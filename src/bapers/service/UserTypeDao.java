@@ -6,6 +6,7 @@
 package bapers.service;
 
 import bapers.data.UserTypeJpaController;
+import bapers.data.exceptions.IllegalOrphanException;
 import bapers.data.exceptions.NonexistentEntityException;
 import bapers.domain.UserType;
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserTypeDao {
         userTypeController.create(new UserType(typeName));
     }
     
-    public void removeType(String typeName) throws NonexistentEntityException {
+    public void removeType(String typeName) throws NonexistentEntityException, IllegalOrphanException {
         userTypeController.destroy(typeName);
     }
     

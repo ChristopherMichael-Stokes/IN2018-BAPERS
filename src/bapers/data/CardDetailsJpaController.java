@@ -10,13 +10,14 @@ import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.CardDetails;
 import bapers.domain.CardDetailsPK;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import bapers.domain.PaymentInfo;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -37,11 +38,21 @@ public class CardDetailsJpaController implements Serializable {
         if (cardDetails.getCardDetailsPK() == null) {
             cardDetails.setCardDetailsPK(new CardDetailsPK());
         }
+        cardDetails.getCardDetailsPK().setFkPaymentId(cardDetails.getPaymentInfo().getPaymentId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            PaymentInfo paymentInfo = cardDetails.getPaymentInfo();
+            if (paymentInfo != null) {
+                paymentInfo = em.getReference(paymentInfo.getClass(), paymentInfo.getPaymentId());
+                cardDetails.setPaymentInfo(paymentInfo);
+            }
             em.persist(cardDetails);
+            if (paymentInfo != null) {
+                paymentInfo.getCardDetailsList().add(cardDetails);
+                paymentInfo = em.merge(paymentInfo);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findCardDetails(cardDetails.getCardDetailsPK()) != null) {
@@ -56,11 +67,27 @@ public class CardDetailsJpaController implements Serializable {
     }
 
     public void edit(CardDetails cardDetails) throws NonexistentEntityException, Exception {
+        cardDetails.getCardDetailsPK().setFkPaymentId(cardDetails.getPaymentInfo().getPaymentId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            CardDetails persistentCardDetails = em.find(CardDetails.class, cardDetails.getCardDetailsPK());
+            PaymentInfo paymentInfoOld = persistentCardDetails.getPaymentInfo();
+            PaymentInfo paymentInfoNew = cardDetails.getPaymentInfo();
+            if (paymentInfoNew != null) {
+                paymentInfoNew = em.getReference(paymentInfoNew.getClass(), paymentInfoNew.getPaymentId());
+                cardDetails.setPaymentInfo(paymentInfoNew);
+            }
             cardDetails = em.merge(cardDetails);
+            if (paymentInfoOld != null && !paymentInfoOld.equals(paymentInfoNew)) {
+                paymentInfoOld.getCardDetailsList().remove(cardDetails);
+                paymentInfoOld = em.merge(paymentInfoOld);
+            }
+            if (paymentInfoNew != null && !paymentInfoNew.equals(paymentInfoOld)) {
+                paymentInfoNew.getCardDetailsList().add(cardDetails);
+                paymentInfoNew = em.merge(paymentInfoNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -89,6 +116,11 @@ public class CardDetailsJpaController implements Serializable {
                 cardDetails.getCardDetailsPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The cardDetails with id " + id + " no longer exists.", enfe);
+            }
+            PaymentInfo paymentInfo = cardDetails.getPaymentInfo();
+            if (paymentInfo != null) {
+                paymentInfo.getCardDetailsList().remove(cardDetails);
+                paymentInfo = em.merge(paymentInfo);
             }
             em.remove(cardDetails);
             em.getTransaction().commit();

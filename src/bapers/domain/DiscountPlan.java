@@ -24,25 +24,25 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author chris
  */
 @Entity
-@Table(name = "user_type")
+@Table(name = "discount_plan")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserType.findAll", query = "SELECT u FROM UserType u")
-    , @NamedQuery(name = "UserType.findByType", query = "SELECT u FROM UserType u WHERE u.type = :type")})
-public class UserType implements Serializable {
+    @NamedQuery(name = "DiscountPlan.findAll", query = "SELECT d FROM DiscountPlan d")
+    , @NamedQuery(name = "DiscountPlan.findByType", query = "SELECT d FROM DiscountPlan d WHERE d.type = :type")})
+public class DiscountPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "type")
     private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkType")
-    private List<User> userList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discountPlantype")
+    private List<CustomerAccount> customerAccountList;
 
-    public UserType() {
+    public DiscountPlan() {
     }
 
-    public UserType(String type) {
+    public DiscountPlan(String type) {
         this.type = type;
     }
 
@@ -55,12 +55,12 @@ public class UserType implements Serializable {
     }
 
     @XmlTransient
-    public List<User> getUserList() {
-        return userList;
+    public List<CustomerAccount> getCustomerAccountList() {
+        return customerAccountList;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setCustomerAccountList(List<CustomerAccount> customerAccountList) {
+        this.customerAccountList = customerAccountList;
     }
 
     @Override
@@ -73,10 +73,10 @@ public class UserType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserType)) {
+        if (!(object instanceof DiscountPlan)) {
             return false;
         }
-        UserType other = (UserType) object;
+        DiscountPlan other = (DiscountPlan) object;
         if ((this.type == null && other.type != null) || (this.type != null && !this.type.equals(other.type))) {
             return false;
         }
@@ -85,7 +85,7 @@ public class UserType implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.UserType[ type=" + type + " ]";
+        return "bapers.domain.DiscountPlan[ type=" + type + " ]";
     }
     
 }

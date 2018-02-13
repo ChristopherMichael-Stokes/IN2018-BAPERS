@@ -61,7 +61,7 @@ public class Task implements Serializable {
     @Temporal(TemporalType.TIME)
     private Date duration;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
-    private List<Tasks> tasksList;
+    private List<Jobtasks> jobtasksList;
 
     public Task() {
     }
@@ -128,12 +128,12 @@ public class Task implements Serializable {
     }
 
     @XmlTransient
-    public List<Tasks> getTasksList() {
-        return tasksList;
+    public List<Jobtasks> getJobtasksList() {
+        return jobtasksList;
     }
 
-    public void setTasksList(List<Tasks> tasksList) {
-        this.tasksList = tasksList;
+    public void setJobtasksList(List<Jobtasks> jobtasksList) {
+        this.jobtasksList = jobtasksList;
     }
 
     @Override

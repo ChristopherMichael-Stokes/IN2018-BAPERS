@@ -5,22 +5,34 @@
  */
 package bapers;
 
-import bapers.service.UserTypeDao;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  *
  * @author chris
  */
-public class BAPERS {
+public class BAPERS extends Application{
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/FXML/scene/userTypes.fxml"));
+        Parent parent = loader.load();
+        
+        Scene scene = new Scene(parent);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
-        // TODO code application logic here
-        UserTypeDao utd = new UserTypeDao();
-        System.out.println("all user types:");
-        utd.allTypes().forEach(s -> System.out.println(s));
+    public static void main(String[] args) {
+        launch(args);
     }
+    
     
 }

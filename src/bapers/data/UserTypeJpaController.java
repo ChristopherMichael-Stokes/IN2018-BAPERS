@@ -5,17 +5,20 @@
  */
 package bapers.data;
 
+import bapers.data.exceptions.IllegalOrphanException;
 import bapers.data.exceptions.NonexistentEntityException;
 import bapers.data.exceptions.PreexistingEntityException;
-import bapers.domain.UserType;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import bapers.domain.User;
+import bapers.domain.UserType;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -33,11 +36,29 @@ public class UserTypeJpaController implements Serializable {
     }
 
     public void create(UserType userType) throws PreexistingEntityException, Exception {
+        if (userType.getUserList() == null) {
+            userType.setUserList(new ArrayList<User>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            List<User> attachedUserList = new ArrayList<User>();
+            for (User userListUserToAttach : userType.getUserList()) {
+                userListUserToAttach = em.getReference(userListUserToAttach.getClass(), userListUserToAttach.getUserId());
+                attachedUserList.add(userListUserToAttach);
+            }
+            userType.setUserList(attachedUserList);
             em.persist(userType);
+            for (User userListUser : userType.getUserList()) {
+                UserType oldFkTypeOfUserListUser = userListUser.getFkType();
+                userListUser.setFkType(userType);
+                userListUser = em.merge(userListUser);
+                if (oldFkTypeOfUserListUser != null) {
+                    oldFkTypeOfUserListUser.getUserList().remove(userListUser);
+                    oldFkTypeOfUserListUser = em.merge(oldFkTypeOfUserListUser);
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findUserType(userType.getType()) != null) {
@@ -51,12 +72,45 @@ public class UserTypeJpaController implements Serializable {
         }
     }
 
-    public void edit(UserType userType) throws NonexistentEntityException, Exception {
+    public void edit(UserType userType) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            UserType persistentUserType = em.find(UserType.class, userType.getType());
+            List<User> userListOld = persistentUserType.getUserList();
+            List<User> userListNew = userType.getUserList();
+            List<String> illegalOrphanMessages = null;
+            for (User userListOldUser : userListOld) {
+                if (!userListNew.contains(userListOldUser)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain User " + userListOldUser + " since its fkType field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<User> attachedUserListNew = new ArrayList<User>();
+            for (User userListNewUserToAttach : userListNew) {
+                userListNewUserToAttach = em.getReference(userListNewUserToAttach.getClass(), userListNewUserToAttach.getUserId());
+                attachedUserListNew.add(userListNewUserToAttach);
+            }
+            userListNew = attachedUserListNew;
+            userType.setUserList(userListNew);
             userType = em.merge(userType);
+            for (User userListNewUser : userListNew) {
+                if (!userListOld.contains(userListNewUser)) {
+                    UserType oldFkTypeOfUserListNewUser = userListNewUser.getFkType();
+                    userListNewUser.setFkType(userType);
+                    userListNewUser = em.merge(userListNewUser);
+                    if (oldFkTypeOfUserListNewUser != null && !oldFkTypeOfUserListNewUser.equals(userType)) {
+                        oldFkTypeOfUserListNewUser.getUserList().remove(userListNewUser);
+                        oldFkTypeOfUserListNewUser = em.merge(oldFkTypeOfUserListNewUser);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -74,7 +128,7 @@ public class UserTypeJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -85,6 +139,17 @@ public class UserTypeJpaController implements Serializable {
                 userType.getType();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The userType with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            List<User> userListOrphanCheck = userType.getUserList();
+            for (User userListOrphanCheckUser : userListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This UserType (" + userType + ") cannot be destroyed since the User " + userListOrphanCheckUser + " in its userList field has a non-nullable fkType field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(userType);
             em.getTransaction().commit();

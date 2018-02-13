@@ -38,9 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "CustomerAccount.findByHousePhone", query = "SELECT c FROM CustomerAccount c WHERE c.housePhone = :housePhone")
     , @NamedQuery(name = "CustomerAccount.findByMobilePhone", query = "SELECT c FROM CustomerAccount c WHERE c.mobilePhone = :mobilePhone")
     , @NamedQuery(name = "CustomerAccount.findByValued", query = "SELECT c FROM CustomerAccount c WHERE c.valued = :valued")
-    , @NamedQuery(name = "CustomerAccount.findByFkAddressLine1", query = "SELECT c FROM CustomerAccount c WHERE c.customerAccountPK.fkAddressLine1 = :fkAddressLine1")
-    , @NamedQuery(name = "CustomerAccount.findByFkCity", query = "SELECT c FROM CustomerAccount c WHERE c.customerAccountPK.fkCity = :fkCity")
-    , @NamedQuery(name = "CustomerAccount.findByFkPostcode", query = "SELECT c FROM CustomerAccount c WHERE c.customerAccountPK.fkPostcode = :fkPostcode")})
+    , @NamedQuery(name = "CustomerAccount.findByCustomerDiscountDiscountPlantype", query = "SELECT c FROM CustomerAccount c WHERE c.customerDiscountDiscountPlantype = :customerDiscountDiscountPlantype")})
 public class CustomerAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,12 +59,17 @@ public class CustomerAccount implements Serializable {
     @Basic(optional = false)
     @Column(name = "valued")
     private boolean valued;
+    @Column(name = "Customer_Discount_Discount_Plan_type")
+    private String customerDiscountDiscountPlantype;
     @JoinColumns({
-        @JoinColumn(name = "fk_address_line1", referencedColumnName = "address_line1", insertable = false, updatable = false)
-        , @JoinColumn(name = "fk_city", referencedColumnName = "city", insertable = false, updatable = false)
-        , @JoinColumn(name = "fk_postcode", referencedColumnName = "postcode", insertable = false, updatable = false)})
+        @JoinColumn(name = "Address_address_line1", referencedColumnName = "address_line1")
+        , @JoinColumn(name = "Address_city", referencedColumnName = "city")
+        , @JoinColumn(name = "Address_postcode", referencedColumnName = "postcode")})
     @ManyToOne(optional = false)
     private Address address;
+    @JoinColumn(name = "Discount_Plan_type", referencedColumnName = "type")
+    @ManyToOne(optional = false)
+    private DiscountPlan discountPlantype;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
     private List<Job> jobList;
 
@@ -86,8 +89,8 @@ public class CustomerAccount implements Serializable {
         this.valued = valued;
     }
 
-    public CustomerAccount(String customerId, String email, String fkAddressLine1, String fkCity, String fkPostcode) {
-        this.customerAccountPK = new CustomerAccountPK(customerId, email, fkAddressLine1, fkCity, fkPostcode);
+    public CustomerAccount(String customerId, String email) {
+        this.customerAccountPK = new CustomerAccountPK(customerId, email);
     }
 
     public CustomerAccountPK getCustomerAccountPK() {
@@ -138,12 +141,28 @@ public class CustomerAccount implements Serializable {
         this.valued = valued;
     }
 
+    public String getCustomerDiscountDiscountPlantype() {
+        return customerDiscountDiscountPlantype;
+    }
+
+    public void setCustomerDiscountDiscountPlantype(String customerDiscountDiscountPlantype) {
+        this.customerDiscountDiscountPlantype = customerDiscountDiscountPlantype;
+    }
+
     public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public DiscountPlan getDiscountPlantype() {
+        return discountPlantype;
+    }
+
+    public void setDiscountPlantype(DiscountPlan discountPlantype) {
+        this.discountPlantype = discountPlantype;
     }
 
     @XmlTransient
