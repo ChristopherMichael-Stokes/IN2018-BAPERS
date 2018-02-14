@@ -15,8 +15,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -42,8 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Job.findByStartTime", query = "SELECT j FROM Job j WHERE j.startTime = :startTime")
     , @NamedQuery(name = "Job.findByEndTime", query = "SELECT j FROM Job j WHERE j.endTime = :endTime")
     , @NamedQuery(name = "Job.findByUrgent", query = "SELECT j FROM Job j WHERE j.urgent = :urgent")
-    , @NamedQuery(name = "Job.findByCustomerAccountcustomerid", query = "SELECT j FROM Job j WHERE j.jobPK.customerAccountcustomerid = :customerAccountcustomerid")
-    , @NamedQuery(name = "Job.findByFkEmail", query = "SELECT j FROM Job j WHERE j.jobPK.fkEmail = :fkEmail")})
+    , @NamedQuery(name = "Job.findByFkCustomerId", query = "SELECT j FROM Job j WHERE j.jobPK.fkCustomerId = :fkCustomerId")
+    , @NamedQuery(name = "Job.findByFkEmail", query = "SELECT j FROM Job j WHERE j.jobPK.fkEmail = :fkEmail")
+    , @NamedQuery(name = "Job.findByFkPaymentId", query = "SELECT j FROM Job j WHERE j.jobPK.fkPaymentId = :fkPaymentId")})
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,20 +64,16 @@ public class Job implements Serializable {
     @Basic(optional = false)
     @Column(name = "urgent")
     private boolean urgent;
-    @JoinTable(name = "payment", joinColumns = {
-        @JoinColumn(name = "Job_job_id", referencedColumnName = "job_id")
-        , @JoinColumn(name = "Job_Customer_Account_customer_id", referencedColumnName = "Customer_Account_customer_id")
-        , @JoinColumn(name = "Job_fk_email", referencedColumnName = "fk_email")}, inverseJoinColumns = {
-        @JoinColumn(name = "Payment_Info_payment_id", referencedColumnName = "payment_id")})
-    @ManyToMany
-    private List<PaymentInfo> paymentInfoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
-    private List<Jobtasks> jobtasksList;
     @JoinColumns({
-        @JoinColumn(name = "Customer_Account_customer_id", referencedColumnName = "customer_id", insertable = false, updatable = false)
+        @JoinColumn(name = "fk_customer_id", referencedColumnName = "customer_id", insertable = false, updatable = false)
         , @JoinColumn(name = "fk_email", referencedColumnName = "email", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private CustomerAccount customerAccount;
+    @JoinColumn(name = "fk_payment_id", referencedColumnName = "payment_id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private PaymentInfo paymentInfo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+    private List<Tasks> tasksList;
 
     public Job() {
     }
@@ -94,8 +89,8 @@ public class Job implements Serializable {
         this.urgent = urgent;
     }
 
-    public Job(int jobId, String customerAccountcustomerid, String fkEmail) {
-        this.jobPK = new JobPK(jobId, customerAccountcustomerid, fkEmail);
+    public Job(int jobId, String fkCustomerId, String fkEmail, int fkPaymentId) {
+        this.jobPK = new JobPK(jobId, fkCustomerId, fkEmail, fkPaymentId);
     }
 
     public JobPK getJobPK() {
@@ -146,30 +141,29 @@ public class Job implements Serializable {
         this.urgent = urgent;
     }
 
-    @XmlTransient
-    public List<PaymentInfo> getPaymentInfoList() {
-        return paymentInfoList;
-    }
-
-    public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
-        this.paymentInfoList = paymentInfoList;
-    }
-
-    @XmlTransient
-    public List<Jobtasks> getJobtasksList() {
-        return jobtasksList;
-    }
-
-    public void setJobtasksList(List<Jobtasks> jobtasksList) {
-        this.jobtasksList = jobtasksList;
-    }
-
     public CustomerAccount getCustomerAccount() {
         return customerAccount;
     }
 
     public void setCustomerAccount(CustomerAccount customerAccount) {
         this.customerAccount = customerAccount;
+    }
+
+    public PaymentInfo getPaymentInfo() {
+        return paymentInfo;
+    }
+
+    public void setPaymentInfo(PaymentInfo paymentInfo) {
+        this.paymentInfo = paymentInfo;
+    }
+
+    @XmlTransient
+    public List<Tasks> getTasksList() {
+        return tasksList;
+    }
+
+    public void setTasksList(List<Tasks> tasksList) {
+        this.tasksList = tasksList;
     }
 
     @Override

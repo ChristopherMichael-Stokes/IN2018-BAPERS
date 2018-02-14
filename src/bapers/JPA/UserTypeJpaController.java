@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.data;
+package bapers.JPA;
 
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
+import bapers.JPA.exceptions.IllegalOrphanException;
+import bapers.JPA.exceptions.NonexistentEntityException;
+import bapers.JPA.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -45,7 +45,7 @@ public class UserTypeJpaController implements Serializable {
             em.getTransaction().begin();
             List<User> attachedUserList = new ArrayList<User>();
             for (User userListUserToAttach : userType.getUserList()) {
-                userListUserToAttach = em.getReference(userListUserToAttach.getClass(), userListUserToAttach.getUserId());
+                userListUserToAttach = em.getReference(userListUserToAttach.getClass(), userListUserToAttach.getUsername());
                 attachedUserList.add(userListUserToAttach);
             }
             userType.setUserList(attachedUserList);
@@ -94,7 +94,7 @@ public class UserTypeJpaController implements Serializable {
             }
             List<User> attachedUserListNew = new ArrayList<User>();
             for (User userListNewUserToAttach : userListNew) {
-                userListNewUserToAttach = em.getReference(userListNewUserToAttach.getClass(), userListNewUserToAttach.getUserId());
+                userListNewUserToAttach = em.getReference(userListNewUserToAttach.getClass(), userListNewUserToAttach.getUsername());
                 attachedUserListNew.add(userListNewUserToAttach);
             }
             userListNew = attachedUserListNew;

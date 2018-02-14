@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.data;
+package bapers.JPA;
 
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
+import bapers.JPA.exceptions.IllegalOrphanException;
+import bapers.JPA.exceptions.NonexistentEntityException;
+import bapers.JPA.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -51,12 +51,12 @@ public class DiscountPlanJpaController implements Serializable {
             discountPlan.setCustomerAccountList(attachedCustomerAccountList);
             em.persist(discountPlan);
             for (CustomerAccount customerAccountListCustomerAccount : discountPlan.getCustomerAccountList()) {
-                DiscountPlan oldDiscountPlantypeOfCustomerAccountListCustomerAccount = customerAccountListCustomerAccount.getDiscountPlantype();
-                customerAccountListCustomerAccount.setDiscountPlantype(discountPlan);
+                DiscountPlan oldFkPlantypeOfCustomerAccountListCustomerAccount = customerAccountListCustomerAccount.getFkPlantype();
+                customerAccountListCustomerAccount.setFkPlantype(discountPlan);
                 customerAccountListCustomerAccount = em.merge(customerAccountListCustomerAccount);
-                if (oldDiscountPlantypeOfCustomerAccountListCustomerAccount != null) {
-                    oldDiscountPlantypeOfCustomerAccountListCustomerAccount.getCustomerAccountList().remove(customerAccountListCustomerAccount);
-                    oldDiscountPlantypeOfCustomerAccountListCustomerAccount = em.merge(oldDiscountPlantypeOfCustomerAccountListCustomerAccount);
+                if (oldFkPlantypeOfCustomerAccountListCustomerAccount != null) {
+                    oldFkPlantypeOfCustomerAccountListCustomerAccount.getCustomerAccountList().remove(customerAccountListCustomerAccount);
+                    oldFkPlantypeOfCustomerAccountListCustomerAccount = em.merge(oldFkPlantypeOfCustomerAccountListCustomerAccount);
                 }
             }
             em.getTransaction().commit();
@@ -86,7 +86,7 @@ public class DiscountPlanJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain CustomerAccount " + customerAccountListOldCustomerAccount + " since its discountPlantype field is not nullable.");
+                    illegalOrphanMessages.add("You must retain CustomerAccount " + customerAccountListOldCustomerAccount + " since its fkPlantype field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -102,12 +102,12 @@ public class DiscountPlanJpaController implements Serializable {
             discountPlan = em.merge(discountPlan);
             for (CustomerAccount customerAccountListNewCustomerAccount : customerAccountListNew) {
                 if (!customerAccountListOld.contains(customerAccountListNewCustomerAccount)) {
-                    DiscountPlan oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount = customerAccountListNewCustomerAccount.getDiscountPlantype();
-                    customerAccountListNewCustomerAccount.setDiscountPlantype(discountPlan);
+                    DiscountPlan oldFkPlantypeOfCustomerAccountListNewCustomerAccount = customerAccountListNewCustomerAccount.getFkPlantype();
+                    customerAccountListNewCustomerAccount.setFkPlantype(discountPlan);
                     customerAccountListNewCustomerAccount = em.merge(customerAccountListNewCustomerAccount);
-                    if (oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount != null && !oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount.equals(discountPlan)) {
-                        oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount.getCustomerAccountList().remove(customerAccountListNewCustomerAccount);
-                        oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount = em.merge(oldDiscountPlantypeOfCustomerAccountListNewCustomerAccount);
+                    if (oldFkPlantypeOfCustomerAccountListNewCustomerAccount != null && !oldFkPlantypeOfCustomerAccountListNewCustomerAccount.equals(discountPlan)) {
+                        oldFkPlantypeOfCustomerAccountListNewCustomerAccount.getCustomerAccountList().remove(customerAccountListNewCustomerAccount);
+                        oldFkPlantypeOfCustomerAccountListNewCustomerAccount = em.merge(oldFkPlantypeOfCustomerAccountListNewCustomerAccount);
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class DiscountPlanJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This DiscountPlan (" + discountPlan + ") cannot be destroyed since the CustomerAccount " + customerAccountListOrphanCheckCustomerAccount + " in its customerAccountList field has a non-nullable discountPlantype field.");
+                illegalOrphanMessages.add("This DiscountPlan (" + discountPlan + ") cannot be destroyed since the CustomerAccount " + customerAccountListOrphanCheckCustomerAccount + " in its customerAccountList field has a non-nullable fkPlantype field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

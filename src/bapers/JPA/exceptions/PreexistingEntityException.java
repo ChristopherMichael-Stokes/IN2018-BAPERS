@@ -1,4 +1,4 @@
-package bapers.data.exceptions;
+package bapers.JPA.exceptions;
 
 public class PreexistingEntityException extends Exception {
     public PreexistingEntityException(String message, Throwable cause) {

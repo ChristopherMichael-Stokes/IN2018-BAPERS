@@ -36,7 +36,7 @@ public class DiscountPlan implements Serializable {
     @Basic(optional = false)
     @Column(name = "type")
     private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discountPlantype")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkPlantype")
     private List<CustomerAccount> customerAccountList;
 
     public DiscountPlan() {

@@ -30,18 +30,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
-    , @NamedQuery(name = "User.findByUserId", query = "SELECT u FROM User u WHERE u.userId = :userId")
+    , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
     , @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName")
     , @NamedQuery(name = "User.findBySurname", query = "SELECT u FROM User u WHERE u.surname = :surname")
-    , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
     , @NamedQuery(name = "User.findByPassphrase", query = "SELECT u FROM User u WHERE u.passphrase = :passphrase")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "username")
+    private String username;
     @Basic(optional = false)
     @Column(name = "first_name")
     private String firstName;
@@ -49,38 +48,34 @@ public class User implements Serializable {
     @Column(name = "surname")
     private String surname;
     @Basic(optional = false)
-    @Column(name = "username")
-    private String username;
-    @Basic(optional = false)
     @Column(name = "passphrase")
     private String passphrase;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "useruserid")
-    private List<Jobtasks> jobtasksList;
     @JoinColumn(name = "fk_type", referencedColumnName = "type")
     @ManyToOne(optional = false)
     private UserType fkType;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userusername")
+    private List<Tasks> tasksList;
 
     public User() {
     }
 
-    public User(Integer userId) {
-        this.userId = userId;
+    public User(String username) {
+        this.username = username;
     }
 
-    public User(Integer userId, String firstName, String surname, String username, String passphrase) {
-        this.userId = userId;
+    public User(String username, String firstName, String surname, String passphrase) {
+        this.username = username;
         this.firstName = firstName;
         this.surname = surname;
-        this.username = username;
         this.passphrase = passphrase;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -99,29 +94,12 @@ public class User implements Serializable {
         this.surname = surname;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassphrase() {
         return passphrase;
     }
 
     public void setPassphrase(String passphrase) {
         this.passphrase = passphrase;
-    }
-
-    @XmlTransient
-    public List<Jobtasks> getJobtasksList() {
-        return jobtasksList;
-    }
-
-    public void setJobtasksList(List<Jobtasks> jobtasksList) {
-        this.jobtasksList = jobtasksList;
     }
 
     public UserType getFkType() {
@@ -132,10 +110,19 @@ public class User implements Serializable {
         this.fkType = fkType;
     }
 
+    @XmlTransient
+    public List<Tasks> getTasksList() {
+        return tasksList;
+    }
+
+    public void setTasksList(List<Tasks> tasksList) {
+        this.tasksList = tasksList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (userId != null ? userId.hashCode() : 0);
+        hash += (username != null ? username.hashCode() : 0);
         return hash;
     }
 
@@ -146,7 +133,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
+        if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
             return false;
         }
         return true;
@@ -154,7 +141,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.User[ userId=" + userId + " ]";
+        return "bapers.domain.User[ username=" + username + " ]";
     }
     
 }

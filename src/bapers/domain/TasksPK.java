@@ -15,14 +15,17 @@ import javax.persistence.Embeddable;
  * @author chris
  */
 @Embeddable
-public class JobtasksPK implements Serializable {
+public class TasksPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "Job_job_id")
     private int jobjobid;
     @Basic(optional = false)
-    @Column(name = "Job_Customer_Account_customer_id")
-    private String jobCustomerAccountcustomerid;
+    @Column(name = "Job_fk_payment_id")
+    private int jobfkpaymentid;
+    @Basic(optional = false)
+    @Column(name = "Job_fk_customer_id")
+    private String jobfkcustomerid;
     @Basic(optional = false)
     @Column(name = "Job_fk_email")
     private String jobfkemail;
@@ -30,12 +33,13 @@ public class JobtasksPK implements Serializable {
     @Column(name = "Task_task_id")
     private int tasktaskid;
 
-    public JobtasksPK() {
+    public TasksPK() {
     }
 
-    public JobtasksPK(int jobjobid, String jobCustomerAccountcustomerid, String jobfkemail, int tasktaskid) {
+    public TasksPK(int jobjobid, int jobfkpaymentid, String jobfkcustomerid, String jobfkemail, int tasktaskid) {
         this.jobjobid = jobjobid;
-        this.jobCustomerAccountcustomerid = jobCustomerAccountcustomerid;
+        this.jobfkpaymentid = jobfkpaymentid;
+        this.jobfkcustomerid = jobfkcustomerid;
         this.jobfkemail = jobfkemail;
         this.tasktaskid = tasktaskid;
     }
@@ -48,12 +52,20 @@ public class JobtasksPK implements Serializable {
         this.jobjobid = jobjobid;
     }
 
-    public String getJobCustomerAccountcustomerid() {
-        return jobCustomerAccountcustomerid;
+    public int getJobfkpaymentid() {
+        return jobfkpaymentid;
     }
 
-    public void setJobCustomerAccountcustomerid(String jobCustomerAccountcustomerid) {
-        this.jobCustomerAccountcustomerid = jobCustomerAccountcustomerid;
+    public void setJobfkpaymentid(int jobfkpaymentid) {
+        this.jobfkpaymentid = jobfkpaymentid;
+    }
+
+    public String getJobfkcustomerid() {
+        return jobfkcustomerid;
+    }
+
+    public void setJobfkcustomerid(String jobfkcustomerid) {
+        this.jobfkcustomerid = jobfkcustomerid;
     }
 
     public String getJobfkemail() {
@@ -76,7 +88,8 @@ public class JobtasksPK implements Serializable {
     public int hashCode() {
         int hash = 0;
         hash += (int) jobjobid;
-        hash += (jobCustomerAccountcustomerid != null ? jobCustomerAccountcustomerid.hashCode() : 0);
+        hash += (int) jobfkpaymentid;
+        hash += (jobfkcustomerid != null ? jobfkcustomerid.hashCode() : 0);
         hash += (jobfkemail != null ? jobfkemail.hashCode() : 0);
         hash += (int) tasktaskid;
         return hash;
@@ -85,14 +98,17 @@ public class JobtasksPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof JobtasksPK)) {
+        if (!(object instanceof TasksPK)) {
             return false;
         }
-        JobtasksPK other = (JobtasksPK) object;
+        TasksPK other = (TasksPK) object;
         if (this.jobjobid != other.jobjobid) {
             return false;
         }
-        if ((this.jobCustomerAccountcustomerid == null && other.jobCustomerAccountcustomerid != null) || (this.jobCustomerAccountcustomerid != null && !this.jobCustomerAccountcustomerid.equals(other.jobCustomerAccountcustomerid))) {
+        if (this.jobfkpaymentid != other.jobfkpaymentid) {
+            return false;
+        }
+        if ((this.jobfkcustomerid == null && other.jobfkcustomerid != null) || (this.jobfkcustomerid != null && !this.jobfkcustomerid.equals(other.jobfkcustomerid))) {
             return false;
         }
         if ((this.jobfkemail == null && other.jobfkemail != null) || (this.jobfkemail != null && !this.jobfkemail.equals(other.jobfkemail))) {
@@ -106,7 +122,7 @@ public class JobtasksPK implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.JobtasksPK[ jobjobid=" + jobjobid + ", jobCustomerAccountcustomerid=" + jobCustomerAccountcustomerid + ", jobfkemail=" + jobfkemail + ", tasktaskid=" + tasktaskid + " ]";
+        return "bapers.domain.TasksPK[ jobjobid=" + jobjobid + ", jobfkpaymentid=" + jobfkpaymentid + ", jobfkcustomerid=" + jobfkcustomerid + ", jobfkemail=" + jobfkemail + ", tasktaskid=" + tasktaskid + " ]";
     }
     
 }

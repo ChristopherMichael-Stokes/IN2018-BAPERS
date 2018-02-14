@@ -23,6 +23,7 @@
     <class>bapers.CardDetails</class>
     <class>bapers.Jobtasks</class>
     <class>bapers.CustomerAccount</class>
+    <class>bapers.domain.Tasks</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bapers?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;useSSL=true"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

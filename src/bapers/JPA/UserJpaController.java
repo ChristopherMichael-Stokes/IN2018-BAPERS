@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.data;
+package bapers.JPA;
 
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
+import bapers.JPA.exceptions.IllegalOrphanException;
+import bapers.JPA.exceptions.NonexistentEntityException;
+import bapers.JPA.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.domain.UserType;
-import bapers.domain.Jobtasks;
+import bapers.domain.Tasks;
 import bapers.domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +37,8 @@ public class UserJpaController implements Serializable {
     }
 
     public void create(User user) throws PreexistingEntityException, Exception {
-        if (user.getJobtasksList() == null) {
-            user.setJobtasksList(new ArrayList<Jobtasks>());
+        if (user.getTasksList() == null) {
+            user.setTasksList(new ArrayList<Tasks>());
         }
         EntityManager em = null;
         try {
@@ -49,29 +49,29 @@ public class UserJpaController implements Serializable {
                 fkType = em.getReference(fkType.getClass(), fkType.getType());
                 user.setFkType(fkType);
             }
-            List<Jobtasks> attachedJobtasksList = new ArrayList<Jobtasks>();
-            for (Jobtasks jobtasksListJobtasksToAttach : user.getJobtasksList()) {
-                jobtasksListJobtasksToAttach = em.getReference(jobtasksListJobtasksToAttach.getClass(), jobtasksListJobtasksToAttach.getJobtasksPK());
-                attachedJobtasksList.add(jobtasksListJobtasksToAttach);
+            List<Tasks> attachedTasksList = new ArrayList<Tasks>();
+            for (Tasks tasksListTasksToAttach : user.getTasksList()) {
+                tasksListTasksToAttach = em.getReference(tasksListTasksToAttach.getClass(), tasksListTasksToAttach.getTasksPK());
+                attachedTasksList.add(tasksListTasksToAttach);
             }
-            user.setJobtasksList(attachedJobtasksList);
+            user.setTasksList(attachedTasksList);
             em.persist(user);
             if (fkType != null) {
                 fkType.getUserList().add(user);
                 fkType = em.merge(fkType);
             }
-            for (Jobtasks jobtasksListJobtasks : user.getJobtasksList()) {
-                User oldUseruseridOfJobtasksListJobtasks = jobtasksListJobtasks.getUseruserid();
-                jobtasksListJobtasks.setUseruserid(user);
-                jobtasksListJobtasks = em.merge(jobtasksListJobtasks);
-                if (oldUseruseridOfJobtasksListJobtasks != null) {
-                    oldUseruseridOfJobtasksListJobtasks.getJobtasksList().remove(jobtasksListJobtasks);
-                    oldUseruseridOfJobtasksListJobtasks = em.merge(oldUseruseridOfJobtasksListJobtasks);
+            for (Tasks tasksListTasks : user.getTasksList()) {
+                User oldUserusernameOfTasksListTasks = tasksListTasks.getUserusername();
+                tasksListTasks.setUserusername(user);
+                tasksListTasks = em.merge(tasksListTasks);
+                if (oldUserusernameOfTasksListTasks != null) {
+                    oldUserusernameOfTasksListTasks.getTasksList().remove(tasksListTasks);
+                    oldUserusernameOfTasksListTasks = em.merge(oldUserusernameOfTasksListTasks);
                 }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findUser(user.getUserId()) != null) {
+            if (findUser(user.getUsername()) != null) {
                 throw new PreexistingEntityException("User " + user + " already exists.", ex);
             }
             throw ex;
@@ -87,18 +87,18 @@ public class UserJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            User persistentUser = em.find(User.class, user.getUserId());
+            User persistentUser = em.find(User.class, user.getUsername());
             UserType fkTypeOld = persistentUser.getFkType();
             UserType fkTypeNew = user.getFkType();
-            List<Jobtasks> jobtasksListOld = persistentUser.getJobtasksList();
-            List<Jobtasks> jobtasksListNew = user.getJobtasksList();
+            List<Tasks> tasksListOld = persistentUser.getTasksList();
+            List<Tasks> tasksListNew = user.getTasksList();
             List<String> illegalOrphanMessages = null;
-            for (Jobtasks jobtasksListOldJobtasks : jobtasksListOld) {
-                if (!jobtasksListNew.contains(jobtasksListOldJobtasks)) {
+            for (Tasks tasksListOldTasks : tasksListOld) {
+                if (!tasksListNew.contains(tasksListOldTasks)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Jobtasks " + jobtasksListOldJobtasks + " since its useruserid field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Tasks " + tasksListOldTasks + " since its userusername field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -108,13 +108,13 @@ public class UserJpaController implements Serializable {
                 fkTypeNew = em.getReference(fkTypeNew.getClass(), fkTypeNew.getType());
                 user.setFkType(fkTypeNew);
             }
-            List<Jobtasks> attachedJobtasksListNew = new ArrayList<Jobtasks>();
-            for (Jobtasks jobtasksListNewJobtasksToAttach : jobtasksListNew) {
-                jobtasksListNewJobtasksToAttach = em.getReference(jobtasksListNewJobtasksToAttach.getClass(), jobtasksListNewJobtasksToAttach.getJobtasksPK());
-                attachedJobtasksListNew.add(jobtasksListNewJobtasksToAttach);
+            List<Tasks> attachedTasksListNew = new ArrayList<Tasks>();
+            for (Tasks tasksListNewTasksToAttach : tasksListNew) {
+                tasksListNewTasksToAttach = em.getReference(tasksListNewTasksToAttach.getClass(), tasksListNewTasksToAttach.getTasksPK());
+                attachedTasksListNew.add(tasksListNewTasksToAttach);
             }
-            jobtasksListNew = attachedJobtasksListNew;
-            user.setJobtasksList(jobtasksListNew);
+            tasksListNew = attachedTasksListNew;
+            user.setTasksList(tasksListNew);
             user = em.merge(user);
             if (fkTypeOld != null && !fkTypeOld.equals(fkTypeNew)) {
                 fkTypeOld.getUserList().remove(user);
@@ -124,14 +124,14 @@ public class UserJpaController implements Serializable {
                 fkTypeNew.getUserList().add(user);
                 fkTypeNew = em.merge(fkTypeNew);
             }
-            for (Jobtasks jobtasksListNewJobtasks : jobtasksListNew) {
-                if (!jobtasksListOld.contains(jobtasksListNewJobtasks)) {
-                    User oldUseruseridOfJobtasksListNewJobtasks = jobtasksListNewJobtasks.getUseruserid();
-                    jobtasksListNewJobtasks.setUseruserid(user);
-                    jobtasksListNewJobtasks = em.merge(jobtasksListNewJobtasks);
-                    if (oldUseruseridOfJobtasksListNewJobtasks != null && !oldUseruseridOfJobtasksListNewJobtasks.equals(user)) {
-                        oldUseruseridOfJobtasksListNewJobtasks.getJobtasksList().remove(jobtasksListNewJobtasks);
-                        oldUseruseridOfJobtasksListNewJobtasks = em.merge(oldUseruseridOfJobtasksListNewJobtasks);
+            for (Tasks tasksListNewTasks : tasksListNew) {
+                if (!tasksListOld.contains(tasksListNewTasks)) {
+                    User oldUserusernameOfTasksListNewTasks = tasksListNewTasks.getUserusername();
+                    tasksListNewTasks.setUserusername(user);
+                    tasksListNewTasks = em.merge(tasksListNewTasks);
+                    if (oldUserusernameOfTasksListNewTasks != null && !oldUserusernameOfTasksListNewTasks.equals(user)) {
+                        oldUserusernameOfTasksListNewTasks.getTasksList().remove(tasksListNewTasks);
+                        oldUserusernameOfTasksListNewTasks = em.merge(oldUserusernameOfTasksListNewTasks);
                     }
                 }
             }
@@ -139,7 +139,7 @@ public class UserJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = user.getUserId();
+                String id = user.getUsername();
                 if (findUser(id) == null) {
                     throw new NonexistentEntityException("The user with id " + id + " no longer exists.");
                 }
@@ -152,7 +152,7 @@ public class UserJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -160,17 +160,17 @@ public class UserJpaController implements Serializable {
             User user;
             try {
                 user = em.getReference(User.class, id);
-                user.getUserId();
+                user.getUsername();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The user with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Jobtasks> jobtasksListOrphanCheck = user.getJobtasksList();
-            for (Jobtasks jobtasksListOrphanCheckJobtasks : jobtasksListOrphanCheck) {
+            List<Tasks> tasksListOrphanCheck = user.getTasksList();
+            for (Tasks tasksListOrphanCheckTasks : tasksListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Jobtasks " + jobtasksListOrphanCheckJobtasks + " in its jobtasksList field has a non-nullable useruserid field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Tasks " + tasksListOrphanCheckTasks + " in its tasksList field has a non-nullable userusername field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -213,7 +213,7 @@ public class UserJpaController implements Serializable {
         }
     }
 
-    public User findUser(Integer id) {
+    public User findUser(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(User.class, id);

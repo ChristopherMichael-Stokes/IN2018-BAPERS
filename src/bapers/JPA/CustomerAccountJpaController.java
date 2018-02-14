@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.data;
+package bapers.JPA;
 
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
+import bapers.JPA.exceptions.IllegalOrphanException;
+import bapers.JPA.exceptions.NonexistentEntityException;
+import bapers.JPA.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -54,10 +54,10 @@ public class CustomerAccountJpaController implements Serializable {
                 address = em.getReference(address.getClass(), address.getAddressPK());
                 customerAccount.setAddress(address);
             }
-            DiscountPlan discountPlantype = customerAccount.getDiscountPlantype();
-            if (discountPlantype != null) {
-                discountPlantype = em.getReference(discountPlantype.getClass(), discountPlantype.getType());
-                customerAccount.setDiscountPlantype(discountPlantype);
+            DiscountPlan fkPlantype = customerAccount.getFkPlantype();
+            if (fkPlantype != null) {
+                fkPlantype = em.getReference(fkPlantype.getClass(), fkPlantype.getType());
+                customerAccount.setFkPlantype(fkPlantype);
             }
             List<Job> attachedJobList = new ArrayList<Job>();
             for (Job jobListJobToAttach : customerAccount.getJobList()) {
@@ -70,9 +70,9 @@ public class CustomerAccountJpaController implements Serializable {
                 address.getCustomerAccountList().add(customerAccount);
                 address = em.merge(address);
             }
-            if (discountPlantype != null) {
-                discountPlantype.getCustomerAccountList().add(customerAccount);
-                discountPlantype = em.merge(discountPlantype);
+            if (fkPlantype != null) {
+                fkPlantype.getCustomerAccountList().add(customerAccount);
+                fkPlantype = em.merge(fkPlantype);
             }
             for (Job jobListJob : customerAccount.getJobList()) {
                 CustomerAccount oldCustomerAccountOfJobListJob = jobListJob.getCustomerAccount();
@@ -104,8 +104,8 @@ public class CustomerAccountJpaController implements Serializable {
             CustomerAccount persistentCustomerAccount = em.find(CustomerAccount.class, customerAccount.getCustomerAccountPK());
             Address addressOld = persistentCustomerAccount.getAddress();
             Address addressNew = customerAccount.getAddress();
-            DiscountPlan discountPlantypeOld = persistentCustomerAccount.getDiscountPlantype();
-            DiscountPlan discountPlantypeNew = customerAccount.getDiscountPlantype();
+            DiscountPlan fkPlantypeOld = persistentCustomerAccount.getFkPlantype();
+            DiscountPlan fkPlantypeNew = customerAccount.getFkPlantype();
             List<Job> jobListOld = persistentCustomerAccount.getJobList();
             List<Job> jobListNew = customerAccount.getJobList();
             List<String> illegalOrphanMessages = null;
@@ -124,9 +124,9 @@ public class CustomerAccountJpaController implements Serializable {
                 addressNew = em.getReference(addressNew.getClass(), addressNew.getAddressPK());
                 customerAccount.setAddress(addressNew);
             }
-            if (discountPlantypeNew != null) {
-                discountPlantypeNew = em.getReference(discountPlantypeNew.getClass(), discountPlantypeNew.getType());
-                customerAccount.setDiscountPlantype(discountPlantypeNew);
+            if (fkPlantypeNew != null) {
+                fkPlantypeNew = em.getReference(fkPlantypeNew.getClass(), fkPlantypeNew.getType());
+                customerAccount.setFkPlantype(fkPlantypeNew);
             }
             List<Job> attachedJobListNew = new ArrayList<Job>();
             for (Job jobListNewJobToAttach : jobListNew) {
@@ -144,13 +144,13 @@ public class CustomerAccountJpaController implements Serializable {
                 addressNew.getCustomerAccountList().add(customerAccount);
                 addressNew = em.merge(addressNew);
             }
-            if (discountPlantypeOld != null && !discountPlantypeOld.equals(discountPlantypeNew)) {
-                discountPlantypeOld.getCustomerAccountList().remove(customerAccount);
-                discountPlantypeOld = em.merge(discountPlantypeOld);
+            if (fkPlantypeOld != null && !fkPlantypeOld.equals(fkPlantypeNew)) {
+                fkPlantypeOld.getCustomerAccountList().remove(customerAccount);
+                fkPlantypeOld = em.merge(fkPlantypeOld);
             }
-            if (discountPlantypeNew != null && !discountPlantypeNew.equals(discountPlantypeOld)) {
-                discountPlantypeNew.getCustomerAccountList().add(customerAccount);
-                discountPlantypeNew = em.merge(discountPlantypeNew);
+            if (fkPlantypeNew != null && !fkPlantypeNew.equals(fkPlantypeOld)) {
+                fkPlantypeNew.getCustomerAccountList().add(customerAccount);
+                fkPlantypeNew = em.merge(fkPlantypeNew);
             }
             for (Job jobListNewJob : jobListNew) {
                 if (!jobListOld.contains(jobListNewJob)) {
@@ -208,10 +208,10 @@ public class CustomerAccountJpaController implements Serializable {
                 address.getCustomerAccountList().remove(customerAccount);
                 address = em.merge(address);
             }
-            DiscountPlan discountPlantype = customerAccount.getDiscountPlantype();
-            if (discountPlantype != null) {
-                discountPlantype.getCustomerAccountList().remove(customerAccount);
-                discountPlantype = em.merge(discountPlantype);
+            DiscountPlan fkPlantype = customerAccount.getFkPlantype();
+            if (fkPlantype != null) {
+                fkPlantype.getCustomerAccountList().remove(customerAccount);
+                fkPlantype = em.merge(fkPlantype);
             }
             em.remove(customerAccount);
             em.getTransaction().commit();

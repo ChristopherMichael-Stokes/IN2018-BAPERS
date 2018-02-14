@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bapers.UserTypeController">
+    <stylesheets>
+        <URL value="@/styles/usertype.css" />
+    </stylesheets>
+   <children>
+      <VBox layoutX="200.0" layoutY="-19.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="590.0" spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="User Type:" />
+                  <TextField fx:id="txtUserType" />
+                  <Button fx:id="btnAdd" mnemonicParsing="false" text="add" />
+                  <Button fx:id="btnRemove" mnemonicParsing="false" text="remove" />
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </HBox>
+            <ListView fx:id="lsvUserTypes" prefHeight="357.0" prefWidth="600.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

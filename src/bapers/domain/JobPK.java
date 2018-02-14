@@ -21,19 +21,23 @@ public class JobPK implements Serializable {
     @Column(name = "job_id")
     private int jobId;
     @Basic(optional = false)
-    @Column(name = "Customer_Account_customer_id")
-    private String customerAccountcustomerid;
+    @Column(name = "fk_customer_id")
+    private String fkCustomerId;
     @Basic(optional = false)
     @Column(name = "fk_email")
     private String fkEmail;
+    @Basic(optional = false)
+    @Column(name = "fk_payment_id")
+    private int fkPaymentId;
 
     public JobPK() {
     }
 
-    public JobPK(int jobId, String customerAccountcustomerid, String fkEmail) {
+    public JobPK(int jobId, String fkCustomerId, String fkEmail, int fkPaymentId) {
         this.jobId = jobId;
-        this.customerAccountcustomerid = customerAccountcustomerid;
+        this.fkCustomerId = fkCustomerId;
         this.fkEmail = fkEmail;
+        this.fkPaymentId = fkPaymentId;
     }
 
     public int getJobId() {
@@ -44,12 +48,12 @@ public class JobPK implements Serializable {
         this.jobId = jobId;
     }
 
-    public String getCustomerAccountcustomerid() {
-        return customerAccountcustomerid;
+    public String getFkCustomerId() {
+        return fkCustomerId;
     }
 
-    public void setCustomerAccountcustomerid(String customerAccountcustomerid) {
-        this.customerAccountcustomerid = customerAccountcustomerid;
+    public void setFkCustomerId(String fkCustomerId) {
+        this.fkCustomerId = fkCustomerId;
     }
 
     public String getFkEmail() {
@@ -60,12 +64,21 @@ public class JobPK implements Serializable {
         this.fkEmail = fkEmail;
     }
 
+    public int getFkPaymentId() {
+        return fkPaymentId;
+    }
+
+    public void setFkPaymentId(int fkPaymentId) {
+        this.fkPaymentId = fkPaymentId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) jobId;
-        hash += (customerAccountcustomerid != null ? customerAccountcustomerid.hashCode() : 0);
+        hash += (fkCustomerId != null ? fkCustomerId.hashCode() : 0);
         hash += (fkEmail != null ? fkEmail.hashCode() : 0);
+        hash += (int) fkPaymentId;
         return hash;
     }
 
@@ -79,10 +92,13 @@ public class JobPK implements Serializable {
         if (this.jobId != other.jobId) {
             return false;
         }
-        if ((this.customerAccountcustomerid == null && other.customerAccountcustomerid != null) || (this.customerAccountcustomerid != null && !this.customerAccountcustomerid.equals(other.customerAccountcustomerid))) {
+        if ((this.fkCustomerId == null && other.fkCustomerId != null) || (this.fkCustomerId != null && !this.fkCustomerId.equals(other.fkCustomerId))) {
             return false;
         }
         if ((this.fkEmail == null && other.fkEmail != null) || (this.fkEmail != null && !this.fkEmail.equals(other.fkEmail))) {
+            return false;
+        }
+        if (this.fkPaymentId != other.fkPaymentId) {
             return false;
         }
         return true;
@@ -90,7 +106,7 @@ public class JobPK implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.JobPK[ jobId=" + jobId + ", customerAccountcustomerid=" + customerAccountcustomerid + ", fkEmail=" + fkEmail + " ]";
+        return "bapers.domain.JobPK[ jobId=" + jobId + ", fkCustomerId=" + fkCustomerId + ", fkEmail=" + fkEmail + ", fkPaymentId=" + fkPaymentId + " ]";
     }
     
 }
