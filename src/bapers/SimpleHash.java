@@ -6,15 +6,13 @@
 package bapers;
 
 import java.security.MessageDigest;
-import javax.xml.bind.DatatypeConverter;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
  * @author EdgarLaw
  */
-
 // avaliable algorithm (MD2,MD5,SHA-1,SHA-224,SHA-256,SHA-384,SHA-512)
-
 public class SimpleHash {
 
     /**
@@ -26,20 +24,21 @@ public class SimpleHash {
 //        System.out.println(getStringHash(test.getBytes(),"SHA-512"));
 //        System.out.println(getStringHash(test.getBytes(),"MD2"));
 //    }
-    
-    public static String getStringHash(byte[] stringBytes, String algorithm)
-    {
+    public static String getStringHash(byte[] stringBytes, String algorithm) {
         String hashValue = null;
-        try{
+        try {
             MessageDigest m = MessageDigest.getInstance(algorithm);
             m.update(stringBytes);
             byte[] bytesArray = m.digest();
-            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
-                    }
-        catch(Exception e){
+            hashValue = "";
+            for (byte b : bytesArray)
+                hashValue+=(String.format("%02x", b));
+            hashValue = hashValue.toLowerCase();
+//            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
+        } catch (NoSuchAlgorithmException e) {
             return "error";
         }
         return hashValue;
     }
-    
+
 }

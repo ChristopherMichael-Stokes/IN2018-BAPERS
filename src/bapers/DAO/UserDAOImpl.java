@@ -37,8 +37,5 @@ public class UserDAOImpl implements UserDAO{
             return false;
         return getStringHash(input.trim().getBytes(), "SHA-512")
                 .equals(user.getPassphrase());
-    }
-
-
-    
+    }   
 }

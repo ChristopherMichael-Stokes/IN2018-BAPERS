@@ -10,10 +10,12 @@ import bapers.JPA.exceptions.IllegalOrphanException;
 import bapers.JPA.exceptions.NonexistentEntityException;
 import bapers.JPA.exceptions.PreexistingEntityException;
 import bapers.domain.UserType;
+import java.security.MessageDigest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -61,6 +63,21 @@ public class UserTypeDAOImpl implements UserTypeDAO {
     @Override
     public void setItems(ObservableList<UserType> items) {
         this.items = items;
+    }
+    
+    private String getStringHash(byte[] stringBytes, String algorithm)
+    {
+        String hashValue = null;
+        try{
+            MessageDigest m = MessageDigest.getInstance(algorithm);
+            m.update(stringBytes);
+            byte[] bytesArray = m.digest();
+            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
+                    }
+        catch(Exception e){
+            return "error";
+        }
+        return hashValue;
     }
 
 }
