@@ -25,20 +25,18 @@ public class SimpleHash {
 //        System.out.println(getStringHash(test.getBytes(),"MD2"));
 //    }
     public static String getStringHash(byte[] stringBytes, String algorithm) {
-        String hashValue = null;
         try {
             MessageDigest m = MessageDigest.getInstance(algorithm);
             m.update(stringBytes);
             byte[] bytesArray = m.digest();
-            hashValue = "";
+            StringBuilder s = new StringBuilder(bytesArray.length * 2);
             for (byte b : bytesArray)
-                hashValue+=(String.format("%02x", b));
-            hashValue = hashValue.toLowerCase();
+                s.append((String.format("%02x", b)));
+            return s.toString();
 //            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
         } catch (NoSuchAlgorithmException e) {
             return "error";
         }
-        return hashValue;
     }
 
 }

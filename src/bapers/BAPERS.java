@@ -61,7 +61,7 @@ public class BAPERS extends Application{
 
 //first user
 
-//insert into user (user_id, first_name, surname, username, passphrase, fk_type)
-//values ('0','chris','theboss','bossman','b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86',
+//insert into user (username, first_name, surname, passphrase, fk_type)
+//values ('boss','chris','theboss','b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86',
 //(select type from user_type where type = "office manager"));
 //select user.* from user;
