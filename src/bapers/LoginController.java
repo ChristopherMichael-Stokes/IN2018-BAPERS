@@ -54,6 +54,7 @@ public class LoginController implements Initializable {
                 
                 lblOut.setText("valid input");
                 attempts = 0;
+                bapers.SceneController.USER = DAO.getUser(txtUsername.getText());
                 try {
                     Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/UserType.fxml"));
                     Scene userTypeScene = new Scene(root);

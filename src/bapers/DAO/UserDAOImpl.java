@@ -35,4 +35,9 @@ public class UserDAOImpl implements UserDAO{
         return getStringHash(input.trim().getBytes(), "SHA-512")
                 .equals(user.getPassphrase());
     }   
+
+    @Override
+    public User getUser(String username) {
+        return controller.findUser(username);
+    }
 }

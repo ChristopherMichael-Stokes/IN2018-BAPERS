@@ -25,6 +25,9 @@
  */
 package bapers;
 
+import bapers.domain.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,6 +40,8 @@ import javafx.stage.Stage;
  */
 public class SceneController extends Application {
 
+    public static User USER;
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
@@ -44,11 +49,25 @@ public class SceneController extends Application {
         LoginController controller = loader.getController();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/login.css");
-        
-        
+
         stage.setTitle("User Types");
         stage.setScene(scene);
         stage.show();
+//        Runnable r = () -> {
+//            while (true) {
+//                if (USER == null) {
+//                    System.out.println("null");
+//                } else {
+//                    System.out.println(USER.getFirstName());
+//                }
+//                try {
+//                    Thread.sleep(500);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(SceneController.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        };
+//        new Thread(r).start();
     }
 
 }
