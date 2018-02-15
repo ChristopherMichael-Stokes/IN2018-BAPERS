@@ -5,9 +5,8 @@
  */
 package bapers.DAO;
 
+import static bapers.BAPERS.EMF;
 import bapers.JPA.UserJpaController;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import static bapers.SimpleHash.getStringHash;
 import bapers.domain.User;
 
@@ -17,12 +16,10 @@ import bapers.domain.User;
  */
 public class UserDAOImpl implements UserDAO{
     
-    private final EntityManagerFactory emf;
     private final UserJpaController controller;
     
     public UserDAOImpl() {
-        emf = Persistence.createEntityManagerFactory("BAPERSPU");
-        controller = new UserJpaController(emf);
+        controller = new UserJpaController(EMF);
     }
     
     @Override

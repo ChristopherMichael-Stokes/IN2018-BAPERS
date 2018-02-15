@@ -5,6 +5,7 @@
  */
 package bapers.DAO;
 
+import static bapers.BAPERS.EMF;
 import bapers.JPA.UserTypeJpaController;
 import bapers.JPA.exceptions.IllegalOrphanException;
 import bapers.JPA.exceptions.NonexistentEntityException;
@@ -13,8 +14,6 @@ import bapers.domain.UserType;
 import java.security.MessageDigest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -23,13 +22,11 @@ import javax.xml.bind.DatatypeConverter;
  */
 public class UserTypeDAOImpl implements UserTypeDAO {
 
-    private final EntityManagerFactory emf;
     private final UserTypeJpaController controller;
     private ObservableList<UserType> items;
 
     public UserTypeDAOImpl() {
-        emf = Persistence.createEntityManagerFactory("BAPERSPU");
-        controller = new UserTypeJpaController(emf);
+        controller = new UserTypeJpaController(EMF);
         items = FXCollections.observableArrayList(controller.findUserTypeEntities());
     }
 
@@ -64,17 +61,15 @@ public class UserTypeDAOImpl implements UserTypeDAO {
     public void setItems(ObservableList<UserType> items) {
         this.items = items;
     }
-    
-    private String getStringHash(byte[] stringBytes, String algorithm)
-    {
+
+    private String getStringHash(byte[] stringBytes, String algorithm) {
         String hashValue = null;
-        try{
+        try {
             MessageDigest m = MessageDigest.getInstance(algorithm);
             m.update(stringBytes);
             byte[] bytesArray = m.digest();
             hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
-                    }
-        catch(Exception e){
+        } catch (Exception e) {
             return "error";
         }
         return hashValue;

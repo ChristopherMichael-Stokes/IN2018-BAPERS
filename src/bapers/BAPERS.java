@@ -5,40 +5,41 @@
  */
 package bapers;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import static javafx.application.Application.launch;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author chris
  */
-public class BAPERS extends Application{
+public class BAPERS {
+    
+    public static final EntityManagerFactory EMF =
+            Persistence.createEntityManagerFactory("BAPERSPU");
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/Login.fxml"));
-        
-        
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/login.css");
-
-        stage.setTitle("User Types");
-        stage.setScene(scene);
-        stage.show();
-        
-        /*  ideas on scene switching
-        
-            make a parent window, that all scenes are triggered from.
-        
-            make an event from each scene and raise the event when a scene 
-            change is necessary.
-            
-            catch event from parent scene
-        */
-    }
+//    @Override
+//    public void start(Stage stage) throws Exception, IOException {
+//        FXMLLoader loader = new FXMLLoader();
+//        Parent root = loader.load(this.getClass().getResource("/fxml/Login.fxml").openStream());
+//        LoginController controller = loader.getController();
+//        Scene scene = new Scene(root);
+//        scene.getStylesheets().add("/styles/login.css");
+//
+//        stage.setTitle("User Types");
+//        stage.setScene(scene);
+//        stage.show();
+//        
+//        /*  ideas on scene switching
+//        
+//            make a parent window, that all scenes are triggered from.
+//        
+//            make an event from each scene and raise the event when a scene 
+//            change is necessary.
+//            
+//            catch event from parent scene
+//        */
+//    }
         
         
         
@@ -47,7 +48,7 @@ public class BAPERS extends Application{
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        launch(SceneController.class, args);
         
 //        String pass = "password";
 //        String sha = getStringHash(pass.getBytes(), "SHA-512"),
