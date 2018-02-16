@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.DAO;
+package bapers.service;
 
 import bapers.domain.User;
 
@@ -11,7 +11,7 @@ import bapers.domain.User;
  *
  * @author chris
  */
-public interface UserDAO {
+public interface UserService {
     
     public boolean userExists(String username);
     

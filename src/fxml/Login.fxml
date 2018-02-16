@@ -18,7 +18,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="9.0" prefWidth="311.0" spacing="10.0">
                <children>
                   <Label text="Username:" />
-                  <TextField fx:id="txtUsername" />
+                  <TextField fx:id="txtUsername" alignment="CENTER" />
                </children>
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
@@ -27,7 +27,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="8.0" prefWidth="311.0" spacing="10.0">
                <children>
                   <Label text="Password:" />
-                  <TextField fx:id="txtPassword">
+                  <TextField fx:id="txtPassword" alignment="CENTER">
                      <HBox.margin>
                         <Insets left="3.0" />
                      </HBox.margin>
@@ -39,7 +39,10 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="39.0" prefWidth="311.0">
                <children>
-                  <Button fx:id="btnLogin" contentDisplay="CENTER" mnemonicParsing="false" text="login" />
+                  <Button fx:id="btnLogin" contentDisplay="CENTER" mnemonicParsing="false" text="login">
+                     <HBox.margin>
+                        <Insets top="20.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
             <Label fx:id="lblOut" contentDisplay="CENTER" VBox.vgrow="ALWAYS" />

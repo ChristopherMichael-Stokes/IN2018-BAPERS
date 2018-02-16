@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.JPA;
+package bapers.data;
 
-import bapers.JPA.exceptions.IllegalOrphanException;
-import bapers.JPA.exceptions.NonexistentEntityException;
-import bapers.JPA.exceptions.PreexistingEntityException;
+import bapers.data.exceptions.IllegalOrphanException;
+import bapers.data.exceptions.NonexistentEntityException;
+import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.Address;
 import bapers.domain.AddressPK;
 import java.io.Serializable;

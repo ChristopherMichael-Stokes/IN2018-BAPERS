@@ -1,4 +1,4 @@
-package bapers.JPA.exceptions;
+package bapers.data.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.DAO;
+package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.JPA.UserTypeJpaController;
-import bapers.JPA.exceptions.IllegalOrphanException;
-import bapers.JPA.exceptions.NonexistentEntityException;
-import bapers.JPA.exceptions.PreexistingEntityException;
+import bapers.data.UserTypeJpaController;
+import bapers.data.exceptions.IllegalOrphanException;
+import bapers.data.exceptions.NonexistentEntityException;
+import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.UserType;
 import java.security.MessageDigest;
 import javafx.collections.FXCollections;
@@ -20,12 +20,12 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author chris
  */
-public class UserTypeDAOImpl implements UserTypeDAO {
+public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeJpaController controller;
     private ObservableList<UserType> items;
 
-    public UserTypeDAOImpl() {
+    public UserTypeServiceImpl() {
         controller = new UserTypeJpaController(EMF);
         items = FXCollections.observableArrayList(controller.findUserTypeEntities());
     }

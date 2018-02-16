@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.DAO;
+package bapers.service;
 
-import bapers.JPA.exceptions.IllegalOrphanException;
-import bapers.JPA.exceptions.NonexistentEntityException;
-import bapers.JPA.exceptions.PreexistingEntityException;
+import bapers.data.exceptions.IllegalOrphanException;
+import bapers.data.exceptions.NonexistentEntityException;
+import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.UserType;
 import javafx.collections.ObservableList;
 
@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
  *
  * @author chris
  */
-public interface UserTypeDAO {
+public interface UserTypeService {
 
     public void addUserType(String text) throws Exception, PreexistingEntityException;
 

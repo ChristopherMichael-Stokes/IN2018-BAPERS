@@ -1,4 +1,4 @@
-package bapers.JPA.exceptions;
+package bapers.data.exceptions;
 
 public class NonexistentEntityException extends Exception {
     public NonexistentEntityException(String message, Throwable cause) {

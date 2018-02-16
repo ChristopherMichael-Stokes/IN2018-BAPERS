@@ -5,8 +5,7 @@
  */
 package bapers;
 
-import bapers.DAO.UserDAO;
-import bapers.DAO.UserDAOImpl;
+import bapers.service.UserServiceImpl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import bapers.service.UserService;
 
 /**
  * FXML Controller class
@@ -37,7 +37,7 @@ public class LoginController implements Initializable {
     @FXML
     private Label lblOut;
 
-    private final UserDAO DAO = new UserDAOImpl();
+    private final UserService DAO = new UserServiceImpl();
     private int attempts = 0;
 
     /**

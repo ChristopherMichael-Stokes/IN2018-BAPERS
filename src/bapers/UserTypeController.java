@@ -5,11 +5,10 @@
  */
 package bapers;
 
-import bapers.DAO.UserTypeDAO;
-import bapers.DAO.UserTypeDAOImpl;
-import bapers.JPA.exceptions.IllegalOrphanException;
-import bapers.JPA.exceptions.NonexistentEntityException;
-import bapers.JPA.exceptions.PreexistingEntityException;
+import bapers.service.UserTypeServiceImpl;
+import bapers.data.exceptions.IllegalOrphanException;
+import bapers.data.exceptions.NonexistentEntityException;
+import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.UserType;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,6 +22,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import bapers.service.UserTypeService;
 
 /**
  * FXML Controller class
@@ -40,7 +40,7 @@ public class UserTypeController implements Initializable {
     @FXML
     private ListView<UserType> lsvUserTypes;
 
-    private static final UserTypeDAO DAO = new UserTypeDAOImpl();
+    private static final UserTypeService DAO = new UserTypeServiceImpl();
 
     /**
      * Initializes the controller class.
@@ -81,10 +81,17 @@ public class UserTypeController implements Initializable {
         });
 
         btnRemove.setOnAction((ActionEvent event) -> {
+            String type = lsvUserTypes.getSelectionModel()
+                    .getSelectedItem().getType();
             try {
-                DAO.removeUserType(lsvUserTypes.getSelectionModel().getSelectedItem().getType());
+                if (!type.toLowerCase().equals("office manager"));
+                    DAO.removeUserType(type);
             } catch (IllegalOrphanException | NonexistentEntityException ex) {
-                Logger.getLogger(UserTypeController.class.getName()).log(Level.SEVERE, null, ex);
+                if (ex instanceof IllegalOrphanException)
+                    System.out.println("cannot remove '"+type
+                            +"', as 1 or more users belong to that type");
+                else if (ex instanceof NonexistentEntityException)
+                    System.out.println("type '"+type+"' does not exist");
             }
 
         });

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bapers.DAO;
+package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.JPA.UserJpaController;
+import bapers.data.UserJpaController;
 import static bapers.SimpleHash.getStringHash;
 import bapers.domain.User;
 
@@ -14,11 +14,11 @@ import bapers.domain.User;
  *
  * @author chris
  */
-public class UserDAOImpl implements UserDAO{
+public class UserServiceImpl implements UserService{
     
     private final UserJpaController controller;
     
-    public UserDAOImpl() {
+    public UserServiceImpl() {
         controller = new UserJpaController(EMF);
     }
     
