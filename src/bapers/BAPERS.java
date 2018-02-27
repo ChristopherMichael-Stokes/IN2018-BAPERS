@@ -42,27 +42,17 @@ public class BAPERS {
 //    }
         
         
-        
-
+       
     /**
      * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(SceneController.class, args);
-        
-//        String pass = "password";
-//        String sha = getStringHash(pass.getBytes(), "SHA-512"),
-//                md2 = getStringHash(pass.getBytes(), "MD2");
-//        System.out.println(sha+" "+sha.length());
-//        System.out.println(md2+" "+md2.length());
+     */    
+    public static void main(String[] args) {  
+        new Thread(() -> EMF.createEntityManager()).start();
+        launch(SceneController.class, args);     
     }
     
     
 }
 
-//first user
-
-//insert into user (username, first_name, surname, passphrase, fk_type)
-//values ('boss','chris','theboss','b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86',
-//(select type from user_type where type = "office manager"));
-//select user.* from user;
+//sha 512 hash of 'password'
+//b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86
