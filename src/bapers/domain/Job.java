@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.domain;
 
@@ -11,10 +31,11 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,20 +55,21 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Job.findAll", query = "SELECT j FROM Job j")
-    , @NamedQuery(name = "Job.findByJobId", query = "SELECT j FROM Job j WHERE j.jobPK.jobId = :jobId")
+    , @NamedQuery(name = "Job.findByJobId", query = "SELECT j FROM Job j WHERE j.jobId = :jobId")
+    , @NamedQuery(name = "Job.findByDescription", query = "SELECT j FROM Job j WHERE j.description = :description")
     , @NamedQuery(name = "Job.findByAmountDue", query = "SELECT j FROM Job j WHERE j.amountDue = :amountDue")
     , @NamedQuery(name = "Job.findByDeadline", query = "SELECT j FROM Job j WHERE j.deadline = :deadline")
-    , @NamedQuery(name = "Job.findByStartTime", query = "SELECT j FROM Job j WHERE j.startTime = :startTime")
-    , @NamedQuery(name = "Job.findByEndTime", query = "SELECT j FROM Job j WHERE j.endTime = :endTime")
-    , @NamedQuery(name = "Job.findByUrgent", query = "SELECT j FROM Job j WHERE j.urgent = :urgent")
-    , @NamedQuery(name = "Job.findByFkCustomerId", query = "SELECT j FROM Job j WHERE j.jobPK.fkCustomerId = :fkCustomerId")
-    , @NamedQuery(name = "Job.findByFkEmail", query = "SELECT j FROM Job j WHERE j.jobPK.fkEmail = :fkEmail")
-    , @NamedQuery(name = "Job.findByFkPaymentId", query = "SELECT j FROM Job j WHERE j.jobPK.fkPaymentId = :fkPaymentId")})
+    , @NamedQuery(name = "Job.findByUrgent", query = "SELECT j FROM Job j WHERE j.urgent = :urgent")})
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected JobPK jobPK;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "job_id")
+    private String jobId;
+    @Basic(optional = false)
+    @Column(name = "description")
+    private String description;
     @Basic(optional = false)
     @Column(name = "amount_due")
     private int amountDue;
@@ -55,50 +77,47 @@ public class Job implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deadline;
     @Basic(optional = false)
-    @Column(name = "start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
-    @Column(name = "end_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
-    @Basic(optional = false)
     @Column(name = "urgent")
     private boolean urgent;
-    @JoinColumns({
-        @JoinColumn(name = "fk_customer_id", referencedColumnName = "customer_id", insertable = false, updatable = false)
-        , @JoinColumn(name = "fk_email", referencedColumnName = "email", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private CustomerAccount customerAccount;
-    @JoinColumn(name = "fk_payment_id", referencedColumnName = "payment_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private PaymentInfo paymentInfo;
+    @JoinTable(name = "payment", joinColumns = {
+        @JoinColumn(name = "fk_job_id", referencedColumnName = "job_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "fk_payment_id", referencedColumnName = "payment_id")})
+    @ManyToMany
+    private List<PaymentInfo> paymentInfoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
-    private List<Tasks> tasksList;
+    private List<JobTask> jobTaskList;
+    @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number")
+    @ManyToOne(optional = false)
+    private CustomerAccount fkAccountNumber;
 
     public Job() {
     }
 
-    public Job(JobPK jobPK) {
-        this.jobPK = jobPK;
+    public Job(String jobId) {
+        this.jobId = jobId;
     }
 
-    public Job(JobPK jobPK, int amountDue, Date startTime, boolean urgent) {
-        this.jobPK = jobPK;
+    public Job(String jobId, String description, int amountDue, boolean urgent) {
+        this.jobId = jobId;
+        this.description = description;
         this.amountDue = amountDue;
-        this.startTime = startTime;
         this.urgent = urgent;
     }
 
-    public Job(int jobId, String fkCustomerId, String fkEmail, int fkPaymentId) {
-        this.jobPK = new JobPK(jobId, fkCustomerId, fkEmail, fkPaymentId);
+    public String getJobId() {
+        return jobId;
     }
 
-    public JobPK getJobPK() {
-        return jobPK;
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
     }
 
-    public void setJobPK(JobPK jobPK) {
-        this.jobPK = jobPK;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getAmountDue() {
@@ -117,22 +136,6 @@ public class Job implements Serializable {
         this.deadline = deadline;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
     public boolean getUrgent() {
         return urgent;
     }
@@ -141,35 +144,36 @@ public class Job implements Serializable {
         this.urgent = urgent;
     }
 
-    public CustomerAccount getCustomerAccount() {
-        return customerAccount;
+    @XmlTransient
+    public List<PaymentInfo> getPaymentInfoList() {
+        return paymentInfoList;
     }
 
-    public void setCustomerAccount(CustomerAccount customerAccount) {
-        this.customerAccount = customerAccount;
-    }
-
-    public PaymentInfo getPaymentInfo() {
-        return paymentInfo;
-    }
-
-    public void setPaymentInfo(PaymentInfo paymentInfo) {
-        this.paymentInfo = paymentInfo;
+    public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
+        this.paymentInfoList = paymentInfoList;
     }
 
     @XmlTransient
-    public List<Tasks> getTasksList() {
-        return tasksList;
+    public List<JobTask> getJobTaskList() {
+        return jobTaskList;
     }
 
-    public void setTasksList(List<Tasks> tasksList) {
-        this.tasksList = tasksList;
+    public void setJobTaskList(List<JobTask> jobTaskList) {
+        this.jobTaskList = jobTaskList;
+    }
+
+    public CustomerAccount getFkAccountNumber() {
+        return fkAccountNumber;
+    }
+
+    public void setFkAccountNumber(CustomerAccount fkAccountNumber) {
+        this.fkAccountNumber = fkAccountNumber;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (jobPK != null ? jobPK.hashCode() : 0);
+        hash += (jobId != null ? jobId.hashCode() : 0);
         return hash;
     }
 
@@ -180,7 +184,7 @@ public class Job implements Serializable {
             return false;
         }
         Job other = (Job) object;
-        if ((this.jobPK == null && other.jobPK != null) || (this.jobPK != null && !this.jobPK.equals(other.jobPK))) {
+        if ((this.jobId == null && other.jobId != null) || (this.jobId != null && !this.jobId.equals(other.jobId))) {
             return false;
         }
         return true;
@@ -188,7 +192,7 @@ public class Job implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.Job[ jobPK=" + jobPK + " ]";
+        return "bapers.domain.Job[ jobId=" + jobId + " ]";
     }
     
 }

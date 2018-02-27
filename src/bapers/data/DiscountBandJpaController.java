@@ -27,14 +27,14 @@ package bapers.data;
 
 import bapers.data.exceptions.NonexistentEntityException;
 import bapers.data.exceptions.PreexistingEntityException;
-import bapers.domain.Address;
-import bapers.domain.AddressPK;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.domain.CustomerAccount;
+import bapers.domain.Discount;
+import bapers.domain.DiscountBand;
+import bapers.domain.DiscountBandPK;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -43,9 +43,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author chris
  */
-public class AddressJpaController implements Serializable {
+public class DiscountBandJpaController implements Serializable {
 
-    public AddressJpaController(EntityManagerFactory emf) {
+    public DiscountBandJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -54,29 +54,29 @@ public class AddressJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Address address) throws PreexistingEntityException, Exception {
-        if (address.getAddressPK() == null) {
-            address.setAddressPK(new AddressPK());
+    public void create(DiscountBand discountBand) throws PreexistingEntityException, Exception {
+        if (discountBand.getDiscountBandPK() == null) {
+            discountBand.setDiscountBandPK(new DiscountBandPK());
         }
-        address.getAddressPK().setFkAccountNumber(address.getCustomerAccount().getAccountNumber());
+        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getDiscount().getFkAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            CustomerAccount customerAccount = address.getCustomerAccount();
-            if (customerAccount != null) {
-                customerAccount = em.getReference(customerAccount.getClass(), customerAccount.getAccountNumber());
-                address.setCustomerAccount(customerAccount);
+            Discount discount = discountBand.getDiscount();
+            if (discount != null) {
+                discount = em.getReference(discount.getClass(), discount.getFkAccountNumber());
+                discountBand.setDiscount(discount);
             }
-            em.persist(address);
-            if (customerAccount != null) {
-                customerAccount.getAddressList().add(address);
-                customerAccount = em.merge(customerAccount);
+            em.persist(discountBand);
+            if (discount != null) {
+                discount.getDiscountBandList().add(discountBand);
+                discount = em.merge(discount);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findAddress(address.getAddressPK()) != null) {
-                throw new PreexistingEntityException("Address " + address + " already exists.", ex);
+            if (findDiscountBand(discountBand.getDiscountBandPK()) != null) {
+                throw new PreexistingEntityException("DiscountBand " + discountBand + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -86,35 +86,35 @@ public class AddressJpaController implements Serializable {
         }
     }
 
-    public void edit(Address address) throws NonexistentEntityException, Exception {
-        address.getAddressPK().setFkAccountNumber(address.getCustomerAccount().getAccountNumber());
+    public void edit(DiscountBand discountBand) throws NonexistentEntityException, Exception {
+        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getDiscount().getFkAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Address persistentAddress = em.find(Address.class, address.getAddressPK());
-            CustomerAccount customerAccountOld = persistentAddress.getCustomerAccount();
-            CustomerAccount customerAccountNew = address.getCustomerAccount();
-            if (customerAccountNew != null) {
-                customerAccountNew = em.getReference(customerAccountNew.getClass(), customerAccountNew.getAccountNumber());
-                address.setCustomerAccount(customerAccountNew);
+            DiscountBand persistentDiscountBand = em.find(DiscountBand.class, discountBand.getDiscountBandPK());
+            Discount discountOld = persistentDiscountBand.getDiscount();
+            Discount discountNew = discountBand.getDiscount();
+            if (discountNew != null) {
+                discountNew = em.getReference(discountNew.getClass(), discountNew.getFkAccountNumber());
+                discountBand.setDiscount(discountNew);
             }
-            address = em.merge(address);
-            if (customerAccountOld != null && !customerAccountOld.equals(customerAccountNew)) {
-                customerAccountOld.getAddressList().remove(address);
-                customerAccountOld = em.merge(customerAccountOld);
+            discountBand = em.merge(discountBand);
+            if (discountOld != null && !discountOld.equals(discountNew)) {
+                discountOld.getDiscountBandList().remove(discountBand);
+                discountOld = em.merge(discountOld);
             }
-            if (customerAccountNew != null && !customerAccountNew.equals(customerAccountOld)) {
-                customerAccountNew.getAddressList().add(address);
-                customerAccountNew = em.merge(customerAccountNew);
+            if (discountNew != null && !discountNew.equals(discountOld)) {
+                discountNew.getDiscountBandList().add(discountBand);
+                discountNew = em.merge(discountNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                AddressPK id = address.getAddressPK();
-                if (findAddress(id) == null) {
-                    throw new NonexistentEntityException("The address with id " + id + " no longer exists.");
+                DiscountBandPK id = discountBand.getDiscountBandPK();
+                if (findDiscountBand(id) == null) {
+                    throw new NonexistentEntityException("The discountBand with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -125,24 +125,24 @@ public class AddressJpaController implements Serializable {
         }
     }
 
-    public void destroy(AddressPK id) throws NonexistentEntityException {
+    public void destroy(DiscountBandPK id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Address address;
+            DiscountBand discountBand;
             try {
-                address = em.getReference(Address.class, id);
-                address.getAddressPK();
+                discountBand = em.getReference(DiscountBand.class, id);
+                discountBand.getDiscountBandPK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The address with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The discountBand with id " + id + " no longer exists.", enfe);
             }
-            CustomerAccount customerAccount = address.getCustomerAccount();
-            if (customerAccount != null) {
-                customerAccount.getAddressList().remove(address);
-                customerAccount = em.merge(customerAccount);
+            Discount discount = discountBand.getDiscount();
+            if (discount != null) {
+                discount.getDiscountBandList().remove(discountBand);
+                discount = em.merge(discount);
             }
-            em.remove(address);
+            em.remove(discountBand);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -151,19 +151,19 @@ public class AddressJpaController implements Serializable {
         }
     }
 
-    public List<Address> findAddressEntities() {
-        return findAddressEntities(true, -1, -1);
+    public List<DiscountBand> findDiscountBandEntities() {
+        return findDiscountBandEntities(true, -1, -1);
     }
 
-    public List<Address> findAddressEntities(int maxResults, int firstResult) {
-        return findAddressEntities(false, maxResults, firstResult);
+    public List<DiscountBand> findDiscountBandEntities(int maxResults, int firstResult) {
+        return findDiscountBandEntities(false, maxResults, firstResult);
     }
 
-    private List<Address> findAddressEntities(boolean all, int maxResults, int firstResult) {
+    private List<DiscountBand> findDiscountBandEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Address.class));
+            cq.select(cq.from(DiscountBand.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -175,20 +175,20 @@ public class AddressJpaController implements Serializable {
         }
     }
 
-    public Address findAddress(AddressPK id) {
+    public DiscountBand findDiscountBand(DiscountBandPK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Address.class, id);
+            return em.find(DiscountBand.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getAddressCount() {
+    public int getDiscountBandCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Address> rt = cq.from(Address.class);
+            Root<DiscountBand> rt = cq.from(DiscountBand.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

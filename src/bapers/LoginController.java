@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import bapers.service.UserService;
+import javafx.scene.input.KeyCode;
 
 /**
  * FXML Controller class
@@ -29,7 +29,7 @@ import bapers.service.UserService;
 public class LoginController implements Initializable {
 
     @FXML
-    private TextField txtUsername;
+    private TextField txtId;
     @FXML
     private TextField txtPassword;
     @FXML
@@ -45,32 +45,50 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnLogin.setOnAction((event) -> {
-        lblOut.setText("begin request "+(attempts++));
-
-            if (DAO.userExists(txtUsername.getText())
-                    && DAO.validHash(txtUsername.getText(),
-                            txtPassword.getText().trim())) {
-                
-                lblOut.setText("valid input");
-                attempts = 0;
-                bapers.SceneController.USER = DAO.getUser(txtUsername.getText());
-                try {
-                    Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/UserType.fxml"));
-                    Scene userTypeScene = new Scene(root);
-                    Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-                    stage.setScene(userTypeScene);
-                    stage.show();
-                } catch (IOException ex) {
-                    
-                }
-            
-                
-            } else {
-                lblOut.setText("invalid username or password\n"
-                        + "login attempts: " + (attempts++));
-            }
-            lblOut.autosize();
+        txtId.setOnKeyPressed((event) -> { 
+            if (event.getCode() == KeyCode.ENTER)
+                txtPassword.requestFocus();
         });
+        txtPassword.setOnKeyPressed((event) -> { 
+            if (event.getCode() == KeyCode.ENTER)
+                login();
+        });        
+        btnLogin.setOnAction((event) -> {
+            login();
+        });
+    }
+
+    private void login() {        
+        lblOut.setText("begin request " + (++attempts));
+
+        if (DAO.userExists(txtId.getText())
+                && DAO.validHash(txtId.getText(),
+                        txtPassword.getText().trim())) {
+
+            lblOut.setText("valid input");
+            attempts = 0;
+            bapers.SceneController.USER = DAO.getUser(txtId.getText());
+            try {
+                Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/UserType.fxml"));
+                Scene userTypeScene = new Scene(root);
+                Stage stage = (Stage)btnLogin.getScene().getWindow();
+//                Stage stage = (Stage) ((Node) this.getSource()).getScene().getWindow();
+                stage.setScene(userTypeScene);
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace(System.err);
+                System.exit(-1);
+            }
+        } else {
+            lblOut.setText("invalid id or password\n"
+                    + "login attempts: " + attempts);
+            txtPassword.setText("");
+            txtId.setText("");
+            txtId.requestFocus();
+//                stage.initModality(Modality.APPLICATION_MODAL);
+//                stage.showAndWait();
+
+        }
+        lblOut.autosize();
     }
 }

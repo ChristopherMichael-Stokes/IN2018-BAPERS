@@ -25,7 +25,7 @@
  */
 package bapers;
 
-import bapers.domain.User;
+import bapers.domain.Staff;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  */
 public class SceneController extends Application {
 
-    public static User USER;
+    public static Staff USER;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -48,9 +48,10 @@ public class SceneController extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/login.css");
 
-        stage.setTitle("User Types");
+        stage.setTitle("Staff Types");
         stage.setScene(scene);
         stage.show();
+        
 //        Runnable r = () -> {
 //            while (true) {
 //                if (USER == null) {

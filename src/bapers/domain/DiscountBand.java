@@ -26,7 +26,6 @@
 package bapers.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -43,81 +42,80 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author chris
  */
 @Entity
-@Table(name = "card_details")
+@Table(name = "discount_band")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CardDetails.findAll", query = "SELECT c FROM CardDetails c")
-    , @NamedQuery(name = "CardDetails.findByLastDigits", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.lastDigits = :lastDigits")
-    , @NamedQuery(name = "CardDetails.findByExpiryDate", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.expiryDate = :expiryDate")
-    , @NamedQuery(name = "CardDetails.findByFkPaymentId", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.fkPaymentId = :fkPaymentId")
-    , @NamedQuery(name = "CardDetails.findByCardType", query = "SELECT c FROM CardDetails c WHERE c.cardType = :cardType")})
-public class CardDetails implements Serializable {
+    @NamedQuery(name = "DiscountBand.findAll", query = "SELECT d FROM DiscountBand d")
+    , @NamedQuery(name = "DiscountBand.findByFkAccountNumber", query = "SELECT d FROM DiscountBand d WHERE d.discountBandPK.fkAccountNumber = :fkAccountNumber")
+    , @NamedQuery(name = "DiscountBand.findByPrice", query = "SELECT d FROM DiscountBand d WHERE d.discountBandPK.price = :price")
+    , @NamedQuery(name = "DiscountBand.findByPercentage", query = "SELECT d FROM DiscountBand d WHERE d.percentage = :percentage")})
+public class DiscountBand implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected CardDetailsPK cardDetailsPK;
+    protected DiscountBandPK discountBandPK;
     @Basic(optional = false)
-    @Column(name = "card_type")
-    private String cardType;
-    @JoinColumn(name = "fk_payment_id", referencedColumnName = "payment_id", insertable = false, updatable = false)
+    @Column(name = "percentage")
+    private float percentage;
+    @JoinColumn(name = "fk_account_number", referencedColumnName = "fk_account_number", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private PaymentInfo paymentInfo;
+    private Discount discount;
 
-    public CardDetails() {
+    public DiscountBand() {
     }
 
-    public CardDetails(CardDetailsPK cardDetailsPK) {
-        this.cardDetailsPK = cardDetailsPK;
+    public DiscountBand(DiscountBandPK discountBandPK) {
+        this.discountBandPK = discountBandPK;
     }
 
-    public CardDetails(CardDetailsPK cardDetailsPK, String cardType) {
-        this.cardDetailsPK = cardDetailsPK;
-        this.cardType = cardType;
+    public DiscountBand(DiscountBandPK discountBandPK, float percentage) {
+        this.discountBandPK = discountBandPK;
+        this.percentage = percentage;
     }
 
-    public CardDetails(String lastDigits, Date expiryDate, int fkPaymentId) {
-        this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate, fkPaymentId);
+    public DiscountBand(String fkAccountNumber, int price) {
+        this.discountBandPK = new DiscountBandPK(fkAccountNumber, price);
     }
 
-    public CardDetailsPK getCardDetailsPK() {
-        return cardDetailsPK;
+    public DiscountBandPK getDiscountBandPK() {
+        return discountBandPK;
     }
 
-    public void setCardDetailsPK(CardDetailsPK cardDetailsPK) {
-        this.cardDetailsPK = cardDetailsPK;
+    public void setDiscountBandPK(DiscountBandPK discountBandPK) {
+        this.discountBandPK = discountBandPK;
     }
 
-    public String getCardType() {
-        return cardType;
+    public float getPercentage() {
+        return percentage;
     }
 
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
+    public void setPercentage(float percentage) {
+        this.percentage = percentage;
     }
 
-    public PaymentInfo getPaymentInfo() {
-        return paymentInfo;
+    public Discount getDiscount() {
+        return discount;
     }
 
-    public void setPaymentInfo(PaymentInfo paymentInfo) {
-        this.paymentInfo = paymentInfo;
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (cardDetailsPK != null ? cardDetailsPK.hashCode() : 0);
+        hash += (discountBandPK != null ? discountBandPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CardDetails)) {
+        if (!(object instanceof DiscountBand)) {
             return false;
         }
-        CardDetails other = (CardDetails) object;
-        if ((this.cardDetailsPK == null && other.cardDetailsPK != null) || (this.cardDetailsPK != null && !this.cardDetailsPK.equals(other.cardDetailsPK))) {
+        DiscountBand other = (DiscountBand) object;
+        if ((this.discountBandPK == null && other.discountBandPK != null) || (this.discountBandPK != null && !this.discountBandPK.equals(other.discountBandPK))) {
             return false;
         }
         return true;
@@ -125,7 +123,7 @@ public class CardDetails implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.CardDetails[ cardDetailsPK=" + cardDetailsPK + " ]";
+        return "bapers.domain.DiscountBand[ discountBandPK=" + discountBandPK + " ]";
     }
     
 }

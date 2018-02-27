@@ -26,84 +26,63 @@
 package bapers.domain;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author chris
  */
 @Entity
-@Table(name = "address")
+@Table(name = "discount")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a")
-    , @NamedQuery(name = "Address.findByAddressLine1", query = "SELECT a FROM Address a WHERE a.addressPK.addressLine1 = :addressLine1")
-    , @NamedQuery(name = "Address.findByAddressLine2", query = "SELECT a FROM Address a WHERE a.addressLine2 = :addressLine2")
-    , @NamedQuery(name = "Address.findByPostcode", query = "SELECT a FROM Address a WHERE a.addressPK.postcode = :postcode")
-    , @NamedQuery(name = "Address.findByCity", query = "SELECT a FROM Address a WHERE a.addressPK.city = :city")
-    , @NamedQuery(name = "Address.findByCountry", query = "SELECT a FROM Address a WHERE a.country = :country")
-    , @NamedQuery(name = "Address.findByFkAccountNumber", query = "SELECT a FROM Address a WHERE a.addressPK.fkAccountNumber = :fkAccountNumber")})
-public class Address implements Serializable {
+    @NamedQuery(name = "Discount.findAll", query = "SELECT d FROM Discount d")
+    , @NamedQuery(name = "Discount.findByFkAccountNumber", query = "SELECT d FROM Discount d WHERE d.fkAccountNumber = :fkAccountNumber")})
+public class Discount implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected AddressPK addressPK;
-    @Column(name = "address_line2")
-    private String addressLine2;
+    @Id
     @Basic(optional = false)
-    @Column(name = "country")
-    private String country;
+    @Column(name = "fk_account_number")
+    private String fkAccountNumber;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private CustomerAccount customerAccount;
+    @JoinColumn(name = "fk_type", referencedColumnName = "type")
+    @ManyToOne(optional = false)
+    private DiscountPlan fkType;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discount")
+    private List<TaskDiscount> taskDiscountList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discount")
+    private List<DiscountBand> discountBandList;
 
-    public Address() {
+    public Discount() {
     }
 
-    public Address(AddressPK addressPK) {
-        this.addressPK = addressPK;
+    public Discount(String fkAccountNumber) {
+        this.fkAccountNumber = fkAccountNumber;
     }
 
-    public Address(AddressPK addressPK, String country) {
-        this.addressPK = addressPK;
-        this.country = country;
+    public String getFkAccountNumber() {
+        return fkAccountNumber;
     }
 
-    public Address(String addressLine1, String postcode, String city, String fkAccountNumber) {
-        this.addressPK = new AddressPK(addressLine1, postcode, city, fkAccountNumber);
-    }
-
-    public AddressPK getAddressPK() {
-        return addressPK;
-    }
-
-    public void setAddressPK(AddressPK addressPK) {
-        this.addressPK = addressPK;
-    }
-
-    public String getAddressLine2() {
-        return addressLine2;
-    }
-
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setFkAccountNumber(String fkAccountNumber) {
+        this.fkAccountNumber = fkAccountNumber;
     }
 
     public CustomerAccount getCustomerAccount() {
@@ -114,21 +93,47 @@ public class Address implements Serializable {
         this.customerAccount = customerAccount;
     }
 
+    public DiscountPlan getFkType() {
+        return fkType;
+    }
+
+    public void setFkType(DiscountPlan fkType) {
+        this.fkType = fkType;
+    }
+
+    @XmlTransient
+    public List<TaskDiscount> getTaskDiscountList() {
+        return taskDiscountList;
+    }
+
+    public void setTaskDiscountList(List<TaskDiscount> taskDiscountList) {
+        this.taskDiscountList = taskDiscountList;
+    }
+
+    @XmlTransient
+    public List<DiscountBand> getDiscountBandList() {
+        return discountBandList;
+    }
+
+    public void setDiscountBandList(List<DiscountBand> discountBandList) {
+        this.discountBandList = discountBandList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (addressPK != null ? addressPK.hashCode() : 0);
+        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Address)) {
+        if (!(object instanceof Discount)) {
             return false;
         }
-        Address other = (Address) object;
-        if ((this.addressPK == null && other.addressPK != null) || (this.addressPK != null && !this.addressPK.equals(other.addressPK))) {
+        Discount other = (Discount) object;
+        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
             return false;
         }
         return true;
@@ -136,7 +141,7 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.Address[ addressPK=" + addressPK + " ]";
+        return "bapers.domain.Discount[ fkAccountNumber=" + fkAccountNumber + " ]";
     }
     
 }

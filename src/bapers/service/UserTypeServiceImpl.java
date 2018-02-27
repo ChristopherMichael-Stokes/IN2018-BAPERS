@@ -11,10 +11,8 @@ import bapers.data.exceptions.IllegalOrphanException;
 import bapers.data.exceptions.NonexistentEntityException;
 import bapers.data.exceptions.PreexistingEntityException;
 import bapers.domain.UserType;
-import java.security.MessageDigest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -23,7 +21,7 @@ import javax.xml.bind.DatatypeConverter;
 public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeJpaController controller;
-    private ObservableList<UserType> items;
+    private final ObservableList<UserType> items;
 
     public UserTypeServiceImpl() {
         controller = new UserTypeJpaController(EMF);
@@ -56,23 +54,5 @@ public class UserTypeServiceImpl implements UserTypeService {
         updateUserType();
         return items;
     }
-
-    @Override
-    public void setItems(ObservableList<UserType> items) {
-        this.items = items;
-    }
-
-    private String getStringHash(byte[] stringBytes, String algorithm) {
-        String hashValue = null;
-        try {
-            MessageDigest m = MessageDigest.getInstance(algorithm);
-            m.update(stringBytes);
-            byte[] bytesArray = m.digest();
-            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
-        } catch (Exception e) {
-            return "error";
-        }
-        return hashValue;
-    }
-
+  
 }

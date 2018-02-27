@@ -8,7 +8,6 @@
     <class>bapers.domain.Job</class>
     <class>bapers.domain.Address</class>
     <class>bapers.domain.Payment</class>
-    <class>bapers.domain.User</class>
     <class>bapers.domain.CardDetails</class>
     <class>bapers.domain.DiscountPlan</class>
     <class>bapers.domain.Task</class>
@@ -24,6 +23,11 @@
     <class>bapers.Jobtasks</class>
     <class>bapers.CustomerAccount</class>
     <class>bapers.domain.Tasks</class>
+    <class>bapers.domain.Staff</class>
+    <class>bapers.domain.Discount</class>
+    <class>bapers.domain.JobTask</class>
+    <class>bapers.domain.TaskDiscount</class>
+    <class>bapers.domain.DiscountBand</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bapers?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;useSSL=true"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

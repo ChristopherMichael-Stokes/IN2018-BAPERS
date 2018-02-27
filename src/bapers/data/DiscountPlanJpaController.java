@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
@@ -13,7 +33,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.domain.CustomerAccount;
+import bapers.domain.Discount;
 import bapers.domain.DiscountPlan;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +56,27 @@ public class DiscountPlanJpaController implements Serializable {
     }
 
     public void create(DiscountPlan discountPlan) throws PreexistingEntityException, Exception {
-        if (discountPlan.getCustomerAccountList() == null) {
-            discountPlan.setCustomerAccountList(new ArrayList<CustomerAccount>());
+        if (discountPlan.getDiscountList() == null) {
+            discountPlan.setDiscountList(new ArrayList<Discount>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<CustomerAccount> attachedCustomerAccountList = new ArrayList<CustomerAccount>();
-            for (CustomerAccount customerAccountListCustomerAccountToAttach : discountPlan.getCustomerAccountList()) {
-                customerAccountListCustomerAccountToAttach = em.getReference(customerAccountListCustomerAccountToAttach.getClass(), customerAccountListCustomerAccountToAttach.getCustomerAccountPK());
-                attachedCustomerAccountList.add(customerAccountListCustomerAccountToAttach);
+            List<Discount> attachedDiscountList = new ArrayList<Discount>();
+            for (Discount discountListDiscountToAttach : discountPlan.getDiscountList()) {
+                discountListDiscountToAttach = em.getReference(discountListDiscountToAttach.getClass(), discountListDiscountToAttach.getFkAccountNumber());
+                attachedDiscountList.add(discountListDiscountToAttach);
             }
-            discountPlan.setCustomerAccountList(attachedCustomerAccountList);
+            discountPlan.setDiscountList(attachedDiscountList);
             em.persist(discountPlan);
-            for (CustomerAccount customerAccountListCustomerAccount : discountPlan.getCustomerAccountList()) {
-                DiscountPlan oldFkPlantypeOfCustomerAccountListCustomerAccount = customerAccountListCustomerAccount.getFkPlantype();
-                customerAccountListCustomerAccount.setFkPlantype(discountPlan);
-                customerAccountListCustomerAccount = em.merge(customerAccountListCustomerAccount);
-                if (oldFkPlantypeOfCustomerAccountListCustomerAccount != null) {
-                    oldFkPlantypeOfCustomerAccountListCustomerAccount.getCustomerAccountList().remove(customerAccountListCustomerAccount);
-                    oldFkPlantypeOfCustomerAccountListCustomerAccount = em.merge(oldFkPlantypeOfCustomerAccountListCustomerAccount);
+            for (Discount discountListDiscount : discountPlan.getDiscountList()) {
+                DiscountPlan oldFkTypeOfDiscountListDiscount = discountListDiscount.getFkType();
+                discountListDiscount.setFkType(discountPlan);
+                discountListDiscount = em.merge(discountListDiscount);
+                if (oldFkTypeOfDiscountListDiscount != null) {
+                    oldFkTypeOfDiscountListDiscount.getDiscountList().remove(discountListDiscount);
+                    oldFkTypeOfDiscountListDiscount = em.merge(oldFkTypeOfDiscountListDiscount);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +98,36 @@ public class DiscountPlanJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             DiscountPlan persistentDiscountPlan = em.find(DiscountPlan.class, discountPlan.getType());
-            List<CustomerAccount> customerAccountListOld = persistentDiscountPlan.getCustomerAccountList();
-            List<CustomerAccount> customerAccountListNew = discountPlan.getCustomerAccountList();
+            List<Discount> discountListOld = persistentDiscountPlan.getDiscountList();
+            List<Discount> discountListNew = discountPlan.getDiscountList();
             List<String> illegalOrphanMessages = null;
-            for (CustomerAccount customerAccountListOldCustomerAccount : customerAccountListOld) {
-                if (!customerAccountListNew.contains(customerAccountListOldCustomerAccount)) {
+            for (Discount discountListOldDiscount : discountListOld) {
+                if (!discountListNew.contains(discountListOldDiscount)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain CustomerAccount " + customerAccountListOldCustomerAccount + " since its fkPlantype field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Discount " + discountListOldDiscount + " since its fkType field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<CustomerAccount> attachedCustomerAccountListNew = new ArrayList<CustomerAccount>();
-            for (CustomerAccount customerAccountListNewCustomerAccountToAttach : customerAccountListNew) {
-                customerAccountListNewCustomerAccountToAttach = em.getReference(customerAccountListNewCustomerAccountToAttach.getClass(), customerAccountListNewCustomerAccountToAttach.getCustomerAccountPK());
-                attachedCustomerAccountListNew.add(customerAccountListNewCustomerAccountToAttach);
+            List<Discount> attachedDiscountListNew = new ArrayList<Discount>();
+            for (Discount discountListNewDiscountToAttach : discountListNew) {
+                discountListNewDiscountToAttach = em.getReference(discountListNewDiscountToAttach.getClass(), discountListNewDiscountToAttach.getFkAccountNumber());
+                attachedDiscountListNew.add(discountListNewDiscountToAttach);
             }
-            customerAccountListNew = attachedCustomerAccountListNew;
-            discountPlan.setCustomerAccountList(customerAccountListNew);
+            discountListNew = attachedDiscountListNew;
+            discountPlan.setDiscountList(discountListNew);
             discountPlan = em.merge(discountPlan);
-            for (CustomerAccount customerAccountListNewCustomerAccount : customerAccountListNew) {
-                if (!customerAccountListOld.contains(customerAccountListNewCustomerAccount)) {
-                    DiscountPlan oldFkPlantypeOfCustomerAccountListNewCustomerAccount = customerAccountListNewCustomerAccount.getFkPlantype();
-                    customerAccountListNewCustomerAccount.setFkPlantype(discountPlan);
-                    customerAccountListNewCustomerAccount = em.merge(customerAccountListNewCustomerAccount);
-                    if (oldFkPlantypeOfCustomerAccountListNewCustomerAccount != null && !oldFkPlantypeOfCustomerAccountListNewCustomerAccount.equals(discountPlan)) {
-                        oldFkPlantypeOfCustomerAccountListNewCustomerAccount.getCustomerAccountList().remove(customerAccountListNewCustomerAccount);
-                        oldFkPlantypeOfCustomerAccountListNewCustomerAccount = em.merge(oldFkPlantypeOfCustomerAccountListNewCustomerAccount);
+            for (Discount discountListNewDiscount : discountListNew) {
+                if (!discountListOld.contains(discountListNewDiscount)) {
+                    DiscountPlan oldFkTypeOfDiscountListNewDiscount = discountListNewDiscount.getFkType();
+                    discountListNewDiscount.setFkType(discountPlan);
+                    discountListNewDiscount = em.merge(discountListNewDiscount);
+                    if (oldFkTypeOfDiscountListNewDiscount != null && !oldFkTypeOfDiscountListNewDiscount.equals(discountPlan)) {
+                        oldFkTypeOfDiscountListNewDiscount.getDiscountList().remove(discountListNewDiscount);
+                        oldFkTypeOfDiscountListNewDiscount = em.merge(oldFkTypeOfDiscountListNewDiscount);
                     }
                 }
             }
@@ -141,12 +161,12 @@ public class DiscountPlanJpaController implements Serializable {
                 throw new NonexistentEntityException("The discountPlan with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<CustomerAccount> customerAccountListOrphanCheck = discountPlan.getCustomerAccountList();
-            for (CustomerAccount customerAccountListOrphanCheckCustomerAccount : customerAccountListOrphanCheck) {
+            List<Discount> discountListOrphanCheck = discountPlan.getDiscountList();
+            for (Discount discountListOrphanCheckDiscount : discountListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This DiscountPlan (" + discountPlan + ") cannot be destroyed since the CustomerAccount " + customerAccountListOrphanCheckCustomerAccount + " in its customerAccountList field has a non-nullable fkPlantype field.");
+                illegalOrphanMessages.add("This DiscountPlan (" + discountPlan + ") cannot be destroyed since the Discount " + discountListOrphanCheckDiscount + " in its discountList field has a non-nullable fkType field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

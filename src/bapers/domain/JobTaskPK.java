@@ -26,78 +26,67 @@
 package bapers.domain;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author chris
  */
-@Entity
-@Table(name = "user_type")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UserType.findAll", query = "SELECT u FROM UserType u")
-    , @NamedQuery(name = "UserType.findByType", query = "SELECT u FROM UserType u WHERE u.type = :type")})
-public class UserType implements Serializable {
+@Embeddable
+public class JobTaskPK implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
     @Basic(optional = false)
-    @Column(name = "type")
-    private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkType")
-    private List<Staff> staffList;
+    @Column(name = "fk_job_id")
+    private String fkJobId;
+    @Basic(optional = false)
+    @Column(name = "fk_task_id")
+    private int fkTaskId;
 
-    public UserType() {
+    public JobTaskPK() {
     }
 
-    public UserType(String type) {
-        this.type = type;
+    public JobTaskPK(String fkJobId, int fkTaskId) {
+        this.fkJobId = fkJobId;
+        this.fkTaskId = fkTaskId;
     }
 
-    public String getType() {
-        return type;
+    public String getFkJobId() {
+        return fkJobId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFkJobId(String fkJobId) {
+        this.fkJobId = fkJobId;
     }
 
-    @XmlTransient
-    public List<Staff> getStaffList() {
-        return staffList;
+    public int getFkTaskId() {
+        return fkTaskId;
     }
 
-    public void setStaffList(List<Staff> staffList) {
-        this.staffList = staffList;
+    public void setFkTaskId(int fkTaskId) {
+        this.fkTaskId = fkTaskId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (type != null ? type.hashCode() : 0);
+        hash += (fkJobId != null ? fkJobId.hashCode() : 0);
+        hash += (int) fkTaskId;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserType)) {
+        if (!(object instanceof JobTaskPK)) {
             return false;
         }
-        UserType other = (UserType) object;
-        if ((this.type == null && other.type != null) || (this.type != null && !this.type.equals(other.type))) {
+        JobTaskPK other = (JobTaskPK) object;
+        if ((this.fkJobId == null && other.fkJobId != null) || (this.fkJobId != null && !this.fkJobId.equals(other.fkJobId))) {
+            return false;
+        }
+        if (this.fkTaskId != other.fkTaskId) {
             return false;
         }
         return true;
@@ -105,7 +94,7 @@ public class UserType implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.UserType[ type=" + type + " ]";
+        return "bapers.domain.JobTaskPK[ fkJobId=" + fkJobId + ", fkTaskId=" + fkTaskId + " ]";
     }
     
 }

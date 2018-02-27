@@ -26,78 +26,67 @@
 package bapers.domain;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author chris
  */
-@Entity
-@Table(name = "user_type")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UserType.findAll", query = "SELECT u FROM UserType u")
-    , @NamedQuery(name = "UserType.findByType", query = "SELECT u FROM UserType u WHERE u.type = :type")})
-public class UserType implements Serializable {
+@Embeddable
+public class DiscountBandPK implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
     @Basic(optional = false)
-    @Column(name = "type")
-    private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkType")
-    private List<Staff> staffList;
+    @Column(name = "fk_account_number")
+    private String fkAccountNumber;
+    @Basic(optional = false)
+    @Column(name = "price")
+    private int price;
 
-    public UserType() {
+    public DiscountBandPK() {
     }
 
-    public UserType(String type) {
-        this.type = type;
+    public DiscountBandPK(String fkAccountNumber, int price) {
+        this.fkAccountNumber = fkAccountNumber;
+        this.price = price;
     }
 
-    public String getType() {
-        return type;
+    public String getFkAccountNumber() {
+        return fkAccountNumber;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFkAccountNumber(String fkAccountNumber) {
+        this.fkAccountNumber = fkAccountNumber;
     }
 
-    @XmlTransient
-    public List<Staff> getStaffList() {
-        return staffList;
+    public int getPrice() {
+        return price;
     }
 
-    public void setStaffList(List<Staff> staffList) {
-        this.staffList = staffList;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (type != null ? type.hashCode() : 0);
+        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
+        hash += (int) price;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserType)) {
+        if (!(object instanceof DiscountBandPK)) {
             return false;
         }
-        UserType other = (UserType) object;
-        if ((this.type == null && other.type != null) || (this.type != null && !this.type.equals(other.type))) {
+        DiscountBandPK other = (DiscountBandPK) object;
+        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
+            return false;
+        }
+        if (this.price != other.price) {
             return false;
         }
         return true;
@@ -105,7 +94,7 @@ public class UserType implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.UserType[ type=" + type + " ]";
+        return "bapers.domain.DiscountBandPK[ fkAccountNumber=" + fkAccountNumber + ", price=" + price + " ]";
     }
     
 }

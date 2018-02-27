@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
@@ -13,7 +33,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.domain.User;
+import bapers.domain.Staff;
 import bapers.domain.UserType;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,27 +56,27 @@ public class UserTypeJpaController implements Serializable {
     }
 
     public void create(UserType userType) throws PreexistingEntityException, Exception {
-        if (userType.getUserList() == null) {
-            userType.setUserList(new ArrayList<User>());
+        if (userType.getStaffList() == null) {
+            userType.setStaffList(new ArrayList<Staff>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<User> attachedUserList = new ArrayList<User>();
-            for (User userListUserToAttach : userType.getUserList()) {
-                userListUserToAttach = em.getReference(userListUserToAttach.getClass(), userListUserToAttach.getUsername());
-                attachedUserList.add(userListUserToAttach);
+            List<Staff> attachedStaffList = new ArrayList<Staff>();
+            for (Staff staffListStaffToAttach : userType.getStaffList()) {
+                staffListStaffToAttach = em.getReference(staffListStaffToAttach.getClass(), staffListStaffToAttach.getStaffId());
+                attachedStaffList.add(staffListStaffToAttach);
             }
-            userType.setUserList(attachedUserList);
+            userType.setStaffList(attachedStaffList);
             em.persist(userType);
-            for (User userListUser : userType.getUserList()) {
-                UserType oldFkTypeOfUserListUser = userListUser.getFkType();
-                userListUser.setFkType(userType);
-                userListUser = em.merge(userListUser);
-                if (oldFkTypeOfUserListUser != null) {
-                    oldFkTypeOfUserListUser.getUserList().remove(userListUser);
-                    oldFkTypeOfUserListUser = em.merge(oldFkTypeOfUserListUser);
+            for (Staff staffListStaff : userType.getStaffList()) {
+                UserType oldFkTypeOfStaffListStaff = staffListStaff.getFkType();
+                staffListStaff.setFkType(userType);
+                staffListStaff = em.merge(staffListStaff);
+                if (oldFkTypeOfStaffListStaff != null) {
+                    oldFkTypeOfStaffListStaff.getStaffList().remove(staffListStaff);
+                    oldFkTypeOfStaffListStaff = em.merge(oldFkTypeOfStaffListStaff);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +98,36 @@ public class UserTypeJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             UserType persistentUserType = em.find(UserType.class, userType.getType());
-            List<User> userListOld = persistentUserType.getUserList();
-            List<User> userListNew = userType.getUserList();
+            List<Staff> staffListOld = persistentUserType.getStaffList();
+            List<Staff> staffListNew = userType.getStaffList();
             List<String> illegalOrphanMessages = null;
-            for (User userListOldUser : userListOld) {
-                if (!userListNew.contains(userListOldUser)) {
+            for (Staff staffListOldStaff : staffListOld) {
+                if (!staffListNew.contains(staffListOldStaff)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain User " + userListOldUser + " since its fkType field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Staff " + staffListOldStaff + " since its fkType field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<User> attachedUserListNew = new ArrayList<User>();
-            for (User userListNewUserToAttach : userListNew) {
-                userListNewUserToAttach = em.getReference(userListNewUserToAttach.getClass(), userListNewUserToAttach.getUsername());
-                attachedUserListNew.add(userListNewUserToAttach);
+            List<Staff> attachedStaffListNew = new ArrayList<Staff>();
+            for (Staff staffListNewStaffToAttach : staffListNew) {
+                staffListNewStaffToAttach = em.getReference(staffListNewStaffToAttach.getClass(), staffListNewStaffToAttach.getStaffId());
+                attachedStaffListNew.add(staffListNewStaffToAttach);
             }
-            userListNew = attachedUserListNew;
-            userType.setUserList(userListNew);
+            staffListNew = attachedStaffListNew;
+            userType.setStaffList(staffListNew);
             userType = em.merge(userType);
-            for (User userListNewUser : userListNew) {
-                if (!userListOld.contains(userListNewUser)) {
-                    UserType oldFkTypeOfUserListNewUser = userListNewUser.getFkType();
-                    userListNewUser.setFkType(userType);
-                    userListNewUser = em.merge(userListNewUser);
-                    if (oldFkTypeOfUserListNewUser != null && !oldFkTypeOfUserListNewUser.equals(userType)) {
-                        oldFkTypeOfUserListNewUser.getUserList().remove(userListNewUser);
-                        oldFkTypeOfUserListNewUser = em.merge(oldFkTypeOfUserListNewUser);
+            for (Staff staffListNewStaff : staffListNew) {
+                if (!staffListOld.contains(staffListNewStaff)) {
+                    UserType oldFkTypeOfStaffListNewStaff = staffListNewStaff.getFkType();
+                    staffListNewStaff.setFkType(userType);
+                    staffListNewStaff = em.merge(staffListNewStaff);
+                    if (oldFkTypeOfStaffListNewStaff != null && !oldFkTypeOfStaffListNewStaff.equals(userType)) {
+                        oldFkTypeOfStaffListNewStaff.getStaffList().remove(staffListNewStaff);
+                        oldFkTypeOfStaffListNewStaff = em.merge(oldFkTypeOfStaffListNewStaff);
                     }
                 }
             }
@@ -141,12 +161,12 @@ public class UserTypeJpaController implements Serializable {
                 throw new NonexistentEntityException("The userType with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<User> userListOrphanCheck = userType.getUserList();
-            for (User userListOrphanCheckUser : userListOrphanCheck) {
+            List<Staff> staffListOrphanCheck = userType.getStaffList();
+            for (Staff staffListOrphanCheckStaff : staffListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This UserType (" + userType + ") cannot be destroyed since the User " + userListOrphanCheckUser + " in its userList field has a non-nullable fkType field.");
+                illegalOrphanMessages.add("This UserType (" + userType + ") cannot be destroyed since the Staff " + staffListOrphanCheckStaff + " in its staffList field has a non-nullable fkType field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

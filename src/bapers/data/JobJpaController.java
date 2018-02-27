@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
@@ -15,11 +35,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.domain.CustomerAccount;
 import bapers.domain.Job;
-import bapers.domain.JobPK;
 import bapers.domain.PaymentInfo;
-import bapers.domain.Tasks;
 import java.util.ArrayList;
 import java.util.List;
+import bapers.domain.JobTask;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -39,56 +58,54 @@ public class JobJpaController implements Serializable {
     }
 
     public void create(Job job) throws PreexistingEntityException, Exception {
-        if (job.getJobPK() == null) {
-            job.setJobPK(new JobPK());
+        if (job.getPaymentInfoList() == null) {
+            job.setPaymentInfoList(new ArrayList<PaymentInfo>());
         }
-        if (job.getTasksList() == null) {
-            job.setTasksList(new ArrayList<Tasks>());
+        if (job.getJobTaskList() == null) {
+            job.setJobTaskList(new ArrayList<JobTask>());
         }
-        job.getJobPK().setFkEmail(job.getCustomerAccount().getCustomerAccountPK().getEmail());
-        job.getJobPK().setFkPaymentId(job.getPaymentInfo().getPaymentId());
-        job.getJobPK().setFkCustomerId(job.getCustomerAccount().getCustomerAccountPK().getCustomerId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            CustomerAccount customerAccount = job.getCustomerAccount();
-            if (customerAccount != null) {
-                customerAccount = em.getReference(customerAccount.getClass(), customerAccount.getCustomerAccountPK());
-                job.setCustomerAccount(customerAccount);
+            CustomerAccount fkAccountNumber = job.getFkAccountNumber();
+            if (fkAccountNumber != null) {
+                fkAccountNumber = em.getReference(fkAccountNumber.getClass(), fkAccountNumber.getAccountNumber());
+                job.setFkAccountNumber(fkAccountNumber);
             }
-            PaymentInfo paymentInfo = job.getPaymentInfo();
-            if (paymentInfo != null) {
-                paymentInfo = em.getReference(paymentInfo.getClass(), paymentInfo.getPaymentId());
-                job.setPaymentInfo(paymentInfo);
+            List<PaymentInfo> attachedPaymentInfoList = new ArrayList<PaymentInfo>();
+            for (PaymentInfo paymentInfoListPaymentInfoToAttach : job.getPaymentInfoList()) {
+                paymentInfoListPaymentInfoToAttach = em.getReference(paymentInfoListPaymentInfoToAttach.getClass(), paymentInfoListPaymentInfoToAttach.getPaymentId());
+                attachedPaymentInfoList.add(paymentInfoListPaymentInfoToAttach);
             }
-            List<Tasks> attachedTasksList = new ArrayList<Tasks>();
-            for (Tasks tasksListTasksToAttach : job.getTasksList()) {
-                tasksListTasksToAttach = em.getReference(tasksListTasksToAttach.getClass(), tasksListTasksToAttach.getTasksPK());
-                attachedTasksList.add(tasksListTasksToAttach);
+            job.setPaymentInfoList(attachedPaymentInfoList);
+            List<JobTask> attachedJobTaskList = new ArrayList<JobTask>();
+            for (JobTask jobTaskListJobTaskToAttach : job.getJobTaskList()) {
+                jobTaskListJobTaskToAttach = em.getReference(jobTaskListJobTaskToAttach.getClass(), jobTaskListJobTaskToAttach.getJobTaskPK());
+                attachedJobTaskList.add(jobTaskListJobTaskToAttach);
             }
-            job.setTasksList(attachedTasksList);
+            job.setJobTaskList(attachedJobTaskList);
             em.persist(job);
-            if (customerAccount != null) {
-                customerAccount.getJobList().add(job);
-                customerAccount = em.merge(customerAccount);
+            if (fkAccountNumber != null) {
+                fkAccountNumber.getJobList().add(job);
+                fkAccountNumber = em.merge(fkAccountNumber);
             }
-            if (paymentInfo != null) {
-                paymentInfo.getJobList().add(job);
-                paymentInfo = em.merge(paymentInfo);
+            for (PaymentInfo paymentInfoListPaymentInfo : job.getPaymentInfoList()) {
+                paymentInfoListPaymentInfo.getJobList().add(job);
+                paymentInfoListPaymentInfo = em.merge(paymentInfoListPaymentInfo);
             }
-            for (Tasks tasksListTasks : job.getTasksList()) {
-                Job oldJobOfTasksListTasks = tasksListTasks.getJob();
-                tasksListTasks.setJob(job);
-                tasksListTasks = em.merge(tasksListTasks);
-                if (oldJobOfTasksListTasks != null) {
-                    oldJobOfTasksListTasks.getTasksList().remove(tasksListTasks);
-                    oldJobOfTasksListTasks = em.merge(oldJobOfTasksListTasks);
+            for (JobTask jobTaskListJobTask : job.getJobTaskList()) {
+                Job oldJobOfJobTaskListJobTask = jobTaskListJobTask.getJob();
+                jobTaskListJobTask.setJob(job);
+                jobTaskListJobTask = em.merge(jobTaskListJobTask);
+                if (oldJobOfJobTaskListJobTask != null) {
+                    oldJobOfJobTaskListJobTask.getJobTaskList().remove(jobTaskListJobTask);
+                    oldJobOfJobTaskListJobTask = em.merge(oldJobOfJobTaskListJobTask);
                 }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findJob(job.getJobPK()) != null) {
+            if (findJob(job.getJobId()) != null) {
                 throw new PreexistingEntityException("Job " + job + " already exists.", ex);
             }
             throw ex;
@@ -100,72 +117,76 @@ public class JobJpaController implements Serializable {
     }
 
     public void edit(Job job) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        job.getJobPK().setFkEmail(job.getCustomerAccount().getCustomerAccountPK().getEmail());
-        job.getJobPK().setFkPaymentId(job.getPaymentInfo().getPaymentId());
-        job.getJobPK().setFkCustomerId(job.getCustomerAccount().getCustomerAccountPK().getCustomerId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Job persistentJob = em.find(Job.class, job.getJobPK());
-            CustomerAccount customerAccountOld = persistentJob.getCustomerAccount();
-            CustomerAccount customerAccountNew = job.getCustomerAccount();
-            PaymentInfo paymentInfoOld = persistentJob.getPaymentInfo();
-            PaymentInfo paymentInfoNew = job.getPaymentInfo();
-            List<Tasks> tasksListOld = persistentJob.getTasksList();
-            List<Tasks> tasksListNew = job.getTasksList();
+            Job persistentJob = em.find(Job.class, job.getJobId());
+            CustomerAccount fkAccountNumberOld = persistentJob.getFkAccountNumber();
+            CustomerAccount fkAccountNumberNew = job.getFkAccountNumber();
+            List<PaymentInfo> paymentInfoListOld = persistentJob.getPaymentInfoList();
+            List<PaymentInfo> paymentInfoListNew = job.getPaymentInfoList();
+            List<JobTask> jobTaskListOld = persistentJob.getJobTaskList();
+            List<JobTask> jobTaskListNew = job.getJobTaskList();
             List<String> illegalOrphanMessages = null;
-            for (Tasks tasksListOldTasks : tasksListOld) {
-                if (!tasksListNew.contains(tasksListOldTasks)) {
+            for (JobTask jobTaskListOldJobTask : jobTaskListOld) {
+                if (!jobTaskListNew.contains(jobTaskListOldJobTask)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Tasks " + tasksListOldTasks + " since its job field is not nullable.");
+                    illegalOrphanMessages.add("You must retain JobTask " + jobTaskListOldJobTask + " since its job field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (customerAccountNew != null) {
-                customerAccountNew = em.getReference(customerAccountNew.getClass(), customerAccountNew.getCustomerAccountPK());
-                job.setCustomerAccount(customerAccountNew);
+            if (fkAccountNumberNew != null) {
+                fkAccountNumberNew = em.getReference(fkAccountNumberNew.getClass(), fkAccountNumberNew.getAccountNumber());
+                job.setFkAccountNumber(fkAccountNumberNew);
             }
-            if (paymentInfoNew != null) {
-                paymentInfoNew = em.getReference(paymentInfoNew.getClass(), paymentInfoNew.getPaymentId());
-                job.setPaymentInfo(paymentInfoNew);
+            List<PaymentInfo> attachedPaymentInfoListNew = new ArrayList<PaymentInfo>();
+            for (PaymentInfo paymentInfoListNewPaymentInfoToAttach : paymentInfoListNew) {
+                paymentInfoListNewPaymentInfoToAttach = em.getReference(paymentInfoListNewPaymentInfoToAttach.getClass(), paymentInfoListNewPaymentInfoToAttach.getPaymentId());
+                attachedPaymentInfoListNew.add(paymentInfoListNewPaymentInfoToAttach);
             }
-            List<Tasks> attachedTasksListNew = new ArrayList<Tasks>();
-            for (Tasks tasksListNewTasksToAttach : tasksListNew) {
-                tasksListNewTasksToAttach = em.getReference(tasksListNewTasksToAttach.getClass(), tasksListNewTasksToAttach.getTasksPK());
-                attachedTasksListNew.add(tasksListNewTasksToAttach);
+            paymentInfoListNew = attachedPaymentInfoListNew;
+            job.setPaymentInfoList(paymentInfoListNew);
+            List<JobTask> attachedJobTaskListNew = new ArrayList<JobTask>();
+            for (JobTask jobTaskListNewJobTaskToAttach : jobTaskListNew) {
+                jobTaskListNewJobTaskToAttach = em.getReference(jobTaskListNewJobTaskToAttach.getClass(), jobTaskListNewJobTaskToAttach.getJobTaskPK());
+                attachedJobTaskListNew.add(jobTaskListNewJobTaskToAttach);
             }
-            tasksListNew = attachedTasksListNew;
-            job.setTasksList(tasksListNew);
+            jobTaskListNew = attachedJobTaskListNew;
+            job.setJobTaskList(jobTaskListNew);
             job = em.merge(job);
-            if (customerAccountOld != null && !customerAccountOld.equals(customerAccountNew)) {
-                customerAccountOld.getJobList().remove(job);
-                customerAccountOld = em.merge(customerAccountOld);
+            if (fkAccountNumberOld != null && !fkAccountNumberOld.equals(fkAccountNumberNew)) {
+                fkAccountNumberOld.getJobList().remove(job);
+                fkAccountNumberOld = em.merge(fkAccountNumberOld);
             }
-            if (customerAccountNew != null && !customerAccountNew.equals(customerAccountOld)) {
-                customerAccountNew.getJobList().add(job);
-                customerAccountNew = em.merge(customerAccountNew);
+            if (fkAccountNumberNew != null && !fkAccountNumberNew.equals(fkAccountNumberOld)) {
+                fkAccountNumberNew.getJobList().add(job);
+                fkAccountNumberNew = em.merge(fkAccountNumberNew);
             }
-            if (paymentInfoOld != null && !paymentInfoOld.equals(paymentInfoNew)) {
-                paymentInfoOld.getJobList().remove(job);
-                paymentInfoOld = em.merge(paymentInfoOld);
+            for (PaymentInfo paymentInfoListOldPaymentInfo : paymentInfoListOld) {
+                if (!paymentInfoListNew.contains(paymentInfoListOldPaymentInfo)) {
+                    paymentInfoListOldPaymentInfo.getJobList().remove(job);
+                    paymentInfoListOldPaymentInfo = em.merge(paymentInfoListOldPaymentInfo);
+                }
             }
-            if (paymentInfoNew != null && !paymentInfoNew.equals(paymentInfoOld)) {
-                paymentInfoNew.getJobList().add(job);
-                paymentInfoNew = em.merge(paymentInfoNew);
+            for (PaymentInfo paymentInfoListNewPaymentInfo : paymentInfoListNew) {
+                if (!paymentInfoListOld.contains(paymentInfoListNewPaymentInfo)) {
+                    paymentInfoListNewPaymentInfo.getJobList().add(job);
+                    paymentInfoListNewPaymentInfo = em.merge(paymentInfoListNewPaymentInfo);
+                }
             }
-            for (Tasks tasksListNewTasks : tasksListNew) {
-                if (!tasksListOld.contains(tasksListNewTasks)) {
-                    Job oldJobOfTasksListNewTasks = tasksListNewTasks.getJob();
-                    tasksListNewTasks.setJob(job);
-                    tasksListNewTasks = em.merge(tasksListNewTasks);
-                    if (oldJobOfTasksListNewTasks != null && !oldJobOfTasksListNewTasks.equals(job)) {
-                        oldJobOfTasksListNewTasks.getTasksList().remove(tasksListNewTasks);
-                        oldJobOfTasksListNewTasks = em.merge(oldJobOfTasksListNewTasks);
+            for (JobTask jobTaskListNewJobTask : jobTaskListNew) {
+                if (!jobTaskListOld.contains(jobTaskListNewJobTask)) {
+                    Job oldJobOfJobTaskListNewJobTask = jobTaskListNewJobTask.getJob();
+                    jobTaskListNewJobTask.setJob(job);
+                    jobTaskListNewJobTask = em.merge(jobTaskListNewJobTask);
+                    if (oldJobOfJobTaskListNewJobTask != null && !oldJobOfJobTaskListNewJobTask.equals(job)) {
+                        oldJobOfJobTaskListNewJobTask.getJobTaskList().remove(jobTaskListNewJobTask);
+                        oldJobOfJobTaskListNewJobTask = em.merge(oldJobOfJobTaskListNewJobTask);
                     }
                 }
             }
@@ -173,7 +194,7 @@ public class JobJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                JobPK id = job.getJobPK();
+                String id = job.getJobId();
                 if (findJob(id) == null) {
                     throw new NonexistentEntityException("The job with id " + id + " no longer exists.");
                 }
@@ -186,7 +207,7 @@ public class JobJpaController implements Serializable {
         }
     }
 
-    public void destroy(JobPK id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -194,30 +215,30 @@ public class JobJpaController implements Serializable {
             Job job;
             try {
                 job = em.getReference(Job.class, id);
-                job.getJobPK();
+                job.getJobId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The job with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Tasks> tasksListOrphanCheck = job.getTasksList();
-            for (Tasks tasksListOrphanCheckTasks : tasksListOrphanCheck) {
+            List<JobTask> jobTaskListOrphanCheck = job.getJobTaskList();
+            for (JobTask jobTaskListOrphanCheckJobTask : jobTaskListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Job (" + job + ") cannot be destroyed since the Tasks " + tasksListOrphanCheckTasks + " in its tasksList field has a non-nullable job field.");
+                illegalOrphanMessages.add("This Job (" + job + ") cannot be destroyed since the JobTask " + jobTaskListOrphanCheckJobTask + " in its jobTaskList field has a non-nullable job field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            CustomerAccount customerAccount = job.getCustomerAccount();
-            if (customerAccount != null) {
-                customerAccount.getJobList().remove(job);
-                customerAccount = em.merge(customerAccount);
+            CustomerAccount fkAccountNumber = job.getFkAccountNumber();
+            if (fkAccountNumber != null) {
+                fkAccountNumber.getJobList().remove(job);
+                fkAccountNumber = em.merge(fkAccountNumber);
             }
-            PaymentInfo paymentInfo = job.getPaymentInfo();
-            if (paymentInfo != null) {
-                paymentInfo.getJobList().remove(job);
-                paymentInfo = em.merge(paymentInfo);
+            List<PaymentInfo> paymentInfoList = job.getPaymentInfoList();
+            for (PaymentInfo paymentInfoListPaymentInfo : paymentInfoList) {
+                paymentInfoListPaymentInfo.getJobList().remove(job);
+                paymentInfoListPaymentInfo = em.merge(paymentInfoListPaymentInfo);
             }
             em.remove(job);
             em.getTransaction().commit();
@@ -252,7 +273,7 @@ public class JobJpaController implements Serializable {
         }
     }
 
-    public Job findJob(JobPK id) {
+    public Job findJob(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Job.class, id);

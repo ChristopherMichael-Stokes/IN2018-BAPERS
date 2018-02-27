@@ -5,7 +5,7 @@
  */
 package bapers.service;
 
-import bapers.domain.User;
+import bapers.domain.Staff;
 
 /**
  *
@@ -17,6 +17,6 @@ public interface UserService {
     
     public boolean validHash(String username, String input);
     
-    public User getUser(String username);
+    public Staff getUser(String username);
     
 }

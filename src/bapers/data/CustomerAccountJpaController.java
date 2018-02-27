@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
@@ -13,13 +33,12 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import bapers.domain.Discount;
 import bapers.domain.Address;
 import bapers.domain.CustomerAccount;
-import bapers.domain.CustomerAccountPK;
-import bapers.domain.DiscountPlan;
-import bapers.domain.Job;
 import java.util.ArrayList;
 import java.util.List;
+import bapers.domain.Job;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -39,8 +58,8 @@ public class CustomerAccountJpaController implements Serializable {
     }
 
     public void create(CustomerAccount customerAccount) throws PreexistingEntityException, Exception {
-        if (customerAccount.getCustomerAccountPK() == null) {
-            customerAccount.setCustomerAccountPK(new CustomerAccountPK());
+        if (customerAccount.getAddressList() == null) {
+            customerAccount.setAddressList(new ArrayList<Address>());
         }
         if (customerAccount.getJobList() == null) {
             customerAccount.setJobList(new ArrayList<Job>());
@@ -49,43 +68,54 @@ public class CustomerAccountJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Address address = customerAccount.getAddress();
-            if (address != null) {
-                address = em.getReference(address.getClass(), address.getAddressPK());
-                customerAccount.setAddress(address);
+            Discount discount = customerAccount.getDiscount();
+            if (discount != null) {
+                discount = em.getReference(discount.getClass(), discount.getFkAccountNumber());
+                customerAccount.setDiscount(discount);
             }
-            DiscountPlan fkPlantype = customerAccount.getFkPlantype();
-            if (fkPlantype != null) {
-                fkPlantype = em.getReference(fkPlantype.getClass(), fkPlantype.getType());
-                customerAccount.setFkPlantype(fkPlantype);
+            List<Address> attachedAddressList = new ArrayList<Address>();
+            for (Address addressListAddressToAttach : customerAccount.getAddressList()) {
+                addressListAddressToAttach = em.getReference(addressListAddressToAttach.getClass(), addressListAddressToAttach.getAddressPK());
+                attachedAddressList.add(addressListAddressToAttach);
             }
+            customerAccount.setAddressList(attachedAddressList);
             List<Job> attachedJobList = new ArrayList<Job>();
             for (Job jobListJobToAttach : customerAccount.getJobList()) {
-                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobPK());
+                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobId());
                 attachedJobList.add(jobListJobToAttach);
             }
             customerAccount.setJobList(attachedJobList);
             em.persist(customerAccount);
-            if (address != null) {
-                address.getCustomerAccountList().add(customerAccount);
-                address = em.merge(address);
+            if (discount != null) {
+                CustomerAccount oldCustomerAccountOfDiscount = discount.getCustomerAccount();
+                if (oldCustomerAccountOfDiscount != null) {
+                    oldCustomerAccountOfDiscount.setDiscount(null);
+                    oldCustomerAccountOfDiscount = em.merge(oldCustomerAccountOfDiscount);
+                }
+                discount.setCustomerAccount(customerAccount);
+                discount = em.merge(discount);
             }
-            if (fkPlantype != null) {
-                fkPlantype.getCustomerAccountList().add(customerAccount);
-                fkPlantype = em.merge(fkPlantype);
+            for (Address addressListAddress : customerAccount.getAddressList()) {
+                CustomerAccount oldCustomerAccountOfAddressListAddress = addressListAddress.getCustomerAccount();
+                addressListAddress.setCustomerAccount(customerAccount);
+                addressListAddress = em.merge(addressListAddress);
+                if (oldCustomerAccountOfAddressListAddress != null) {
+                    oldCustomerAccountOfAddressListAddress.getAddressList().remove(addressListAddress);
+                    oldCustomerAccountOfAddressListAddress = em.merge(oldCustomerAccountOfAddressListAddress);
+                }
             }
             for (Job jobListJob : customerAccount.getJobList()) {
-                CustomerAccount oldCustomerAccountOfJobListJob = jobListJob.getCustomerAccount();
-                jobListJob.setCustomerAccount(customerAccount);
+                CustomerAccount oldFkAccountNumberOfJobListJob = jobListJob.getFkAccountNumber();
+                jobListJob.setFkAccountNumber(customerAccount);
                 jobListJob = em.merge(jobListJob);
-                if (oldCustomerAccountOfJobListJob != null) {
-                    oldCustomerAccountOfJobListJob.getJobList().remove(jobListJob);
-                    oldCustomerAccountOfJobListJob = em.merge(oldCustomerAccountOfJobListJob);
+                if (oldFkAccountNumberOfJobListJob != null) {
+                    oldFkAccountNumberOfJobListJob.getJobList().remove(jobListJob);
+                    oldFkAccountNumberOfJobListJob = em.merge(oldFkAccountNumberOfJobListJob);
                 }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findCustomerAccount(customerAccount.getCustomerAccountPK()) != null) {
+            if (findCustomerAccount(customerAccount.getAccountNumber()) != null) {
                 throw new PreexistingEntityException("CustomerAccount " + customerAccount + " already exists.", ex);
             }
             throw ex;
@@ -101,65 +131,86 @@ public class CustomerAccountJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            CustomerAccount persistentCustomerAccount = em.find(CustomerAccount.class, customerAccount.getCustomerAccountPK());
-            Address addressOld = persistentCustomerAccount.getAddress();
-            Address addressNew = customerAccount.getAddress();
-            DiscountPlan fkPlantypeOld = persistentCustomerAccount.getFkPlantype();
-            DiscountPlan fkPlantypeNew = customerAccount.getFkPlantype();
+            CustomerAccount persistentCustomerAccount = em.find(CustomerAccount.class, customerAccount.getAccountNumber());
+            Discount discountOld = persistentCustomerAccount.getDiscount();
+            Discount discountNew = customerAccount.getDiscount();
+            List<Address> addressListOld = persistentCustomerAccount.getAddressList();
+            List<Address> addressListNew = customerAccount.getAddressList();
             List<Job> jobListOld = persistentCustomerAccount.getJobList();
             List<Job> jobListNew = customerAccount.getJobList();
             List<String> illegalOrphanMessages = null;
+            if (discountOld != null && !discountOld.equals(discountNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain Discount " + discountOld + " since its customerAccount field is not nullable.");
+            }
+            for (Address addressListOldAddress : addressListOld) {
+                if (!addressListNew.contains(addressListOldAddress)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Address " + addressListOldAddress + " since its customerAccount field is not nullable.");
+                }
+            }
             for (Job jobListOldJob : jobListOld) {
                 if (!jobListNew.contains(jobListOldJob)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Job " + jobListOldJob + " since its customerAccount field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Job " + jobListOldJob + " since its fkAccountNumber field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (addressNew != null) {
-                addressNew = em.getReference(addressNew.getClass(), addressNew.getAddressPK());
-                customerAccount.setAddress(addressNew);
+            if (discountNew != null) {
+                discountNew = em.getReference(discountNew.getClass(), discountNew.getFkAccountNumber());
+                customerAccount.setDiscount(discountNew);
             }
-            if (fkPlantypeNew != null) {
-                fkPlantypeNew = em.getReference(fkPlantypeNew.getClass(), fkPlantypeNew.getType());
-                customerAccount.setFkPlantype(fkPlantypeNew);
+            List<Address> attachedAddressListNew = new ArrayList<Address>();
+            for (Address addressListNewAddressToAttach : addressListNew) {
+                addressListNewAddressToAttach = em.getReference(addressListNewAddressToAttach.getClass(), addressListNewAddressToAttach.getAddressPK());
+                attachedAddressListNew.add(addressListNewAddressToAttach);
             }
+            addressListNew = attachedAddressListNew;
+            customerAccount.setAddressList(addressListNew);
             List<Job> attachedJobListNew = new ArrayList<Job>();
             for (Job jobListNewJobToAttach : jobListNew) {
-                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobPK());
+                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobId());
                 attachedJobListNew.add(jobListNewJobToAttach);
             }
             jobListNew = attachedJobListNew;
             customerAccount.setJobList(jobListNew);
             customerAccount = em.merge(customerAccount);
-            if (addressOld != null && !addressOld.equals(addressNew)) {
-                addressOld.getCustomerAccountList().remove(customerAccount);
-                addressOld = em.merge(addressOld);
+            if (discountNew != null && !discountNew.equals(discountOld)) {
+                CustomerAccount oldCustomerAccountOfDiscount = discountNew.getCustomerAccount();
+                if (oldCustomerAccountOfDiscount != null) {
+                    oldCustomerAccountOfDiscount.setDiscount(null);
+                    oldCustomerAccountOfDiscount = em.merge(oldCustomerAccountOfDiscount);
+                }
+                discountNew.setCustomerAccount(customerAccount);
+                discountNew = em.merge(discountNew);
             }
-            if (addressNew != null && !addressNew.equals(addressOld)) {
-                addressNew.getCustomerAccountList().add(customerAccount);
-                addressNew = em.merge(addressNew);
-            }
-            if (fkPlantypeOld != null && !fkPlantypeOld.equals(fkPlantypeNew)) {
-                fkPlantypeOld.getCustomerAccountList().remove(customerAccount);
-                fkPlantypeOld = em.merge(fkPlantypeOld);
-            }
-            if (fkPlantypeNew != null && !fkPlantypeNew.equals(fkPlantypeOld)) {
-                fkPlantypeNew.getCustomerAccountList().add(customerAccount);
-                fkPlantypeNew = em.merge(fkPlantypeNew);
+            for (Address addressListNewAddress : addressListNew) {
+                if (!addressListOld.contains(addressListNewAddress)) {
+                    CustomerAccount oldCustomerAccountOfAddressListNewAddress = addressListNewAddress.getCustomerAccount();
+                    addressListNewAddress.setCustomerAccount(customerAccount);
+                    addressListNewAddress = em.merge(addressListNewAddress);
+                    if (oldCustomerAccountOfAddressListNewAddress != null && !oldCustomerAccountOfAddressListNewAddress.equals(customerAccount)) {
+                        oldCustomerAccountOfAddressListNewAddress.getAddressList().remove(addressListNewAddress);
+                        oldCustomerAccountOfAddressListNewAddress = em.merge(oldCustomerAccountOfAddressListNewAddress);
+                    }
+                }
             }
             for (Job jobListNewJob : jobListNew) {
                 if (!jobListOld.contains(jobListNewJob)) {
-                    CustomerAccount oldCustomerAccountOfJobListNewJob = jobListNewJob.getCustomerAccount();
-                    jobListNewJob.setCustomerAccount(customerAccount);
+                    CustomerAccount oldFkAccountNumberOfJobListNewJob = jobListNewJob.getFkAccountNumber();
+                    jobListNewJob.setFkAccountNumber(customerAccount);
                     jobListNewJob = em.merge(jobListNewJob);
-                    if (oldCustomerAccountOfJobListNewJob != null && !oldCustomerAccountOfJobListNewJob.equals(customerAccount)) {
-                        oldCustomerAccountOfJobListNewJob.getJobList().remove(jobListNewJob);
-                        oldCustomerAccountOfJobListNewJob = em.merge(oldCustomerAccountOfJobListNewJob);
+                    if (oldFkAccountNumberOfJobListNewJob != null && !oldFkAccountNumberOfJobListNewJob.equals(customerAccount)) {
+                        oldFkAccountNumberOfJobListNewJob.getJobList().remove(jobListNewJob);
+                        oldFkAccountNumberOfJobListNewJob = em.merge(oldFkAccountNumberOfJobListNewJob);
                     }
                 }
             }
@@ -167,7 +218,7 @@ public class CustomerAccountJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                CustomerAccountPK id = customerAccount.getCustomerAccountPK();
+                String id = customerAccount.getAccountNumber();
                 if (findCustomerAccount(id) == null) {
                     throw new NonexistentEntityException("The customerAccount with id " + id + " no longer exists.");
                 }
@@ -180,7 +231,7 @@ public class CustomerAccountJpaController implements Serializable {
         }
     }
 
-    public void destroy(CustomerAccountPK id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -188,30 +239,34 @@ public class CustomerAccountJpaController implements Serializable {
             CustomerAccount customerAccount;
             try {
                 customerAccount = em.getReference(CustomerAccount.class, id);
-                customerAccount.getCustomerAccountPK();
+                customerAccount.getAccountNumber();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The customerAccount with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            Discount discountOrphanCheck = customerAccount.getDiscount();
+            if (discountOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the Discount " + discountOrphanCheck + " in its discount field has a non-nullable customerAccount field.");
+            }
+            List<Address> addressListOrphanCheck = customerAccount.getAddressList();
+            for (Address addressListOrphanCheckAddress : addressListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the Address " + addressListOrphanCheckAddress + " in its addressList field has a non-nullable customerAccount field.");
+            }
             List<Job> jobListOrphanCheck = customerAccount.getJobList();
             for (Job jobListOrphanCheckJob : jobListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the Job " + jobListOrphanCheckJob + " in its jobList field has a non-nullable customerAccount field.");
+                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the Job " + jobListOrphanCheckJob + " in its jobList field has a non-nullable fkAccountNumber field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Address address = customerAccount.getAddress();
-            if (address != null) {
-                address.getCustomerAccountList().remove(customerAccount);
-                address = em.merge(address);
-            }
-            DiscountPlan fkPlantype = customerAccount.getFkPlantype();
-            if (fkPlantype != null) {
-                fkPlantype.getCustomerAccountList().remove(customerAccount);
-                fkPlantype = em.merge(fkPlantype);
             }
             em.remove(customerAccount);
             em.getTransaction().commit();
@@ -246,7 +301,7 @@ public class CustomerAccountJpaController implements Serializable {
         }
     }
 
-    public CustomerAccount findCustomerAccount(CustomerAccountPK id) {
+    public CustomerAccount findCustomerAccount(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(CustomerAccount.class, id);

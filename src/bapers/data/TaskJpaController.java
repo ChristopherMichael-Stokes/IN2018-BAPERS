@@ -1,22 +1,43 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
 import bapers.data.exceptions.IllegalOrphanException;
 import bapers.data.exceptions.NonexistentEntityException;
 import bapers.data.exceptions.PreexistingEntityException;
-import bapers.domain.Task;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.domain.Tasks;
+import bapers.domain.TaskDiscount;
 import java.util.ArrayList;
 import java.util.List;
+import bapers.domain.JobTask;
+import bapers.domain.Task;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -36,27 +57,45 @@ public class TaskJpaController implements Serializable {
     }
 
     public void create(Task task) throws PreexistingEntityException, Exception {
-        if (task.getTasksList() == null) {
-            task.setTasksList(new ArrayList<Tasks>());
+        if (task.getTaskDiscountList() == null) {
+            task.setTaskDiscountList(new ArrayList<TaskDiscount>());
+        }
+        if (task.getJobTaskList() == null) {
+            task.setJobTaskList(new ArrayList<JobTask>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Tasks> attachedTasksList = new ArrayList<Tasks>();
-            for (Tasks tasksListTasksToAttach : task.getTasksList()) {
-                tasksListTasksToAttach = em.getReference(tasksListTasksToAttach.getClass(), tasksListTasksToAttach.getTasksPK());
-                attachedTasksList.add(tasksListTasksToAttach);
+            List<TaskDiscount> attachedTaskDiscountList = new ArrayList<TaskDiscount>();
+            for (TaskDiscount taskDiscountListTaskDiscountToAttach : task.getTaskDiscountList()) {
+                taskDiscountListTaskDiscountToAttach = em.getReference(taskDiscountListTaskDiscountToAttach.getClass(), taskDiscountListTaskDiscountToAttach.getTaskDiscountPK());
+                attachedTaskDiscountList.add(taskDiscountListTaskDiscountToAttach);
             }
-            task.setTasksList(attachedTasksList);
+            task.setTaskDiscountList(attachedTaskDiscountList);
+            List<JobTask> attachedJobTaskList = new ArrayList<JobTask>();
+            for (JobTask jobTaskListJobTaskToAttach : task.getJobTaskList()) {
+                jobTaskListJobTaskToAttach = em.getReference(jobTaskListJobTaskToAttach.getClass(), jobTaskListJobTaskToAttach.getJobTaskPK());
+                attachedJobTaskList.add(jobTaskListJobTaskToAttach);
+            }
+            task.setJobTaskList(attachedJobTaskList);
             em.persist(task);
-            for (Tasks tasksListTasks : task.getTasksList()) {
-                Task oldTaskOfTasksListTasks = tasksListTasks.getTask();
-                tasksListTasks.setTask(task);
-                tasksListTasks = em.merge(tasksListTasks);
-                if (oldTaskOfTasksListTasks != null) {
-                    oldTaskOfTasksListTasks.getTasksList().remove(tasksListTasks);
-                    oldTaskOfTasksListTasks = em.merge(oldTaskOfTasksListTasks);
+            for (TaskDiscount taskDiscountListTaskDiscount : task.getTaskDiscountList()) {
+                Task oldTaskOfTaskDiscountListTaskDiscount = taskDiscountListTaskDiscount.getTask();
+                taskDiscountListTaskDiscount.setTask(task);
+                taskDiscountListTaskDiscount = em.merge(taskDiscountListTaskDiscount);
+                if (oldTaskOfTaskDiscountListTaskDiscount != null) {
+                    oldTaskOfTaskDiscountListTaskDiscount.getTaskDiscountList().remove(taskDiscountListTaskDiscount);
+                    oldTaskOfTaskDiscountListTaskDiscount = em.merge(oldTaskOfTaskDiscountListTaskDiscount);
+                }
+            }
+            for (JobTask jobTaskListJobTask : task.getJobTaskList()) {
+                Task oldTaskOfJobTaskListJobTask = jobTaskListJobTask.getTask();
+                jobTaskListJobTask.setTask(task);
+                jobTaskListJobTask = em.merge(jobTaskListJobTask);
+                if (oldTaskOfJobTaskListJobTask != null) {
+                    oldTaskOfJobTaskListJobTask.getJobTaskList().remove(jobTaskListJobTask);
+                    oldTaskOfJobTaskListJobTask = em.merge(oldTaskOfJobTaskListJobTask);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +117,64 @@ public class TaskJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Task persistentTask = em.find(Task.class, task.getTaskId());
-            List<Tasks> tasksListOld = persistentTask.getTasksList();
-            List<Tasks> tasksListNew = task.getTasksList();
+            List<TaskDiscount> taskDiscountListOld = persistentTask.getTaskDiscountList();
+            List<TaskDiscount> taskDiscountListNew = task.getTaskDiscountList();
+            List<JobTask> jobTaskListOld = persistentTask.getJobTaskList();
+            List<JobTask> jobTaskListNew = task.getJobTaskList();
             List<String> illegalOrphanMessages = null;
-            for (Tasks tasksListOldTasks : tasksListOld) {
-                if (!tasksListNew.contains(tasksListOldTasks)) {
+            for (TaskDiscount taskDiscountListOldTaskDiscount : taskDiscountListOld) {
+                if (!taskDiscountListNew.contains(taskDiscountListOldTaskDiscount)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Tasks " + tasksListOldTasks + " since its task field is not nullable.");
+                    illegalOrphanMessages.add("You must retain TaskDiscount " + taskDiscountListOldTaskDiscount + " since its task field is not nullable.");
+                }
+            }
+            for (JobTask jobTaskListOldJobTask : jobTaskListOld) {
+                if (!jobTaskListNew.contains(jobTaskListOldJobTask)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain JobTask " + jobTaskListOldJobTask + " since its task field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Tasks> attachedTasksListNew = new ArrayList<Tasks>();
-            for (Tasks tasksListNewTasksToAttach : tasksListNew) {
-                tasksListNewTasksToAttach = em.getReference(tasksListNewTasksToAttach.getClass(), tasksListNewTasksToAttach.getTasksPK());
-                attachedTasksListNew.add(tasksListNewTasksToAttach);
+            List<TaskDiscount> attachedTaskDiscountListNew = new ArrayList<TaskDiscount>();
+            for (TaskDiscount taskDiscountListNewTaskDiscountToAttach : taskDiscountListNew) {
+                taskDiscountListNewTaskDiscountToAttach = em.getReference(taskDiscountListNewTaskDiscountToAttach.getClass(), taskDiscountListNewTaskDiscountToAttach.getTaskDiscountPK());
+                attachedTaskDiscountListNew.add(taskDiscountListNewTaskDiscountToAttach);
             }
-            tasksListNew = attachedTasksListNew;
-            task.setTasksList(tasksListNew);
+            taskDiscountListNew = attachedTaskDiscountListNew;
+            task.setTaskDiscountList(taskDiscountListNew);
+            List<JobTask> attachedJobTaskListNew = new ArrayList<JobTask>();
+            for (JobTask jobTaskListNewJobTaskToAttach : jobTaskListNew) {
+                jobTaskListNewJobTaskToAttach = em.getReference(jobTaskListNewJobTaskToAttach.getClass(), jobTaskListNewJobTaskToAttach.getJobTaskPK());
+                attachedJobTaskListNew.add(jobTaskListNewJobTaskToAttach);
+            }
+            jobTaskListNew = attachedJobTaskListNew;
+            task.setJobTaskList(jobTaskListNew);
             task = em.merge(task);
-            for (Tasks tasksListNewTasks : tasksListNew) {
-                if (!tasksListOld.contains(tasksListNewTasks)) {
-                    Task oldTaskOfTasksListNewTasks = tasksListNewTasks.getTask();
-                    tasksListNewTasks.setTask(task);
-                    tasksListNewTasks = em.merge(tasksListNewTasks);
-                    if (oldTaskOfTasksListNewTasks != null && !oldTaskOfTasksListNewTasks.equals(task)) {
-                        oldTaskOfTasksListNewTasks.getTasksList().remove(tasksListNewTasks);
-                        oldTaskOfTasksListNewTasks = em.merge(oldTaskOfTasksListNewTasks);
+            for (TaskDiscount taskDiscountListNewTaskDiscount : taskDiscountListNew) {
+                if (!taskDiscountListOld.contains(taskDiscountListNewTaskDiscount)) {
+                    Task oldTaskOfTaskDiscountListNewTaskDiscount = taskDiscountListNewTaskDiscount.getTask();
+                    taskDiscountListNewTaskDiscount.setTask(task);
+                    taskDiscountListNewTaskDiscount = em.merge(taskDiscountListNewTaskDiscount);
+                    if (oldTaskOfTaskDiscountListNewTaskDiscount != null && !oldTaskOfTaskDiscountListNewTaskDiscount.equals(task)) {
+                        oldTaskOfTaskDiscountListNewTaskDiscount.getTaskDiscountList().remove(taskDiscountListNewTaskDiscount);
+                        oldTaskOfTaskDiscountListNewTaskDiscount = em.merge(oldTaskOfTaskDiscountListNewTaskDiscount);
+                    }
+                }
+            }
+            for (JobTask jobTaskListNewJobTask : jobTaskListNew) {
+                if (!jobTaskListOld.contains(jobTaskListNewJobTask)) {
+                    Task oldTaskOfJobTaskListNewJobTask = jobTaskListNewJobTask.getTask();
+                    jobTaskListNewJobTask.setTask(task);
+                    jobTaskListNewJobTask = em.merge(jobTaskListNewJobTask);
+                    if (oldTaskOfJobTaskListNewJobTask != null && !oldTaskOfJobTaskListNewJobTask.equals(task)) {
+                        oldTaskOfJobTaskListNewJobTask.getJobTaskList().remove(jobTaskListNewJobTask);
+                        oldTaskOfJobTaskListNewJobTask = em.merge(oldTaskOfJobTaskListNewJobTask);
                     }
                 }
             }
@@ -141,12 +208,19 @@ public class TaskJpaController implements Serializable {
                 throw new NonexistentEntityException("The task with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Tasks> tasksListOrphanCheck = task.getTasksList();
-            for (Tasks tasksListOrphanCheckTasks : tasksListOrphanCheck) {
+            List<TaskDiscount> taskDiscountListOrphanCheck = task.getTaskDiscountList();
+            for (TaskDiscount taskDiscountListOrphanCheckTaskDiscount : taskDiscountListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Task (" + task + ") cannot be destroyed since the Tasks " + tasksListOrphanCheckTasks + " in its tasksList field has a non-nullable task field.");
+                illegalOrphanMessages.add("This Task (" + task + ") cannot be destroyed since the TaskDiscount " + taskDiscountListOrphanCheckTaskDiscount + " in its taskDiscountList field has a non-nullable task field.");
+            }
+            List<JobTask> jobTaskListOrphanCheck = task.getJobTaskList();
+            for (JobTask jobTaskListOrphanCheckJobTask : jobTaskListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Task (" + task + ") cannot be destroyed since the JobTask " + jobTaskListOrphanCheckJobTask + " in its jobTaskList field has a non-nullable task field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

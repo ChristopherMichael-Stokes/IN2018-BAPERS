@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.domain;
 
@@ -13,6 +33,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -52,10 +73,10 @@ public class PaymentInfo implements Serializable {
     @Column(name = "date_paid")
     @Temporal(TemporalType.DATE)
     private Date datePaid;
+    @ManyToMany(mappedBy = "paymentInfoList")
+    private List<Job> jobList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
     private List<CardDetails> cardDetailsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
-    private List<Job> jobList;
 
     public PaymentInfo() {
     }
@@ -104,21 +125,21 @@ public class PaymentInfo implements Serializable {
     }
 
     @XmlTransient
-    public List<CardDetails> getCardDetailsList() {
-        return cardDetailsList;
-    }
-
-    public void setCardDetailsList(List<CardDetails> cardDetailsList) {
-        this.cardDetailsList = cardDetailsList;
-    }
-
-    @XmlTransient
     public List<Job> getJobList() {
         return jobList;
     }
 
     public void setJobList(List<Job> jobList) {
         this.jobList = jobList;
+    }
+
+    @XmlTransient
+    public List<CardDetails> getCardDetailsList() {
+        return cardDetailsList;
+    }
+
+    public void setCardDetailsList(List<CardDetails> cardDetailsList) {
+        this.cardDetailsList = cardDetailsList;
     }
 
     @Override

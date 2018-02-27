@@ -23,6 +23,4 @@ public interface UserTypeService {
 
     public ObservableList<UserType> getItems();
 
-    public void setItems(ObservableList<UserType> items);
-
 }

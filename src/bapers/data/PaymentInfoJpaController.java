@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.data;
 
@@ -13,10 +33,10 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.domain.CardDetails;
+import bapers.domain.Job;
 import java.util.ArrayList;
 import java.util.List;
-import bapers.domain.Job;
+import bapers.domain.CardDetails;
 import bapers.domain.PaymentInfo;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,29 +57,33 @@ public class PaymentInfoJpaController implements Serializable {
     }
 
     public void create(PaymentInfo paymentInfo) throws PreexistingEntityException, Exception {
-        if (paymentInfo.getCardDetailsList() == null) {
-            paymentInfo.setCardDetailsList(new ArrayList<CardDetails>());
-        }
         if (paymentInfo.getJobList() == null) {
             paymentInfo.setJobList(new ArrayList<Job>());
+        }
+        if (paymentInfo.getCardDetailsList() == null) {
+            paymentInfo.setCardDetailsList(new ArrayList<CardDetails>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            List<Job> attachedJobList = new ArrayList<Job>();
+            for (Job jobListJobToAttach : paymentInfo.getJobList()) {
+                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobId());
+                attachedJobList.add(jobListJobToAttach);
+            }
+            paymentInfo.setJobList(attachedJobList);
             List<CardDetails> attachedCardDetailsList = new ArrayList<CardDetails>();
             for (CardDetails cardDetailsListCardDetailsToAttach : paymentInfo.getCardDetailsList()) {
                 cardDetailsListCardDetailsToAttach = em.getReference(cardDetailsListCardDetailsToAttach.getClass(), cardDetailsListCardDetailsToAttach.getCardDetailsPK());
                 attachedCardDetailsList.add(cardDetailsListCardDetailsToAttach);
             }
             paymentInfo.setCardDetailsList(attachedCardDetailsList);
-            List<Job> attachedJobList = new ArrayList<Job>();
-            for (Job jobListJobToAttach : paymentInfo.getJobList()) {
-                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobPK());
-                attachedJobList.add(jobListJobToAttach);
-            }
-            paymentInfo.setJobList(attachedJobList);
             em.persist(paymentInfo);
+            for (Job jobListJob : paymentInfo.getJobList()) {
+                jobListJob.getPaymentInfoList().add(paymentInfo);
+                jobListJob = em.merge(jobListJob);
+            }
             for (CardDetails cardDetailsListCardDetails : paymentInfo.getCardDetailsList()) {
                 PaymentInfo oldPaymentInfoOfCardDetailsListCardDetails = cardDetailsListCardDetails.getPaymentInfo();
                 cardDetailsListCardDetails.setPaymentInfo(paymentInfo);
@@ -67,15 +91,6 @@ public class PaymentInfoJpaController implements Serializable {
                 if (oldPaymentInfoOfCardDetailsListCardDetails != null) {
                     oldPaymentInfoOfCardDetailsListCardDetails.getCardDetailsList().remove(cardDetailsListCardDetails);
                     oldPaymentInfoOfCardDetailsListCardDetails = em.merge(oldPaymentInfoOfCardDetailsListCardDetails);
-                }
-            }
-            for (Job jobListJob : paymentInfo.getJobList()) {
-                PaymentInfo oldPaymentInfoOfJobListJob = jobListJob.getPaymentInfo();
-                jobListJob.setPaymentInfo(paymentInfo);
-                jobListJob = em.merge(jobListJob);
-                if (oldPaymentInfoOfJobListJob != null) {
-                    oldPaymentInfoOfJobListJob.getJobList().remove(jobListJob);
-                    oldPaymentInfoOfJobListJob = em.merge(oldPaymentInfoOfJobListJob);
                 }
             }
             em.getTransaction().commit();
@@ -97,10 +112,10 @@ public class PaymentInfoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             PaymentInfo persistentPaymentInfo = em.find(PaymentInfo.class, paymentInfo.getPaymentId());
-            List<CardDetails> cardDetailsListOld = persistentPaymentInfo.getCardDetailsList();
-            List<CardDetails> cardDetailsListNew = paymentInfo.getCardDetailsList();
             List<Job> jobListOld = persistentPaymentInfo.getJobList();
             List<Job> jobListNew = paymentInfo.getJobList();
+            List<CardDetails> cardDetailsListOld = persistentPaymentInfo.getCardDetailsList();
+            List<CardDetails> cardDetailsListNew = paymentInfo.getCardDetailsList();
             List<String> illegalOrphanMessages = null;
             for (CardDetails cardDetailsListOldCardDetails : cardDetailsListOld) {
                 if (!cardDetailsListNew.contains(cardDetailsListOldCardDetails)) {
@@ -110,17 +125,16 @@ public class PaymentInfoJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain CardDetails " + cardDetailsListOldCardDetails + " since its paymentInfo field is not nullable.");
                 }
             }
-            for (Job jobListOldJob : jobListOld) {
-                if (!jobListNew.contains(jobListOldJob)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Job " + jobListOldJob + " since its paymentInfo field is not nullable.");
-                }
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            List<Job> attachedJobListNew = new ArrayList<Job>();
+            for (Job jobListNewJobToAttach : jobListNew) {
+                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobId());
+                attachedJobListNew.add(jobListNewJobToAttach);
+            }
+            jobListNew = attachedJobListNew;
+            paymentInfo.setJobList(jobListNew);
             List<CardDetails> attachedCardDetailsListNew = new ArrayList<CardDetails>();
             for (CardDetails cardDetailsListNewCardDetailsToAttach : cardDetailsListNew) {
                 cardDetailsListNewCardDetailsToAttach = em.getReference(cardDetailsListNewCardDetailsToAttach.getClass(), cardDetailsListNewCardDetailsToAttach.getCardDetailsPK());
@@ -128,14 +142,19 @@ public class PaymentInfoJpaController implements Serializable {
             }
             cardDetailsListNew = attachedCardDetailsListNew;
             paymentInfo.setCardDetailsList(cardDetailsListNew);
-            List<Job> attachedJobListNew = new ArrayList<Job>();
-            for (Job jobListNewJobToAttach : jobListNew) {
-                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobPK());
-                attachedJobListNew.add(jobListNewJobToAttach);
-            }
-            jobListNew = attachedJobListNew;
-            paymentInfo.setJobList(jobListNew);
             paymentInfo = em.merge(paymentInfo);
+            for (Job jobListOldJob : jobListOld) {
+                if (!jobListNew.contains(jobListOldJob)) {
+                    jobListOldJob.getPaymentInfoList().remove(paymentInfo);
+                    jobListOldJob = em.merge(jobListOldJob);
+                }
+            }
+            for (Job jobListNewJob : jobListNew) {
+                if (!jobListOld.contains(jobListNewJob)) {
+                    jobListNewJob.getPaymentInfoList().add(paymentInfo);
+                    jobListNewJob = em.merge(jobListNewJob);
+                }
+            }
             for (CardDetails cardDetailsListNewCardDetails : cardDetailsListNew) {
                 if (!cardDetailsListOld.contains(cardDetailsListNewCardDetails)) {
                     PaymentInfo oldPaymentInfoOfCardDetailsListNewCardDetails = cardDetailsListNewCardDetails.getPaymentInfo();
@@ -144,17 +163,6 @@ public class PaymentInfoJpaController implements Serializable {
                     if (oldPaymentInfoOfCardDetailsListNewCardDetails != null && !oldPaymentInfoOfCardDetailsListNewCardDetails.equals(paymentInfo)) {
                         oldPaymentInfoOfCardDetailsListNewCardDetails.getCardDetailsList().remove(cardDetailsListNewCardDetails);
                         oldPaymentInfoOfCardDetailsListNewCardDetails = em.merge(oldPaymentInfoOfCardDetailsListNewCardDetails);
-                    }
-                }
-            }
-            for (Job jobListNewJob : jobListNew) {
-                if (!jobListOld.contains(jobListNewJob)) {
-                    PaymentInfo oldPaymentInfoOfJobListNewJob = jobListNewJob.getPaymentInfo();
-                    jobListNewJob.setPaymentInfo(paymentInfo);
-                    jobListNewJob = em.merge(jobListNewJob);
-                    if (oldPaymentInfoOfJobListNewJob != null && !oldPaymentInfoOfJobListNewJob.equals(paymentInfo)) {
-                        oldPaymentInfoOfJobListNewJob.getJobList().remove(jobListNewJob);
-                        oldPaymentInfoOfJobListNewJob = em.merge(oldPaymentInfoOfJobListNewJob);
                     }
                 }
             }
@@ -195,15 +203,13 @@ public class PaymentInfoJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This PaymentInfo (" + paymentInfo + ") cannot be destroyed since the CardDetails " + cardDetailsListOrphanCheckCardDetails + " in its cardDetailsList field has a non-nullable paymentInfo field.");
             }
-            List<Job> jobListOrphanCheck = paymentInfo.getJobList();
-            for (Job jobListOrphanCheckJob : jobListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This PaymentInfo (" + paymentInfo + ") cannot be destroyed since the Job " + jobListOrphanCheckJob + " in its jobList field has a non-nullable paymentInfo field.");
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Job> jobList = paymentInfo.getJobList();
+            for (Job jobListJob : jobList) {
+                jobListJob.getPaymentInfoList().remove(paymentInfo);
+                jobListJob = em.merge(jobListJob);
             }
             em.remove(paymentInfo);
             em.getTransaction().commit();

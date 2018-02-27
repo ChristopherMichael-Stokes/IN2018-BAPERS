@@ -1,7 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2018, chris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package bapers.domain;
 
@@ -10,14 +30,12 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -31,18 +49,29 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CustomerAccount.findAll", query = "SELECT c FROM CustomerAccount c")
-    , @NamedQuery(name = "CustomerAccount.findByCustomerId", query = "SELECT c FROM CustomerAccount c WHERE c.customerAccountPK.customerId = :customerId")
-    , @NamedQuery(name = "CustomerAccount.findByEmail", query = "SELECT c FROM CustomerAccount c WHERE c.customerAccountPK.email = :email")
+    , @NamedQuery(name = "CustomerAccount.findByAccountNumber", query = "SELECT c FROM CustomerAccount c WHERE c.accountNumber = :accountNumber")
+    , @NamedQuery(name = "CustomerAccount.findByEmail", query = "SELECT c FROM CustomerAccount c WHERE c.email = :email")
+    , @NamedQuery(name = "CustomerAccount.findByAccountHolderName", query = "SELECT c FROM CustomerAccount c WHERE c.accountHolderName = :accountHolderName")
+    , @NamedQuery(name = "CustomerAccount.findByTitle", query = "SELECT c FROM CustomerAccount c WHERE c.title = :title")
     , @NamedQuery(name = "CustomerAccount.findByFirstName", query = "SELECT c FROM CustomerAccount c WHERE c.firstName = :firstName")
     , @NamedQuery(name = "CustomerAccount.findBySurname", query = "SELECT c FROM CustomerAccount c WHERE c.surname = :surname")
     , @NamedQuery(name = "CustomerAccount.findByHousePhone", query = "SELECT c FROM CustomerAccount c WHERE c.housePhone = :housePhone")
-    , @NamedQuery(name = "CustomerAccount.findByMobilePhone", query = "SELECT c FROM CustomerAccount c WHERE c.mobilePhone = :mobilePhone")
-    , @NamedQuery(name = "CustomerAccount.findByValued", query = "SELECT c FROM CustomerAccount c WHERE c.valued = :valued")})
+    , @NamedQuery(name = "CustomerAccount.findByMobilePhone", query = "SELECT c FROM CustomerAccount c WHERE c.mobilePhone = :mobilePhone")})
 public class CustomerAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CustomerAccountPK customerAccountPK;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "account_number")
+    private String accountNumber;
+    @Column(name = "email")
+    private String email;
+    @Basic(optional = false)
+    @Column(name = "account_holder_name")
+    private String accountHolderName;
+    @Basic(optional = false)
+    @Column(name = "title")
+    private String title;
     @Basic(optional = false)
     @Column(name = "first_name")
     private String firstName;
@@ -52,50 +81,61 @@ public class CustomerAccount implements Serializable {
     @Basic(optional = false)
     @Column(name = "house_phone")
     private String housePhone;
-    @Basic(optional = false)
     @Column(name = "mobile_phone")
     private String mobilePhone;
-    @Basic(optional = false)
-    @Column(name = "valued")
-    private boolean valued;
-    @JoinColumns({
-        @JoinColumn(name = "fk_address_line1", referencedColumnName = "address_line1")
-        , @JoinColumn(name = "fk_city", referencedColumnName = "city")
-        , @JoinColumn(name = "fk_postcode", referencedColumnName = "postcode")})
-    @ManyToOne(optional = false)
-    private Address address;
-    @JoinColumn(name = "fk_Plan_type", referencedColumnName = "type")
-    @ManyToOne(optional = false)
-    private DiscountPlan fkPlantype;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private List<Address> addressList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private Discount discount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccountNumber")
     private List<Job> jobList;
 
     public CustomerAccount() {
     }
 
-    public CustomerAccount(CustomerAccountPK customerAccountPK) {
-        this.customerAccountPK = customerAccountPK;
+    public CustomerAccount(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
-    public CustomerAccount(CustomerAccountPK customerAccountPK, String firstName, String surname, String housePhone, String mobilePhone, boolean valued) {
-        this.customerAccountPK = customerAccountPK;
+    public CustomerAccount(String accountNumber, String accountHolderName, String title, String firstName, String surname, String housePhone) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.title = title;
         this.firstName = firstName;
         this.surname = surname;
         this.housePhone = housePhone;
-        this.mobilePhone = mobilePhone;
-        this.valued = valued;
     }
 
-    public CustomerAccount(String customerId, String email) {
-        this.customerAccountPK = new CustomerAccountPK(customerId, email);
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public CustomerAccountPK getCustomerAccountPK() {
-        return customerAccountPK;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
-    public void setCustomerAccountPK(CustomerAccountPK customerAccountPK) {
-        this.customerAccountPK = customerAccountPK;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public void setAccountHolderName(String accountHolderName) {
+        this.accountHolderName = accountHolderName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getFirstName() {
@@ -130,28 +170,21 @@ public class CustomerAccount implements Serializable {
         this.mobilePhone = mobilePhone;
     }
 
-    public boolean getValued() {
-        return valued;
+    @XmlTransient
+    public List<Address> getAddressList() {
+        return addressList;
     }
 
-    public void setValued(boolean valued) {
-        this.valued = valued;
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
     }
 
-    public Address getAddress() {
-        return address;
+    public Discount getDiscount() {
+        return discount;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public DiscountPlan getFkPlantype() {
-        return fkPlantype;
-    }
-
-    public void setFkPlantype(DiscountPlan fkPlantype) {
-        this.fkPlantype = fkPlantype;
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 
     @XmlTransient
@@ -166,7 +199,7 @@ public class CustomerAccount implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (customerAccountPK != null ? customerAccountPK.hashCode() : 0);
+        hash += (accountNumber != null ? accountNumber.hashCode() : 0);
         return hash;
     }
 
@@ -177,7 +210,7 @@ public class CustomerAccount implements Serializable {
             return false;
         }
         CustomerAccount other = (CustomerAccount) object;
-        if ((this.customerAccountPK == null && other.customerAccountPK != null) || (this.customerAccountPK != null && !this.customerAccountPK.equals(other.customerAccountPK))) {
+        if ((this.accountNumber == null && other.accountNumber != null) || (this.accountNumber != null && !this.accountNumber.equals(other.accountNumber))) {
             return false;
         }
         return true;
@@ -185,7 +218,7 @@ public class CustomerAccount implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.domain.CustomerAccount[ customerAccountPK=" + customerAccountPK + " ]";
+        return "bapers.domain.CustomerAccount[ accountNumber=" + accountNumber + " ]";
     }
     
 }

@@ -6,9 +6,9 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.UserJpaController;
+import bapers.data.StaffJpaController;
 import static bapers.SimpleHash.getStringHash;
-import bapers.domain.User;
+import bapers.domain.Staff;
 
 /**
  *
@@ -16,28 +16,29 @@ import bapers.domain.User;
  */
 public class UserServiceImpl implements UserService{
     
-    private final UserJpaController controller;
+    private final StaffJpaController controller;
     
     public UserServiceImpl() {
-        controller = new UserJpaController(EMF);
+        controller = new StaffJpaController(EMF);
     }
     
     @Override
-    public boolean userExists(String username) {
-        return controller.findUser(username) != null;
+    public boolean userExists(String id) {
+        return controller.findStaff(id) != null;
     }
 
     @Override
-    public boolean validHash(String username, String input) {
-        User user = controller.findUser(username);
+    public boolean validHash(String id, String input) {
+        Staff user = controller.findStaff(id);
         if (input == null || user == null)
             return false;
-        return getStringHash(input.trim().getBytes(), "SHA-512")
-                .equals(user.getPassphrase());
+        String hash = getStringHash(input.trim().getBytes(), "SHA-512");
+        System.out.println(hash);
+        return hash.equals(user.getPassphrase());
     }   
 
     @Override
-    public User getUser(String username) {
-        return controller.findUser(username);
+    public Staff getUser(String id) {
+        return controller.findStaff(id);
     }
 }

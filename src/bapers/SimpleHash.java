@@ -14,16 +14,17 @@ import java.security.NoSuchAlgorithmException;
  */
 // avaliable algorithm (MD2,MD5,SHA-1,SHA-224,SHA-256,SHA-384,SHA-512)
 public class SimpleHash {
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String[] args) {
-//        String test = "Try whatever you want here!";
-//        // String on second parameter can be change by algorithm listed on top
-//        System.out.println(getStringHash(test.getBytes(),"SHA-512"));
-//        System.out.println(getStringHash(test.getBytes(),"MD2"));
-//    }
+    
+    public static final String HASH = "SHA-512";
+    
+    public static String getStringHash(String ... strings){
+        StringBuilder sb = new StringBuilder();
+        for (String s : strings) {
+            sb.append(s);
+        }
+        return getStringHash(sb.toString().getBytes(), HASH);
+    }
+    
     public static String getStringHash(byte[] stringBytes, String algorithm) {
         try {
             MessageDigest m = MessageDigest.getInstance(algorithm);
@@ -35,7 +36,7 @@ public class SimpleHash {
             return s.toString();
 //            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
         } catch (NoSuchAlgorithmException e) {
-            return "error";
+            return null;
         }
     }
 
