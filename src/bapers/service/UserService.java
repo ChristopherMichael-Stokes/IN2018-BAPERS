@@ -5,7 +5,7 @@
  */
 package bapers.service;
 
-import bapers.domain.Staff;
+import bapers.data.domain.Staff;
 
 /**
  *

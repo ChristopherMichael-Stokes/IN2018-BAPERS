@@ -6,9 +6,9 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.StaffJpaController;
+import bapers.data.dataAccess.StaffJpaController;
 import static bapers.SimpleHash.getStringHash;
-import bapers.domain.Staff;
+import bapers.data.domain.Staff;
 
 /**
  *

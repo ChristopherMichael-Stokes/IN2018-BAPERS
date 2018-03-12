@@ -25,7 +25,7 @@
  */
 package bapers;
 
-import bapers.domain.Staff;
+import bapers.data.domain.Staff;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

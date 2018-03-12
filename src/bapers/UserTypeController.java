@@ -6,10 +6,10 @@
 package bapers;
 
 import bapers.service.UserTypeServiceImpl;
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
-import bapers.domain.UserType;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
+import bapers.data.domain.UserType;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;

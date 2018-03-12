@@ -6,11 +6,11 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.UserTypeJpaController;
-import bapers.data.exceptions.IllegalOrphanException;
-import bapers.data.exceptions.NonexistentEntityException;
-import bapers.data.exceptions.PreexistingEntityException;
-import bapers.domain.UserType;
+import bapers.data.dataAccess.UserTypeJpaController;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
+import bapers.data.domain.UserType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
