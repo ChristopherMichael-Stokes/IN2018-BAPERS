@@ -73,9 +73,11 @@ public class LoginController implements Initializable {
             if (event.getCode() == KeyCode.ENTER)
                 login();
         });        
+        txtPassword.setOnKeyReleased((event) -> lblOut.setText(txtPassword.getText()));
         btnLogin.setOnAction((event) -> {
             login();
         });
+        
     }
 
     private void login() {        
@@ -88,18 +90,18 @@ public class LoginController implements Initializable {
             lblOut.setText("valid input");
             attempts = 0;
             bapers.BAPERS.USER = DAO.getUser(txtId.getText());
-            System.out.println(bapers.BAPERS.USER.toString());
-            try {
-                Parent root = FXMLLoader.load(this.getClass().getResource("/bapers/userInterface/fxml/UserType.fxml"));
-                Scene userTypeScene = new Scene(root);
-                Stage stage = (Stage)btnLogin.getScene().getWindow();
-//                Stage stage = (Stage) ((Node) this.getSource()).getScene().getWindow();
-                stage.setScene(userTypeScene);
-                stage.show();
-            } catch (IOException ex) {
-                ex.printStackTrace(System.err);
-                System.exit(-1);
-            }
+            System.out.println(bapers.BAPERS.USER.getFirstName());
+//            try {
+//                Parent root = FXMLLoader.load(this.getClass().getResource("/bapers/userInterface/fxml/UserType.fxml"));
+//                Scene userTypeScene = new Scene(root);
+//                Stage stage = (Stage)btnLogin.getScene().getWindow();
+////                Stage stage = (Stage) ((Node) this.getSource()).getScene().getWindow();
+//                stage.setScene(userTypeScene);
+//                stage.show();
+//            } catch (IOException ex) {
+//                ex.printStackTrace(System.err);
+//                System.exit(-1);
+//            }
         } else {
             lblOut.setText("invalid id or password\n"
                     + "login attempts: " + attempts);

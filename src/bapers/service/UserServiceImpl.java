@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService{
         if (input == null || user == null)
             return false;
         String hash = getStringHash(input.trim().getBytes(), "SHA-512");
-        System.out.println(hash);
         return hash.equals(user.getPassphrase());
     }   
 

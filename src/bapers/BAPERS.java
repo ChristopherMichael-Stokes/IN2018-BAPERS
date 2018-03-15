@@ -62,7 +62,6 @@ public class BAPERS extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 }
 
 //sha 512 hash of 'password'
