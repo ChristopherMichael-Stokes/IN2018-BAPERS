@@ -22,5 +22,4 @@ public interface UserTypeService {
     public void removeUserType(String text) throws IllegalOrphanException, NonexistentEntityException;
 
     public ObservableList<UserType> getItems();
-
 }

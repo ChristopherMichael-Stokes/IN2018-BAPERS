@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="176.0" prefWidth="233.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.LoginController">
     <stylesheets>
-        <URL value="@/styles/login.css" />
+        <URL value="@/bapers/userInterface/styles/login.css"/>
     </stylesheets>
    <children>
       <VBox alignment="CENTER" layoutX="244.0" layoutY="142.0" prefHeight="253.0" prefWidth="233.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

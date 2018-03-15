@@ -5,24 +5,24 @@
  */
 package bapers;
 
-import java.util.Arrays;
-import java.util.List;
-import static javafx.application.Application.launch;
-import javax.persistence.EntityManager;
+import bapers.data.domain.Staff;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
-import javax.persistence.StoredProcedureQuery;
 
 /**
  *
  * @author chris
  */
-public class BAPERS {
+public class BAPERS extends Application {
 
     public static final EntityManagerFactory EMF
             = Persistence.createEntityManagerFactory("BAPERSPU");
-
+    public static Staff USER;
 //    @Override
 //    public void start(Stage stage) throws Exception, IOException {
 //        FXMLLoader loader = new FXMLLoader();
@@ -47,25 +47,20 @@ public class BAPERS {
 //    }
     /**
      * @param args the command line arguments
-     */  
+     */
     public static void main(String[] args) {
-//        new Thread(() -> EMF.createEntityManager()).start();
-        EntityManager em = EMF.createEntityManager();
-//        StoredProcedureQuery query = em.createNamedStoredProcedureQuery("DayShift");
-//        query.setParameter("date", "2018-01-13".toCharArray());
-//        List<DayShift1> result = query.getResultList();
-        StoredProcedureQuery query = em.createStoredProcedureQuery("Day_shift1");
-        query.registerStoredProcedureParameter("date", char[].class, ParameterMode.IN);
-        query.setParameter("date", "2018-01-13".toCharArray());
-        List<Object[]> result = query.getResultList();
-        System.out.println("\nday shift result:");
-        result.forEach((o) -> {
-            System.out.println(Arrays.asList(o).toString());
-        });
-//        read this --> https://en.wikibooks.org/wiki/Java_Persistence/Advanced_Topics#Stored_Procedures
-//        plus this --> https://docs.oracle.com/javaee/7/api/javax/persistence/NamedStoredProcedureQuery.html#resultClasses--
-              
-        launch(SceneController.class, args);
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/bapers/userInterface/fxml/Login.fxml"));
+        Scene scene = new Scene(root, 300, 200);        
+        scene.getStylesheets().add("/bapers/userInterface/styles/login.css");
+
+        primaryStage.setTitle("Staff Types");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
 }
