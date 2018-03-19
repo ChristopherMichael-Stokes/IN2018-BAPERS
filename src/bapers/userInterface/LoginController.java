@@ -25,21 +25,17 @@
  */
 package bapers.userInterface;
 
+import static bapers.BAPERS.USER;
 import bapers.service.UserService;
 import bapers.service.UserServiceImpl;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -62,6 +58,8 @@ public class LoginController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -89,8 +87,8 @@ public class LoginController implements Initializable {
 
             lblOut.setText("valid input");
             attempts = 0;
-            bapers.BAPERS.USER = DAO.getUser(txtId.getText());
-            System.out.println(bapers.BAPERS.USER.getFirstName());
+            USER = DAO.getUser(txtId.getText());
+            System.out.println(USER.getFirstName()+" "+USER.getSurname());
 //            try {
 //                Parent root = FXMLLoader.load(this.getClass().getResource("/bapers/userInterface/fxml/UserType.fxml"));
 //                Scene userTypeScene = new Scene(root);
