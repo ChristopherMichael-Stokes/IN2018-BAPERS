@@ -15,8 +15,16 @@ import java.security.NoSuchAlgorithmException;
 // avaliable algorithm (MD2,MD5,SHA-1,SHA-224,SHA-256,SHA-384,SHA-512)
 public class SimpleHash {
     
+    /**
+     *
+     */
     public static final String HASH = "SHA-512";
     
+    /**
+     *
+     * @param strings
+     * @return
+     */
     public static String getStringHash(String ... strings){
         StringBuilder sb = new StringBuilder();
         for (String s : strings) {
@@ -25,6 +33,12 @@ public class SimpleHash {
         return getStringHash(sb.toString().getBytes(), HASH);
     }
     
+    /**
+     *
+     * @param stringBytes
+     * @param algorithm
+     * @return
+     */
     public static String getStringHash(byte[] stringBytes, String algorithm) {
         try {
             MessageDigest m = MessageDigest.getInstance(algorithm);

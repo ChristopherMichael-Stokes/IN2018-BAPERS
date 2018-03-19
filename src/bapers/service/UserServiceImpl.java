@@ -18,15 +18,29 @@ public class UserServiceImpl implements UserService{
     
     private final StaffJpaController controller;
     
+    /**
+     *
+     */
     public UserServiceImpl() {
         controller = new StaffJpaController(EMF);
     }
     
+    /**
+     *
+     * @param id
+     * @return
+     */
     @Override
     public boolean userExists(String id) {
         return controller.findStaff(id) != null;
     }
 
+    /**
+     *
+     * @param id
+     * @param input
+     * @return
+     */
     @Override
     public boolean validHash(String id, String input) {
         Staff user = controller.findStaff(id);
@@ -36,8 +50,58 @@ public class UserServiceImpl implements UserService{
         return hash.equals(user.getPassphrase());
     }   
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @Override
     public Staff getUser(String id) {
         return controller.findStaff(id);
+    }
+
+    /**
+     *
+     * @param staff
+     */
+    @Override
+    public void addUser(Staff staff) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param id
+     */
+    @Override
+    public void removeUser(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param staff
+     */
+    @Override
+    public void updateUser(Staff staff) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param type
+     */
+    @Override
+    public void addUserType(String type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param type
+     */
+    @Override
+    public void removeUserType(String type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

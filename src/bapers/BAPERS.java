@@ -20,8 +20,15 @@ import javax.persistence.Persistence;
  */
 public class BAPERS extends Application {
 
+    /**
+     *
+     */
     public static final EntityManagerFactory EMF
             = Persistence.createEntityManagerFactory("BAPERSPU");
+
+    /**
+     *
+     */
     public static Staff USER;
 //    @Override
 //    public void start(Stage stage) throws Exception, IOException {

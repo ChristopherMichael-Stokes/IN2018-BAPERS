@@ -11,12 +11,57 @@ import bapers.data.domain.Staff;
  *
  * @author chris
  */
-public interface UserService {
+public interface UserService {    
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public boolean userExists(String id);
     
-    public boolean userExists(String username);
+    /**
+     *
+     * @param id
+     * @param input
+     * @return
+     */
+    public boolean validHash(String id, String input);
     
-    public boolean validHash(String username, String input);
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Staff getUser(String id);
     
-    public Staff getUser(String username);
+    /**
+     *
+     * @param staff
+     */
+    public void addUser(Staff staff);
     
+    /**
+     *
+     * @param id
+     */
+    public void removeUser(String id);
+    
+    /**
+     *
+     * @param staff
+     */
+    public void updateUser(Staff staff);
+    
+    /**
+     *
+     * @param type
+     */
+    public void addUserType(String type);
+    
+    /**
+     *
+     * @param type
+     */
+    public void removeUserType(String type);    
 }
