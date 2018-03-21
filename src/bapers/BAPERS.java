@@ -62,7 +62,7 @@ public class BAPERS extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/bapers/userInterface/fxml/Login.fxml"));
-        Scene scene = new Scene(root, 300, 200);        
+        Scene scene = new Scene(root, 800, 450);        
         scene.getStylesheets().add("/bapers/userInterface/styles/login.css");
 
         primaryStage.setTitle("Staff Types");

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -8,16 +9,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bapers.userInterface.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.LoginController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/login.css" />
     </stylesheets>
    <children>
       <VBox alignment="CENTER" layoutX="244.0" layoutY="142.0" prefHeight="253.0" prefWidth="233.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="9.0" prefWidth="311.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="9.0" prefWidth="311.0" spacing="10.0">
                <children>
-                  <Label text="Staff ID:   " />
+                  <Label alignment="CENTER_RIGHT" text="Staff ID:    " textAlignment="RIGHT">
+                     <font>
+                        <Font size="19.0" />
+                     </font></Label>
                   <TextField fx:id="txtId" alignment="TOP_LEFT">
                      <HBox.margin>
                         <Insets />
@@ -27,9 +31,12 @@
                   <Insets left="10.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="8.0" prefWidth="311.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="8.0" prefWidth="311.0" spacing="10.0">
                <children>
-                  <Label text="Password:" />
+                  <Label text="Password:">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Label>
                   <PasswordField fx:id="txtPassword" />
                </children>
                <VBox.margin>
