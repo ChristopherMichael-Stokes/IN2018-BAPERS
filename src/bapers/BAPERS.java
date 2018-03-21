@@ -19,7 +19,7 @@ import javax.persistence.Persistence;
  * @author chris
  */
 public class BAPERS extends Application {
-
+    
     /**
      *
      */
@@ -56,6 +56,7 @@ public class BAPERS extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("git works");
         launch(args);
     }
 
@@ -67,7 +68,7 @@ public class BAPERS extends Application {
 
         primaryStage.setTitle("Staff Types");
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.show();    
     }
 }
 

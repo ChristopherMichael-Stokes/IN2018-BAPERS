@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
@@ -18,9 +19,9 @@
          <children>
             <HBox alignment="CENTER" prefHeight="9.0" prefWidth="311.0" spacing="10.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" text="Staff ID:    " textAlignment="RIGHT">
+                  <Label alignment="CENTER_RIGHT" text="Staff ID:  " textAlignment="RIGHT">
                      <font>
-                        <Font size="19.0" />
+                        <Font name="System Bold" size="19.0" />
                      </font></Label>
                   <TextField fx:id="txtId" alignment="TOP_LEFT">
                      <HBox.margin>
@@ -35,7 +36,7 @@
                <children>
                   <Label text="Password:">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font></Label>
                   <PasswordField fx:id="txtPassword" />
                </children>
