@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService{
     }
     
     /**
-     *
-     * @param id
-     * @return
+     * determines whether staff member is in system
+     * @param id of staff member
+     * @return true if the staff member exists in the system
      */
     @Override
     public boolean userExists(String id) {
