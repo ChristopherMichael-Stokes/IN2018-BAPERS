@@ -27,7 +27,10 @@ package bapers.userInterface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
@@ -35,6 +38,31 @@ import javafx.fxml.Initializable;
  * @author chris
  */
 public class HomePageController implements Initializable {
+
+    @FXML
+    private Button btnCustomerAccount;
+    @FXML
+    private Button btnIntervals;
+    @FXML
+    private Button btnBackup;
+    @FXML
+    private Button btnUsers;
+    @FXML
+    private Button btnPlaceOrder;
+    @FXML
+    private Button btnJobProcessing;
+    @FXML
+    private Button btnPayment;
+    @FXML
+    private Button btnReports;
+    @FXML
+    private Button btnTasks;
+    @FXML
+    private Label lblName;
+    @FXML
+    private Label lblTime;
+    @FXML
+    private Button btnLogout;
 
     /**
      * Initializes the controller class.

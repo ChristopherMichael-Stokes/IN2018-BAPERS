@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -7,8 +10,100 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.HomePageController">
+<AnchorPane id="AnchorPane" prefHeight="499.0" prefWidth="840.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.HomePageController">
     <stylesheets>
-        <URL value="@/bapers/userInterface/styles/homepage.css"/>
+        <URL value="@/bapers/userInterface/styles/homepage.css" />
     </stylesheets>
+   <children>
+      <BorderPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox prefHeight="79.0" prefWidth="827.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                      <Button fx:id="btnCustomerAccount" mnemonicParsing="false" text="Customer Accounts" />
+                        <Button fx:id="btnIntervals" mnemonicParsing="false" text="Intervals" />
+                        <Button fx:id="btnBackup" mnemonicParsing="false" text="Backup" />
+                        <Button fx:id="btnUsers" mnemonicParsing="false" text="Users" />
+                        <Button fx:id="btnPlaceOrder" mnemonicParsing="false" text=" Place Order" />
+                        <Button fx:id="btnJobProcessing" mnemonicParsing="false" text="Job Processing" />
+                        <Button fx:id="btnPayment" mnemonicParsing="false" text="Payment" />
+                        <Button fx:id="btnReports" mnemonicParsing="false" text="Reports" />
+                        <Button fx:id="btnTasks" mnemonicParsing="false" text="Tasks" />
+                    </items>
+                  </ToolBar>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="lblName" text="Welcome back">
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                              <Label fx:id="lblTime" text="time">
+                                 <HBox.margin>
+                                    <Insets right="30.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="840.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Home">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <VBox prefHeight="0.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnLogout" mnemonicParsing="false" text="Log off">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </bottom>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Briefing">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin></Label>
+                  <Label text="briefing here">
+                     <VBox.margin>
+                        <Insets left="30.0" />
+                     </VBox.margin></Label>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
 </AnchorPane>
