@@ -25,10 +25,15 @@
  */
 package bapers.service;
 
+import bapers.data.domain.Task;
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author chris
  */
 public interface TaskService {
-    
+    public ObservableList<Task> getTasks();
+    public void addTask(Task task);
+    public void updateTask(Task task);    
 }

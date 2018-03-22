@@ -25,10 +25,17 @@
  */
 package bapers.service;
 
+import bapers.data.domain.Job;
+import javafx.collections.ObservableList;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+
 /**
  *
  * @author chris
  */
 public interface PaymentService {
-    
+    public ObservableList<Job> getJobs(String accountNumber);
+    public void addPayment(String accountNumber, String ... jobs);
+    public void addPayment(String accountNumber, String cardDigits, 
+            DateTime expiryDate, String cardType, String ... jobs);
 }

@@ -25,10 +25,16 @@
  */
 package bapers.service;
 
+import bapers.data.domain.JobTask;
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author chris
  */
 public interface JobService {
+    public void setTaskComplete(int taskId);
+    public ObservableList<JobTask> getTasks(String jobId);
+    public void printLabel(String jobId);
     
 }
