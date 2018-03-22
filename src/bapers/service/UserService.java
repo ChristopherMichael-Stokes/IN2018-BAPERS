@@ -59,7 +59,7 @@ public interface UserService {
      *
      * @param staff
      */
-    public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception ;
+    public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception;
 
     /**
      *
