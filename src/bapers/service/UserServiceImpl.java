@@ -6,15 +6,13 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
+import static bapers.SimpleHash.getStringHash;
 import bapers.data.dataAccess.StaffJpaController;
-import static bapers.utility.SimpleHash.getStringHash;
 import bapers.data.dataAccess.UserTypeJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.Staff;
 import bapers.data.domain.UserType;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
