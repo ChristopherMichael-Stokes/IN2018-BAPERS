@@ -30,6 +30,5 @@ package bapers.service;
  * @author chris
  */
 public interface HomeService {
-
-    public String getBriefing();
+    public String getBriefing();    
 }

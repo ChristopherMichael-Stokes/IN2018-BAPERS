@@ -6,8 +6,8 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.dataAccess.StaffJpaController;
 import static bapers.SimpleHash.getStringHash;
+import bapers.data.dataAccess.StaffJpaController;
 import bapers.data.dataAccess.UserTypeJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;

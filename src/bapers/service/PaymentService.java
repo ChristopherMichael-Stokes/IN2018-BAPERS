@@ -36,9 +36,7 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 public interface PaymentService {
 
     public ObservableList<Job> getJobs(String accountNumber);
-
-    public void addPayment(String accountNumber, String... jobs);
-
-    public void addPayment(String accountNumber, String cardDigits,
-            DateTime expiryDate, String cardType, String... jobs);
+    public void addPayment(String accountNumber, String ... jobs);
+    public void addPayment(String accountNumber, String cardDigits, 
+            DateTime expiryDate, String cardType, String ... jobs);
 }
