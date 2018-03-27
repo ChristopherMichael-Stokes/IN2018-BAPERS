@@ -25,6 +25,9 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Task;
 import javafx.collections.ObservableList;
 import org.junit.After;
@@ -77,7 +80,7 @@ public class TaskServiceTest {
      * Test of addTask method, of class TaskService.
      */
     @Test
-    public void testAddTask() {
+    public void testAddTask() throws Exception {
         System.out.println("addTask");
         Task task = null;
         TaskService instance = new TaskServiceImpl();
@@ -90,7 +93,7 @@ public class TaskServiceTest {
      * Test of updateTask method, of class TaskService.
      */
     @Test
-    public void testUpdateTask() {
+    public void testUpdateTask() throws Exception {
         System.out.println("updateTask");
         Task task = null;
         TaskService instance = new TaskServiceImpl();
@@ -105,10 +108,10 @@ public class TaskServiceTest {
             return null;
         }
 
-        public void addTask(Task task) {
+        public void addTask(Task task) throws PreexistingEntityException, Exception {
         }
 
-        public void updateTask(Task task) {
+        public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception {
         }
     }
     

@@ -27,6 +27,7 @@ package bapers.service;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Staff;
 import bapers.data.domain.UserType;
 import javafx.collections.ObservableList;
@@ -140,7 +141,7 @@ public class UserServiceTest {
      * Test of addUser method, of class UserService.
      */
     @Test
-    public void testAddUser() {
+    public void testAddUser() throws Exception {
         System.out.println("addUser");
         Staff staff = null;
         UserService instance = new UserServiceImpl();
@@ -179,7 +180,7 @@ public class UserServiceTest {
      * Test of addUserType method, of class UserService.
      */
     @Test
-    public void testAddUserType() {
+    public void testAddUserType() throws Exception {
         System.out.println("addUserType");
         String type = "";
         UserService instance = new UserServiceImpl();
@@ -192,7 +193,7 @@ public class UserServiceTest {
      * Test of removeUserType method, of class UserService.
      */
     @Test
-    public void testRemoveUserType() {
+    public void testRemoveUserType() throws Exception {
         System.out.println("removeUserType");
         String type = "";
         UserService instance = new UserServiceImpl();
@@ -223,7 +224,7 @@ public class UserServiceTest {
             return null;
         }
 
-        public void addUser(Staff staff) {
+        public void addUser(Staff staff) throws PreexistingEntityException, Exception {
         }
 
         public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException {
@@ -232,10 +233,10 @@ public class UserServiceTest {
         public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception {
         }
 
-        public void addUserType(String type) {
+        public void addUserType(String type) throws PreexistingEntityException, Exception {
         }
 
-        public void removeUserType(String type) {
+        public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException {
         }
     }
     

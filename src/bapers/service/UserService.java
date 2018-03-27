@@ -7,6 +7,7 @@ package bapers.service;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Staff;
 import bapers.data.domain.UserType;
 import javafx.collections.ObservableList;
@@ -47,7 +48,7 @@ public interface UserService {
      *
      * @param staff
      */
-    public void addUser(Staff staff);
+    public void addUser(Staff staff) throws PreexistingEntityException, Exception;
 
     /**
      *
@@ -65,11 +66,11 @@ public interface UserService {
      *
      * @param type
      */
-    public void addUserType(String type);
+    public void addUserType(String type) throws PreexistingEntityException, Exception;
 
     /**
      *
      * @param type
      */
-    public void removeUserType(String type);
+    public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException;
 }

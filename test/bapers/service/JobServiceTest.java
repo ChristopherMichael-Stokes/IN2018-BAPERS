@@ -26,6 +26,7 @@
 package bapers.service;
 
 import bapers.data.domain.JobTask;
+import java.util.Date;
 import javafx.collections.ObservableList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,8 +67,9 @@ public class JobServiceTest {
     public void testSetTaskComplete() {
         System.out.println("setTaskComplete");
         int taskId = 0;
+        Date time = null;
         JobService instance = new JobServiceImpl();
-        instance.setTaskComplete(taskId);
+        instance.setTaskComplete(taskId, time);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -102,7 +104,7 @@ public class JobServiceTest {
 
     public class JobServiceImpl implements JobService {
 
-        public void setTaskComplete(int taskId) {
+        public void setTaskComplete(int taskId, Date time) {
         }
 
         public ObservableList<JobTask> getTasks(String jobId) {

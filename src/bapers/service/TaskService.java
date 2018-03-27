@@ -25,6 +25,9 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Task;
 import javafx.collections.ObservableList;
 
@@ -33,7 +36,10 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface TaskService {
+
     public ObservableList<Task> getTasks();
-    public void addTask(Task task);
-    public void updateTask(Task task);    
+
+    public void addTask(Task task) throws PreexistingEntityException, Exception;
+
+    public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception;
 }

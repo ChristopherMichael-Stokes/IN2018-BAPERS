@@ -7,14 +7,13 @@ package bapers.service;
 
 import static bapers.BAPERS.EMF;
 import bapers.data.dataAccess.StaffJpaController;
-import static bapers.utility.SimpleHash.getStringHash;
 import bapers.data.dataAccess.UserTypeJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Staff;
 import bapers.data.domain.UserType;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static bapers.utility.SimpleHash.getStringHash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -81,8 +80,8 @@ public class UserServiceImpl implements UserService {
      * @param staff
      */
     @Override
-    public void addUser(Staff staff) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addUser(Staff staff) throws PreexistingEntityException, Exception {
+        controller.create(staff);
     }
 
     /**
@@ -108,8 +107,8 @@ public class UserServiceImpl implements UserService {
      * @param type
      */
     @Override
-    public void addUserType(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addUserType(String type) throws PreexistingEntityException, Exception {
+        typeController.create(new UserType(type));
     }
 
     /**
@@ -117,17 +116,17 @@ public class UserServiceImpl implements UserService {
      * @param type
      */
     @Override
-    public void removeUserType(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException {
+        typeController.destroy(type);
     }
 
     @Override
     public ObservableList<Staff> getStaff() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return staff;
     }
 
     @Override
     public ObservableList<UserType> getUserTypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return userTypes;
     }
 }

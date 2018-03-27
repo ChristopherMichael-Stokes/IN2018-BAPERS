@@ -26,6 +26,7 @@
 package bapers.service;
 
 import bapers.data.domain.JobTask;
+import java.util.Date;
 import javafx.collections.ObservableList;
 
 /**
@@ -33,8 +34,11 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface JobService {
-    public void setTaskComplete(int taskId);
+
+    public void setTaskComplete(int taskId, Date time);
+
     public ObservableList<JobTask> getTasks(String jobId);
+
     public void printLabel(String jobId);
-    
+
 }

@@ -71,7 +71,6 @@ public class HomePageController implements Initializable {
     private Label lblTime;
     @FXML
     private Button btnLogout;
-
     /**
      * Initializes the controller class.
      *

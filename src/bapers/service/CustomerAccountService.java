@@ -34,6 +34,7 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface CustomerAccountService {
+
     public ObservableList<CustomerAccount> getCustomerAccounts();
     public void addCustomer(CustomerAccount account, Address address);
     public boolean customerExists(String accountNumber);
