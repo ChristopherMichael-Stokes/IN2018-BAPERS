@@ -5,18 +5,72 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Staff;
+import bapers.data.domain.UserType;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author chris
  */
 public interface UserService {
-    
-    public boolean userExists(String username);
-    
-    public boolean validHash(String username, String input);
-    
-    public Staff getUser(String username);
-    
+
+    public ObservableList<Staff> getStaff();
+
+    public ObservableList<UserType> getUserTypes();
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public boolean userExists(String id);
+
+    /**
+     *
+     * @param id
+     * @param input
+     * @return
+     */
+    public boolean validHash(String id, String input);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Staff getUser(String id);
+
+    /**
+     *
+     * @param staff
+     */
+    public void addUser(Staff staff) throws PreexistingEntityException, Exception;
+
+    /**
+     *
+     * @param id
+     */
+    public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException;
+
+    /**
+     *
+     * @param staff
+     */
+    public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception;
+
+    /**
+     *
+     * @param type
+     */
+    public void addUserType(String type) throws PreexistingEntityException, Exception;
+
+    /**
+     *
+     * @param type
+     */
+    public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException;
 }
