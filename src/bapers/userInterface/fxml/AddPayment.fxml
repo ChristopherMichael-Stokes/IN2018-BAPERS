@@ -24,31 +24,27 @@
             </Separator>
             <Label prefHeight="26.0" prefWidth="152.0" text="Payment">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="10.0" left="30.0" top="10.0" />
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
                </VBox.margin>
             </Label>
-            <Separator prefWidth="200.0">
+            <Separator prefWidth="200.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="30.0" right="30.0" />
                </VBox.margin>
             </Separator>
-            <HBox prefHeight="64.0" prefWidth="704.0" />
             <TextField fx:id="txtAccNo" maxWidth="-Infinity" prefHeight="39.0" prefWidth="174.0" promptText="Enter Customer ID..." VBox.vgrow="NEVER">
                <VBox.margin>
                   <Insets bottom="20.0" left="20.0" top="20.0" />
                </VBox.margin>
             </TextField>
-            <VBox prefHeight="200.0" prefWidth="100.0" />
             <Label prefHeight="27.0" prefWidth="182.0" text="Payment Due: £XXXX">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" />
                </VBox.margin>
             </Label>
-            <HBox prefHeight="100.0" prefWidth="200.0" />
-            <HBox prefHeight="100.0" prefWidth="200.0" />
             <HBox prefHeight="329.0" prefWidth="1275.0" VBox.vgrow="ALWAYS">
                <children>
                   <ScrollPane fx:id="scpJobs" prefHeight="358.0" prefWidth="249.0" HBox.hgrow="ALWAYS">
@@ -108,14 +104,9 @@
                         <Insets bottom="10.0" />
                      </HBox.margin>
                   </VBox>
+                  <Pane prefHeight="200.0" prefWidth="200.0" />
                </children>
             </HBox>
-            <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="39.0" prefWidth="97.0" text="Home">
-               <VBox.margin>
-                  <Insets left="10.0" top="50.0" />
-               </VBox.margin>
-            </Button>
-            <HBox prefHeight="9.0" prefWidth="704.0" />
             <Separator maxWidth="-Infinity" prefWidth="200.0">
                <VBox.margin>
                   <Insets />
@@ -124,14 +115,24 @@
                   <Insets left="20.0" top="10.0" />
                </padding>
             </Separator>
-            <Label text="Home&gt;Payment">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="20.0" top="17.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="21.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="38.0" prefWidth="704.0">
+               <children>
+                  <Label text="Home&gt;Payment" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnHome" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>
