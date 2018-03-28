@@ -32,8 +32,6 @@ import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -87,6 +85,13 @@ public class HomePageController implements Initializable {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+    enum Scenes {one, two;}
+    private void switchScene(Scenes scene) {
+        switch(scene) {
+            
+            default: break;
+        }
     }
 
 }

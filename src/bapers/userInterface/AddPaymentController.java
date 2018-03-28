@@ -27,7 +27,11 @@ package bapers.userInterface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -35,6 +39,13 @@ import javafx.fxml.Initializable;
  * @author chris
  */
 public class AddPaymentController implements Initializable {
+
+    @FXML
+    private TextField txtAccNo;
+    @FXML
+    private ScrollPane scpJobs;
+    @FXML
+    private Button btnHome;
 
     /**
      * Initializes the controller class.
