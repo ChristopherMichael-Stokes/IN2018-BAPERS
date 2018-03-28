@@ -29,12 +29,16 @@ import static bapers.BAPERS.EMF;
 import bapers.data.dataAccess.CardDetailsJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.PaymentInfoJpaController;
-import bapers.data.domain.CustomerAccount;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
+import bapers.data.domain.CardDetails;
 import bapers.data.domain.Job;
 import bapers.data.domain.PaymentInfo;
+import bapers.utility.SimpleHash;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
@@ -42,41 +46,47 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
  */
 public class PaymentServiceImpl implements PaymentService {
 
-    private final PaymentInfoJpaController PaymentController;
-    private final CardDetailsJpaController CardController;
+    private final PaymentInfoJpaController paymentController;
+    private final CardDetailsJpaController cardController;
     private final JobJpaController jobController;
-    private final ObservableList<Job> job;
 
     public PaymentServiceImpl() {
-        PaymentController = new PaymentInfoJpaController(EMF);
-        CardController = new CardDetailsJpaController(EMF);
+        paymentController = new PaymentInfoJpaController(EMF);
+        cardController = new CardDetailsJpaController(EMF);
         jobController = new JobJpaController(EMF);
-        job = FXCollections.observableArrayList(jobController.findJobEntities());
     }
 
     @Override
     public ObservableList<Job> getJobs(String accountNumber) {
-        ObservableList<Job> specifyJob = FXCollections.observableArrayList();
-        for(int n = 0; n < job.size(); ++n) {
-            if (job.get(n).getFkAccountNumber().getAccountNumber() == accountNumber && job.get(n).getAmountDue() > 0) {
-                specifyJob.add(job.get(n));
-
-            }
-        }
-        return specifyJob;
+        return jobController.findJobEntities().stream()
+                .filter(j -> j.getFkAccountNumber().getAccountNumber()
+                    .equals(accountNumber) && j.getAmountDue() > 0)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
     @Override
-    public void addPayment(String accountNumber, String... jobs
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
+            String... jobs) throws PreexistingEntityException, Exception {
+        String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
+                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0,8);
+        PaymentInfo pi = new PaymentInfo(transactionId, datePaid, 
+                amountPaid, "cash");
+        paymentController.create(pi);
     }
 
     @Override
-    public void addPayment(String accountNumber, String cardDigits,
-            DateTime expiryDate, String cardType, String... jobs
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
+            String cardDigits, Date expiryDate, String cardType, String... jobs) 
+            throws PreexistingEntityException, Exception {
+        String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
+                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0,8);
+        PaymentInfo pi = new PaymentInfo(transactionId, datePaid, 
+                amountPaid, "card");
+        paymentController.create(pi);
+        CardDetails cd = new CardDetails(cardDigits, expiryDate, transactionId);
+        cd.setCardType(cardType);
+        cardController.create(cd);
+        
     }
 
 }

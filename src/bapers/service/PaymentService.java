@@ -25,9 +25,10 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Job;
 import javafx.collections.ObservableList;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+import java.util.Date;
 
 /**
  *
@@ -36,7 +37,9 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 public interface PaymentService {
 
     public ObservableList<Job> getJobs(String accountNumber);
-    public void addPayment(String accountNumber, String ... jobs);
-    public void addPayment(String accountNumber, String cardDigits, 
-            DateTime expiryDate, String cardType, String ... jobs);
+    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
+            String ... jobs) throws PreexistingEntityException, Exception;
+    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
+            String cardDigits, Date expiryDate, String cardType, String ... jobs) 
+            throws PreexistingEntityException, Exception;
 }
