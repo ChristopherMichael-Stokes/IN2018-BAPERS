@@ -25,9 +25,10 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Job;
+import java.util.Date;
 import javafx.collections.ObservableList;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -79,12 +80,14 @@ public class PaymentServiceTest {
      * Test of addPayment method, of class PaymentService.
      */
     @Test
-    public void testAddPayment_String_StringArr() {
+    public void testAddPayment_4args() throws Exception {
         System.out.println("addPayment");
         String accountNumber = "";
+        int amountPaid = 0;
+        Date datePaid = null;
         String[] jobs = null;
         PaymentService instance = new PaymentServiceImpl();
-        instance.addPayment(accountNumber, jobs);
+        instance.addPayment(accountNumber, amountPaid, datePaid, jobs);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -93,15 +96,17 @@ public class PaymentServiceTest {
      * Test of addPayment method, of class PaymentService.
      */
     @Test
-    public void testAddPayment_5args() {
+    public void testAddPayment_7args() throws Exception {
         System.out.println("addPayment");
         String accountNumber = "";
+        int amountPaid = 0;
+        Date datePaid = null;
         String cardDigits = "";
-        DateTime expiryDate = null;
+        Date expiryDate = null;
         String cardType = "";
         String[] jobs = null;
         PaymentService instance = new PaymentServiceImpl();
-        instance.addPayment(accountNumber, cardDigits, expiryDate, cardType, jobs);
+        instance.addPayment(accountNumber, amountPaid, datePaid, cardDigits, expiryDate, cardType, jobs);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -112,10 +117,10 @@ public class PaymentServiceTest {
             return null;
         }
 
-        public void addPayment(String accountNumber, String[] jobs) {
+        public void addPayment(String accountNumber, int amountPaid, Date datePaid, String[] jobs) throws PreexistingEntityException, Exception {
         }
 
-        public void addPayment(String accountNumber, String cardDigits, DateTime expiryDate, String cardType, String[] jobs) {
+        public void addPayment(String accountNumber, int amountPaid, Date datePaid, String cardDigits, Date expiryDate, String cardType, String[] jobs) throws PreexistingEntityException, Exception {
         }
     }
     
