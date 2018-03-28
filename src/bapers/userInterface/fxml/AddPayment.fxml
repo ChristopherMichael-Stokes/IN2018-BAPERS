@@ -40,7 +40,7 @@
                   <Insets bottom="20.0" left="20.0" top="20.0" />
                </VBox.margin>
             </TextField>
-            <Label prefHeight="27.0" prefWidth="182.0" text="Payment Due: £XXXX">
+            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" text="Payment Due: £XXXX">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" />
                </VBox.margin>
@@ -59,42 +59,42 @@
                   </Separator>
                   <VBox alignment="CENTER_LEFT" prefHeight="348.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <DatePicker maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date">
+                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </DatePicker>
-                        <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="282.0" promptText="Enter Payment Amount">
+                        <TextField fx:id="txtPaymentAmount" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="282.0" promptText="Enter Payment Amount">
                            <VBox.margin>
                               <Insets bottom="8.0" left="10.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <RadioButton mnemonicParsing="false" text="Cash" VBox.vgrow="ALWAYS">
+                        <RadioButton fx:id="rbCash" mnemonicParsing="false" text="Cash" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Card" VBox.vgrow="ALWAYS">
+                        <RadioButton fx:id="rbCard" mnemonicParsing="false" text="Card" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
-                        <ComboBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="284.0" promptText="Card Type">
+                        <ComboBox fx:id="cmbCardType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="284.0" promptText="Card Type">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="287.0" promptText="Enter Card Number">
+                        <TextField fx:id="txtCardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="287.0" promptText="Enter Card Number">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="289.0" promptText="Enter Expiry Date MM/YY">
+                        <TextField fx:id="txtExpiry" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="289.0" promptText="Enter Expiry Date MM/YY">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </TextField>
-                        <Button mnemonicParsing="false" text="Add Payment">
+                        <Button fx:id="btnAddPayment" mnemonicParsing="false" text="Add Payment">
                            <VBox.margin>
                               <Insets left="10.0" top="10.0" />
                            </VBox.margin>
@@ -125,7 +125,7 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Pane HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnHome" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
                      <HBox.margin>
                         <Insets right="10.0" />
