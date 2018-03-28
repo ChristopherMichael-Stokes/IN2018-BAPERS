@@ -33,10 +33,10 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.data.domain.Job;
+import bapers.data.domain.CardDetails;
 import java.util.ArrayList;
 import java.util.List;
-import bapers.data.domain.CardDetails;
+import bapers.data.domain.Job;
 import bapers.data.domain.PaymentInfo;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -57,33 +57,29 @@ public class PaymentInfoJpaController implements Serializable {
     }
 
     public void create(PaymentInfo paymentInfo) throws PreexistingEntityException, Exception {
-        if (paymentInfo.getJobList() == null) {
-            paymentInfo.setJobList(new ArrayList<Job>());
-        }
         if (paymentInfo.getCardDetailsList() == null) {
             paymentInfo.setCardDetailsList(new ArrayList<CardDetails>());
+        }
+        if (paymentInfo.getJobList() == null) {
+            paymentInfo.setJobList(new ArrayList<Job>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Job> attachedJobList = new ArrayList<Job>();
-            for (Job jobListJobToAttach : paymentInfo.getJobList()) {
-                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobId());
-                attachedJobList.add(jobListJobToAttach);
-            }
-            paymentInfo.setJobList(attachedJobList);
             List<CardDetails> attachedCardDetailsList = new ArrayList<CardDetails>();
             for (CardDetails cardDetailsListCardDetailsToAttach : paymentInfo.getCardDetailsList()) {
                 cardDetailsListCardDetailsToAttach = em.getReference(cardDetailsListCardDetailsToAttach.getClass(), cardDetailsListCardDetailsToAttach.getCardDetailsPK());
                 attachedCardDetailsList.add(cardDetailsListCardDetailsToAttach);
             }
             paymentInfo.setCardDetailsList(attachedCardDetailsList);
-            em.persist(paymentInfo);
-            for (Job jobListJob : paymentInfo.getJobList()) {
-                jobListJob.getPaymentInfoList().add(paymentInfo);
-                jobListJob = em.merge(jobListJob);
+            List<Job> attachedJobList = new ArrayList<Job>();
+            for (Job jobListJobToAttach : paymentInfo.getJobList()) {
+                jobListJobToAttach = em.getReference(jobListJobToAttach.getClass(), jobListJobToAttach.getJobId());
+                attachedJobList.add(jobListJobToAttach);
             }
+            paymentInfo.setJobList(attachedJobList);
+            em.persist(paymentInfo);
             for (CardDetails cardDetailsListCardDetails : paymentInfo.getCardDetailsList()) {
                 PaymentInfo oldPaymentInfoOfCardDetailsListCardDetails = cardDetailsListCardDetails.getPaymentInfo();
                 cardDetailsListCardDetails.setPaymentInfo(paymentInfo);
@@ -91,6 +87,15 @@ public class PaymentInfoJpaController implements Serializable {
                 if (oldPaymentInfoOfCardDetailsListCardDetails != null) {
                     oldPaymentInfoOfCardDetailsListCardDetails.getCardDetailsList().remove(cardDetailsListCardDetails);
                     oldPaymentInfoOfCardDetailsListCardDetails = em.merge(oldPaymentInfoOfCardDetailsListCardDetails);
+                }
+            }
+            for (Job jobListJob : paymentInfo.getJobList()) {
+                PaymentInfo oldFkTransactionIdOfJobListJob = jobListJob.getFkTransactionId();
+                jobListJob.setFkTransactionId(paymentInfo);
+                jobListJob = em.merge(jobListJob);
+                if (oldFkTransactionIdOfJobListJob != null) {
+                    oldFkTransactionIdOfJobListJob.getJobList().remove(jobListJob);
+                    oldFkTransactionIdOfJobListJob = em.merge(oldFkTransactionIdOfJobListJob);
                 }
             }
             em.getTransaction().commit();
@@ -112,10 +117,10 @@ public class PaymentInfoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             PaymentInfo persistentPaymentInfo = em.find(PaymentInfo.class, paymentInfo.getTransactionId());
-            List<Job> jobListOld = persistentPaymentInfo.getJobList();
-            List<Job> jobListNew = paymentInfo.getJobList();
             List<CardDetails> cardDetailsListOld = persistentPaymentInfo.getCardDetailsList();
             List<CardDetails> cardDetailsListNew = paymentInfo.getCardDetailsList();
+            List<Job> jobListOld = persistentPaymentInfo.getJobList();
+            List<Job> jobListNew = paymentInfo.getJobList();
             List<String> illegalOrphanMessages = null;
             for (CardDetails cardDetailsListOldCardDetails : cardDetailsListOld) {
                 if (!cardDetailsListNew.contains(cardDetailsListOldCardDetails)) {
@@ -128,13 +133,6 @@ public class PaymentInfoJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Job> attachedJobListNew = new ArrayList<Job>();
-            for (Job jobListNewJobToAttach : jobListNew) {
-                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobId());
-                attachedJobListNew.add(jobListNewJobToAttach);
-            }
-            jobListNew = attachedJobListNew;
-            paymentInfo.setJobList(jobListNew);
             List<CardDetails> attachedCardDetailsListNew = new ArrayList<CardDetails>();
             for (CardDetails cardDetailsListNewCardDetailsToAttach : cardDetailsListNew) {
                 cardDetailsListNewCardDetailsToAttach = em.getReference(cardDetailsListNewCardDetailsToAttach.getClass(), cardDetailsListNewCardDetailsToAttach.getCardDetailsPK());
@@ -142,19 +140,14 @@ public class PaymentInfoJpaController implements Serializable {
             }
             cardDetailsListNew = attachedCardDetailsListNew;
             paymentInfo.setCardDetailsList(cardDetailsListNew);
+            List<Job> attachedJobListNew = new ArrayList<Job>();
+            for (Job jobListNewJobToAttach : jobListNew) {
+                jobListNewJobToAttach = em.getReference(jobListNewJobToAttach.getClass(), jobListNewJobToAttach.getJobId());
+                attachedJobListNew.add(jobListNewJobToAttach);
+            }
+            jobListNew = attachedJobListNew;
+            paymentInfo.setJobList(jobListNew);
             paymentInfo = em.merge(paymentInfo);
-            for (Job jobListOldJob : jobListOld) {
-                if (!jobListNew.contains(jobListOldJob)) {
-                    jobListOldJob.getPaymentInfoList().remove(paymentInfo);
-                    jobListOldJob = em.merge(jobListOldJob);
-                }
-            }
-            for (Job jobListNewJob : jobListNew) {
-                if (!jobListOld.contains(jobListNewJob)) {
-                    jobListNewJob.getPaymentInfoList().add(paymentInfo);
-                    jobListNewJob = em.merge(jobListNewJob);
-                }
-            }
             for (CardDetails cardDetailsListNewCardDetails : cardDetailsListNew) {
                 if (!cardDetailsListOld.contains(cardDetailsListNewCardDetails)) {
                     PaymentInfo oldPaymentInfoOfCardDetailsListNewCardDetails = cardDetailsListNewCardDetails.getPaymentInfo();
@@ -163,6 +156,23 @@ public class PaymentInfoJpaController implements Serializable {
                     if (oldPaymentInfoOfCardDetailsListNewCardDetails != null && !oldPaymentInfoOfCardDetailsListNewCardDetails.equals(paymentInfo)) {
                         oldPaymentInfoOfCardDetailsListNewCardDetails.getCardDetailsList().remove(cardDetailsListNewCardDetails);
                         oldPaymentInfoOfCardDetailsListNewCardDetails = em.merge(oldPaymentInfoOfCardDetailsListNewCardDetails);
+                    }
+                }
+            }
+            for (Job jobListOldJob : jobListOld) {
+                if (!jobListNew.contains(jobListOldJob)) {
+                    jobListOldJob.setFkTransactionId(null);
+                    jobListOldJob = em.merge(jobListOldJob);
+                }
+            }
+            for (Job jobListNewJob : jobListNew) {
+                if (!jobListOld.contains(jobListNewJob)) {
+                    PaymentInfo oldFkTransactionIdOfJobListNewJob = jobListNewJob.getFkTransactionId();
+                    jobListNewJob.setFkTransactionId(paymentInfo);
+                    jobListNewJob = em.merge(jobListNewJob);
+                    if (oldFkTransactionIdOfJobListNewJob != null && !oldFkTransactionIdOfJobListNewJob.equals(paymentInfo)) {
+                        oldFkTransactionIdOfJobListNewJob.getJobList().remove(jobListNewJob);
+                        oldFkTransactionIdOfJobListNewJob = em.merge(oldFkTransactionIdOfJobListNewJob);
                     }
                 }
             }
@@ -208,7 +218,7 @@ public class PaymentInfoJpaController implements Serializable {
             }
             List<Job> jobList = paymentInfo.getJobList();
             for (Job jobListJob : jobList) {
-                jobListJob.getPaymentInfoList().remove(paymentInfo);
+                jobListJob.setFkTransactionId(null);
                 jobListJob = em.merge(jobListJob);
             }
             em.remove(paymentInfo);

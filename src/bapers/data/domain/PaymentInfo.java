@@ -33,7 +33,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -73,10 +72,10 @@ public class PaymentInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "payment_type")
     private String paymentType;
-    @ManyToMany(mappedBy = "paymentInfoList")
-    private List<Job> jobList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
     private List<CardDetails> cardDetailsList;
+    @OneToMany(mappedBy = "fkTransactionId")
+    private List<Job> jobList;
 
     public PaymentInfo() {
     }
@@ -125,21 +124,21 @@ public class PaymentInfo implements Serializable {
     }
 
     @XmlTransient
-    public List<Job> getJobList() {
-        return jobList;
-    }
-
-    public void setJobList(List<Job> jobList) {
-        this.jobList = jobList;
-    }
-
-    @XmlTransient
     public List<CardDetails> getCardDetailsList() {
         return cardDetailsList;
     }
 
     public void setCardDetailsList(List<CardDetails> cardDetailsList) {
         this.cardDetailsList = cardDetailsList;
+    }
+
+    @XmlTransient
+    public List<Job> getJobList() {
+        return jobList;
+    }
+
+    public void setJobList(List<Job> jobList) {
+        this.jobList = jobList;
     }
 
     @Override
