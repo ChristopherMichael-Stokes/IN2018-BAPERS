@@ -48,12 +48,12 @@ public class AddressPK implements Serializable {
     private String city;
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private String fkAccountNumber;
+    private int fkAccountNumber;
 
     public AddressPK() {
     }
 
-    public AddressPK(String addressLine1, String postcode, String city, String fkAccountNumber) {
+    public AddressPK(String addressLine1, String postcode, String city, int fkAccountNumber) {
         this.addressLine1 = addressLine1;
         this.postcode = postcode;
         this.city = city;
@@ -84,11 +84,11 @@ public class AddressPK implements Serializable {
         this.city = city;
     }
 
-    public String getFkAccountNumber() {
+    public int getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(String fkAccountNumber) {
+    public void setFkAccountNumber(int fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 
@@ -98,7 +98,7 @@ public class AddressPK implements Serializable {
         hash += (addressLine1 != null ? addressLine1.hashCode() : 0);
         hash += (postcode != null ? postcode.hashCode() : 0);
         hash += (city != null ? city.hashCode() : 0);
-        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
+        hash += (int) fkAccountNumber;
         return hash;
     }
 
@@ -118,7 +118,7 @@ public class AddressPK implements Serializable {
         if ((this.city == null && other.city != null) || (this.city != null && !this.city.equals(other.city))) {
             return false;
         }
-        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
+        if (this.fkAccountNumber != other.fkAccountNumber) {
             return false;
         }
         return true;

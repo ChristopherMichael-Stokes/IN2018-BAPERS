@@ -59,8 +59,8 @@ public class TaskDiscountJpaController implements Serializable {
         if (taskDiscount.getTaskDiscountPK() == null) {
             taskDiscount.setTaskDiscountPK(new TaskDiscountPK());
         }
-        taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
         taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getDiscount().getFkAccountNumber());
+        taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -98,8 +98,8 @@ public class TaskDiscountJpaController implements Serializable {
     }
 
     public void edit(TaskDiscount taskDiscount) throws NonexistentEntityException, Exception {
-        taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
         taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getDiscount().getFkAccountNumber());
+        taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
         EntityManager em = null;
         try {
             em = getEntityManager();

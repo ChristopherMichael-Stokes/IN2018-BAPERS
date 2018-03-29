@@ -58,7 +58,7 @@ public class Discount implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private String fkAccountNumber;
+    private Integer fkAccountNumber;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
     @OneToOne(optional = false)
     private CustomerAccount customerAccount;
@@ -73,15 +73,15 @@ public class Discount implements Serializable {
     public Discount() {
     }
 
-    public Discount(String fkAccountNumber) {
+    public Discount(Integer fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 
-    public String getFkAccountNumber() {
+    public Integer getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(String fkAccountNumber) {
+    public void setFkAccountNumber(Integer fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 

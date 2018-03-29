@@ -31,6 +31,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -61,9 +63,10 @@ public class CustomerAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "account_number")
-    private String accountNumber;
+    private Integer accountNumber;
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
@@ -93,11 +96,11 @@ public class CustomerAccount implements Serializable {
     public CustomerAccount() {
     }
 
-    public CustomerAccount(String accountNumber) {
+    public CustomerAccount(Integer accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    public CustomerAccount(String accountNumber, String accountHolderName, String title, String firstName, String surname, String housePhone) {
+    public CustomerAccount(Integer accountNumber, String accountHolderName, String title, String firstName, String surname, String housePhone) {
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
         this.title = title;
@@ -106,11 +109,11 @@ public class CustomerAccount implements Serializable {
         this.housePhone = housePhone;
     }
 
-    public String getAccountNumber() {
+    public Integer getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(Integer accountNumber) {
         this.accountNumber = accountNumber;
     }
 

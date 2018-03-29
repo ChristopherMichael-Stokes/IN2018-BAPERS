@@ -76,7 +76,7 @@ public class TaskDiscount implements Serializable {
         this.percentage = percentage;
     }
 
-    public TaskDiscount(String fkAccountNumber, int fkTaskId) {
+    public TaskDiscount(int fkAccountNumber, int fkTaskId) {
         this.taskDiscountPK = new TaskDiscountPK(fkAccountNumber, fkTaskId);
     }
 

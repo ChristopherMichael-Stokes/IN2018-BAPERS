@@ -27,7 +27,6 @@ package bapers.data.dataAccess;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -57,7 +56,7 @@ public class CustomerAccountJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(CustomerAccount customerAccount) throws PreexistingEntityException, Exception {
+    public void create(CustomerAccount customerAccount) {
         if (customerAccount.getAddressList() == null) {
             customerAccount.setAddressList(new ArrayList<Address>());
         }
@@ -114,11 +113,6 @@ public class CustomerAccountJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findCustomerAccount(customerAccount.getAccountNumber()) != null) {
-                throw new PreexistingEntityException("CustomerAccount " + customerAccount + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -218,7 +212,7 @@ public class CustomerAccountJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = customerAccount.getAccountNumber();
+                Integer id = customerAccount.getAccountNumber();
                 if (findCustomerAccount(id) == null) {
                     throw new NonexistentEntityException("The customerAccount with id " + id + " no longer exists.");
                 }
@@ -231,7 +225,7 @@ public class CustomerAccountJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -301,7 +295,7 @@ public class CustomerAccountJpaController implements Serializable {
         }
     }
 
-    public CustomerAccount findCustomerAccount(String id) {
+    public CustomerAccount findCustomerAccount(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(CustomerAccount.class, id);

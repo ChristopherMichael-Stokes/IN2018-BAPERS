@@ -39,7 +39,7 @@ public class TaskDiscountPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private String fkAccountNumber;
+    private int fkAccountNumber;
     @Basic(optional = false)
     @Column(name = "fk_task_id")
     private int fkTaskId;
@@ -47,16 +47,16 @@ public class TaskDiscountPK implements Serializable {
     public TaskDiscountPK() {
     }
 
-    public TaskDiscountPK(String fkAccountNumber, int fkTaskId) {
+    public TaskDiscountPK(int fkAccountNumber, int fkTaskId) {
         this.fkAccountNumber = fkAccountNumber;
         this.fkTaskId = fkTaskId;
     }
 
-    public String getFkAccountNumber() {
+    public int getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(String fkAccountNumber) {
+    public void setFkAccountNumber(int fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 
@@ -71,7 +71,7 @@ public class TaskDiscountPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
+        hash += (int) fkAccountNumber;
         hash += (int) fkTaskId;
         return hash;
     }
@@ -83,7 +83,7 @@ public class TaskDiscountPK implements Serializable {
             return false;
         }
         TaskDiscountPK other = (TaskDiscountPK) object;
-        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
+        if (this.fkAccountNumber != other.fkAccountNumber) {
             return false;
         }
         if (this.fkTaskId != other.fkTaskId) {

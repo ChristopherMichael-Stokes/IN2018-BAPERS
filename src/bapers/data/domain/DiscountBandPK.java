@@ -39,7 +39,7 @@ public class DiscountBandPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private String fkAccountNumber;
+    private int fkAccountNumber;
     @Basic(optional = false)
     @Column(name = "price")
     private int price;
@@ -47,16 +47,16 @@ public class DiscountBandPK implements Serializable {
     public DiscountBandPK() {
     }
 
-    public DiscountBandPK(String fkAccountNumber, int price) {
+    public DiscountBandPK(int fkAccountNumber, int price) {
         this.fkAccountNumber = fkAccountNumber;
         this.price = price;
     }
 
-    public String getFkAccountNumber() {
+    public int getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(String fkAccountNumber) {
+    public void setFkAccountNumber(int fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 
@@ -71,7 +71,7 @@ public class DiscountBandPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
+        hash += (int) fkAccountNumber;
         hash += (int) price;
         return hash;
     }
@@ -83,7 +83,7 @@ public class DiscountBandPK implements Serializable {
             return false;
         }
         DiscountBandPK other = (DiscountBandPK) object;
-        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
+        if (this.fkAccountNumber != other.fkAccountNumber) {
             return false;
         }
         if (this.price != other.price) {

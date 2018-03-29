@@ -73,7 +73,7 @@ public class DiscountBand implements Serializable {
         this.percentage = percentage;
     }
 
-    public DiscountBand(String fkAccountNumber, int price) {
+    public DiscountBand(int fkAccountNumber, int price) {
         this.discountBandPK = new DiscountBandPK(fkAccountNumber, price);
     }
 

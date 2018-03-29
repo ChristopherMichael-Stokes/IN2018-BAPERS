@@ -31,6 +31,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -58,9 +60,10 @@ public class Staff implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "staff_id")
-    private String staffId;
+    private Integer staffId;
     @Basic(optional = false)
     @Column(name = "first_name")
     private String firstName;
@@ -79,22 +82,22 @@ public class Staff implements Serializable {
     public Staff() {
     }
 
-    public Staff(String staffId) {
+    public Staff(Integer staffId) {
         this.staffId = staffId;
     }
 
-    public Staff(String staffId, String firstName, String surname, String passphrase) {
+    public Staff(Integer staffId, String firstName, String surname, String passphrase) {
         this.staffId = staffId;
         this.firstName = firstName;
         this.surname = surname;
         this.passphrase = passphrase;
     }
 
-    public String getStaffId() {
+    public Integer getStaffId() {
         return staffId;
     }
 
-    public void setStaffId(String staffId) {
+    public void setStaffId(Integer staffId) {
         this.staffId = staffId;
     }
 

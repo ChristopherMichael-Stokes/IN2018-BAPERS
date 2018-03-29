@@ -27,7 +27,6 @@ package bapers.data.dataAccess;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -56,7 +55,7 @@ public class StaffJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Staff staff) throws PreexistingEntityException, Exception {
+    public void create(Staff staff) {
         if (staff.getJobTaskList() == null) {
             staff.setJobTaskList(new ArrayList<JobTask>());
         }
@@ -90,11 +89,6 @@ public class StaffJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findStaff(staff.getStaffId()) != null) {
-                throw new PreexistingEntityException("Staff " + staff + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -159,7 +153,7 @@ public class StaffJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = staff.getStaffId();
+                Integer id = staff.getStaffId();
                 if (findStaff(id) == null) {
                     throw new NonexistentEntityException("The staff with id " + id + " no longer exists.");
                 }
@@ -172,7 +166,7 @@ public class StaffJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -233,7 +227,7 @@ public class StaffJpaController implements Serializable {
         }
     }
 
-    public Staff findStaff(String id) {
+    public Staff findStaff(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Staff.class, id);

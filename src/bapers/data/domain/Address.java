@@ -78,7 +78,7 @@ public class Address implements Serializable {
         this.country = country;
     }
 
-    public Address(String addressLine1, String postcode, String city, String fkAccountNumber) {
+    public Address(String addressLine1, String postcode, String city, int fkAccountNumber) {
         this.addressPK = new AddressPK(addressLine1, postcode, city, fkAccountNumber);
     }
 

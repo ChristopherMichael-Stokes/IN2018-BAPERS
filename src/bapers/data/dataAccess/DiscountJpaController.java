@@ -253,7 +253,7 @@ public class DiscountJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = discount.getFkAccountNumber();
+                Integer id = discount.getFkAccountNumber();
                 if (findDiscount(id) == null) {
                     throw new NonexistentEntityException("The discount with id " + id + " no longer exists.");
                 }
@@ -266,7 +266,7 @@ public class DiscountJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -339,7 +339,7 @@ public class DiscountJpaController implements Serializable {
         }
     }
 
-    public Discount findDiscount(String id) {
+    public Discount findDiscount(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Discount.class, id);
