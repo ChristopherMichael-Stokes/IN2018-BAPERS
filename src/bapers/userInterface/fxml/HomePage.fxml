@@ -19,7 +19,7 @@
          <top>
             <VBox prefHeight="79.0" prefWidth="827.0" BorderPane.alignment="CENTER">
                <children>
-                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                  <ToolBar fx:id="tbNavigation" prefHeight="40.0" prefWidth="200.0">
                     <items>
                       <Button fx:id="btnCustomerAccount" mnemonicParsing="false" text="Customer Accounts" />
                         <Button fx:id="btnIntervals" mnemonicParsing="false" text="Intervals" />
