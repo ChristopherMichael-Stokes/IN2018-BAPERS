@@ -77,6 +77,7 @@ public class SceneController {
                     break;
                 case login:
                     USER = null;
+                    width = 800; height = 450;
                     break;
                 case manageBackup:
                     break;
@@ -108,7 +109,10 @@ public class SceneController {
             System.err.println(ex.getMessage());
             System.err.println("invalid .fxml file");
             Platform.exit();
-        }
-        
+        }       
+    }
+    
+    public static void logout() {
+        switchScene(Scenes.login);
     }
 }

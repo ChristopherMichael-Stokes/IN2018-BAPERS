@@ -27,6 +27,7 @@ package bapers.userInterface;
 
 import static bapers.BAPERS.USER;
 import bapers.userInterface.SceneController.Scenes;
+import static bapers.userInterface.SceneController.logout;
 import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.time.LocalTime;
@@ -94,7 +95,7 @@ public class HomePageController implements Initializable {
         btnPayment.setOnAction((event) -> switchScene(Scenes.payment));
         btnReports.setOnAction((event) -> switchScene(Scenes.report));
         btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
-        btnLogout.setOnAction((event) -> switchScene(Scenes.login));
+        btnLogout.setOnAction((event) -> logout());
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), (event) -> {
