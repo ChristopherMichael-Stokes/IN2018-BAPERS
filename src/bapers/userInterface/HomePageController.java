@@ -25,6 +25,9 @@
  */
 package bapers.userInterface;
 
+import static bapers.BAPERS.USER;
+import bapers.userInterface.SceneController.Scenes;
+import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -69,6 +72,7 @@ public class HomePageController implements Initializable {
     private Label lblTime;
     @FXML
     private Button btnLogout;
+
     /**
      * Initializes the controller class.
      *
@@ -77,6 +81,21 @@ public class HomePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        lblName.setText("Welcome back "+USER.getFirstName()+" "+USER.getSurname());
+        
+        //missing add customer account button
+        btnCustomerAccount.setOnAction((event) -> switchScene(Scenes.manageCustomerAccount));
+        btnIntervals.setOnAction((event) -> switchScene(Scenes.manageIntervals));
+        btnPayment.setOnAction((event) -> switchScene(Scenes.payment));
+        btnBackup.setOnAction((event) -> switchScene(Scenes.manageBackup));
+        btnUsers.setOnAction((event) -> switchScene(Scenes.manageStaff));
+        btnPlaceOrder.setOnAction((event) -> switchScene(Scenes.placeOrder));
+        btnJobProcessing.setOnAction((event) -> switchScene(Scenes.jobProcessing));
+        btnPayment.setOnAction((event) -> switchScene(Scenes.payment));
+        btnReports.setOnAction((event) -> switchScene(Scenes.report));
+        btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
+        btnLogout.setOnAction((event) -> switchScene(Scenes.login));
+
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), (event) -> {
                     lblTime.setText(LocalTime.now().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
@@ -86,12 +105,4 @@ public class HomePageController implements Initializable {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
-    enum Scenes {one, two;}
-    private void switchScene(Scenes scene) {
-        switch(scene) {
-            
-            default: break;
-        }
-    }
-
 }
