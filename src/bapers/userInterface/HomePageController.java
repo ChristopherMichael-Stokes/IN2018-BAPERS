@@ -26,6 +26,8 @@
 package bapers.userInterface;
 
 import static bapers.BAPERS.USER;
+import bapers.service.HomeService;
+import bapers.service.HomeServiceImpl;
 import bapers.userInterface.SceneController.Scenes;
 import static bapers.userInterface.SceneController.logout;
 import static bapers.userInterface.SceneController.switchScene;
@@ -73,6 +75,10 @@ public class HomePageController implements Initializable {
     private Label lblTime;
     @FXML
     private Button btnLogout;
+    
+    private final HomeService dao = new HomeServiceImpl();
+    @FXML
+    private Label lblBriefing;
 
     /**
      * Initializes the controller class.
@@ -96,6 +102,10 @@ public class HomePageController implements Initializable {
         btnReports.setOnAction((event) -> switchScene(Scenes.report));
         btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
         btnLogout.setOnAction((event) -> logout());
+        
+        
+        
+        lblBriefing.setText(dao.getBriefing());
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), (event) -> {
