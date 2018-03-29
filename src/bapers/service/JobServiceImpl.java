@@ -81,7 +81,15 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void printLabel(String jobId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        https://docs.oracle.com/javase/8/javafx/api/javafx/print/PrinterJob.html
+//        Node node = new Circle(100, 200, 200);
+//        PrinterJob job = PrinterJob.createPrinterJob();
+//        if (job != null) {
+//            boolean success = job.printPage(node);
+//            if (success) {
+//                job.endJob();
+//            }
+//        }
     }
 
 }
