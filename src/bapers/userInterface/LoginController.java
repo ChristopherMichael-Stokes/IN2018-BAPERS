@@ -28,6 +28,7 @@ package bapers.userInterface;
 import static bapers.BAPERS.USER;
 import bapers.service.UserService;
 import bapers.service.UserServiceImpl;
+import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -89,17 +90,7 @@ public class LoginController implements Initializable {
             attempts = 0;
             USER = DAO.getUser(txtId.getText());
             System.out.println(USER.getFirstName()+" "+USER.getSurname());
-//            try {
-//                Parent root = FXMLLoader.load(this.getClass().getResource("/bapers/userInterface/fxml/UserType.fxml"));
-//                Scene userTypeScene = new Scene(root);
-//                Stage stage = (Stage)btnLogin.getScene().getWindow();
-////                Stage stage = (Stage) ((Node) this.getSource()).getScene().getWindow();
-//                stage.setScene(userTypeScene);
-//                stage.show();
-//            } catch (IOException ex) {
-//                ex.printStackTrace(System.err);
-//                System.exit(-1);
-//            }
+            switchScene(SceneController.Scenes.home);
         } else {
             lblOut.setText("invalid id or password\n"
                     + "login attempts: " + attempts);
