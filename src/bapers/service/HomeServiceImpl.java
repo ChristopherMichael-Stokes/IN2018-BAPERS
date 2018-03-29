@@ -25,10 +25,30 @@
  */
 package bapers.service;
 
+import static bapers.BAPERS.EMF;
+import static bapers.BAPERS.USER;
+import bapers.data.dataAccess.StaffJpaController;
+
 /**
  *
  * @author EdgarLaw
  */
-public class HomeServiceImpl {
+public class HomeServiceImpl implements HomeService{
+    
+    HomeServiceImpl(){
+    }
+
+    @Override
+    public String getBriefing() {
+        switch (USER.getFkType().getType()){
+            case "admin": 
+                
+                return "hi";
+            default: return "";
+        }
+        
+    }
+    
+    
 
 }

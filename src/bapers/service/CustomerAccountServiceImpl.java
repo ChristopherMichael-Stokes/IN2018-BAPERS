@@ -25,10 +25,46 @@
  */
 package bapers.service;
 
+import static bapers.BAPERS.EMF;
+import bapers.data.dataAccess.AddressJpaController;
+import bapers.data.dataAccess.CustomerAccountJpaController;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
+import bapers.data.domain.Address;
+import bapers.data.domain.CustomerAccount;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author EdgarLaw
  */
-public class CustomerAccountServiceImpl {
+public class CustomerAccountServiceImpl implements CustomerAccountService{
+    private final CustomerAccountJpaController customerController;
+    private final AddressJpaController addressController;
+    private final ObservableList<CustomerAccount> customers;
+    
+    CustomerAccountServiceImpl(){
+        customerController = new CustomerAccountJpaController(EMF);
+        addressController = new AddressJpaController(EMF);
+        customers = FXCollections.observableArrayList(customerController.findCustomerAccountEntities());
+    }
+    public ObservableList<CustomerAccount> getCustomerAccounts(){
+        return customers;
+    }
+    public void addCustomer(CustomerAccount account, Address address) throws PreexistingEntityException, Exception {
+        account.getAddressList().add(address);
+        customerController.create(account);
+    }
+    public boolean customerExists(String accountNumber){
+        return customerController.findCustomerAccount(accountNumber) != null;
+    }
+    public void updateAccount(CustomerAccount account, Address address) throws IllegalOrphanException, NonexistentEntityException, Exception {
+        account.getAddressList().clear();
+        account.getAddressList().add(address);
+        customerController.edit(account);
+        
+    }
 
 }

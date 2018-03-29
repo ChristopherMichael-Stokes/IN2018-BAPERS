@@ -25,6 +25,9 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
 import javafx.collections.ObservableList;
@@ -36,7 +39,7 @@ import javafx.collections.ObservableList;
 public interface CustomerAccountService {
 
     public ObservableList<CustomerAccount> getCustomerAccounts();
-    public void addCustomer(CustomerAccount account, Address address);
+    public void addCustomer(CustomerAccount account, Address address) throws PreexistingEntityException, Exception ;
     public boolean customerExists(String accountNumber);
-    public void updateAccount(CustomerAccount account, Address address);
+    public void updateAccount(CustomerAccount account, Address address) throws IllegalOrphanException, NonexistentEntityException, Exception ;
 }
