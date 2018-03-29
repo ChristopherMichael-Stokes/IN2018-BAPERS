@@ -71,10 +71,28 @@ public class HomeServiceTest {
         fail("The test case is a prototype.");
     }
 
+    /**
+     * Test of getUserType method, of class HomeService.
+     */
+    @Test
+    public void testGetUserType() {
+        System.out.println("getUserType");
+        HomeService instance = new HomeServiceImpl();
+        HomeService.UserTypes expResult = null;
+        HomeService.UserTypes result = instance.getUserType();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
     public class HomeServiceImpl implements HomeService {
 
         public String getBriefing() {
             return "";
+        }
+
+        public UserTypes getUserType() {
+            return null;
         }
     }
     
