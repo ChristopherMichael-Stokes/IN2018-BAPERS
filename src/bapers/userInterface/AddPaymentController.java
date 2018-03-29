@@ -25,6 +25,8 @@
  */
 package bapers.userInterface;
 
+import bapers.userInterface.SceneController.Scenes;
+import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -62,7 +64,7 @@ public class AddPaymentController implements Initializable {
     @FXML
     private RadioButton rbCard;
     @FXML
-    private ComboBox<?> cmbCardType;
+    private ComboBox<String> cmbCardType;
     @FXML
     private TextField txtCardNumber;
     @FXML
@@ -77,10 +79,11 @@ public class AddPaymentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnHome.setOnAction((event) -> switchScene(Scenes.home));
         ToggleGroup group = new ToggleGroup();
         rbCard.setToggleGroup(group);
         rbCash.setToggleGroup(group);
-
+        cmbCardType.getItems().addAll("visa", "master card", "debit");
     }    
     
 }
