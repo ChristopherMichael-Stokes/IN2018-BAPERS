@@ -25,10 +25,26 @@
  */
 package bapers.service;
 
+
 /**
  *
  * @author chris
  */
 public interface HomeService {
+    public enum UserTypes{
+        officeManager, shiftManager, receptionist, technician;
+        public static HomeServiceImpl.UserTypes getType(String type) {
+            switch(type){
+                case "office manager":
+                    return officeManager;
+                case "shift manager":
+                    return shiftManager;
+                case "receptionist":
+                    return receptionist;                  
+                default: return null;
+            }                
+        }
+    };
     public String getBriefing();    
+    public UserTypes getUserType();
 }

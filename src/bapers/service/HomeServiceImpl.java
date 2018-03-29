@@ -25,28 +25,39 @@
  */
 package bapers.service;
 
-import static bapers.BAPERS.EMF;
 import static bapers.BAPERS.USER;
-import bapers.data.dataAccess.StaffJpaController;
 
 /**
  *
  * @author EdgarLaw
  */
 public class HomeServiceImpl implements HomeService{
+       
+    private final UserTypes type;
+
+    public HomeServiceImpl() {
+        type = UserTypes.getType(USER.getFkType().getType());
+    }   
     
-    HomeServiceImpl(){
+    @Override
+    public String getBriefing() {
+        
+        switch (type){
+            case officeManager:                 
+                return null;
+            case shiftManager:                 
+                return null;
+            case receptionist:                 
+                return null;
+            case technician:                 
+                return null;    
+            default: return "";
+        }        
     }
 
     @Override
-    public String getBriefing() {
-        switch (USER.getFkType().getType()){
-            case "admin": 
-                
-                return "hi";
-            default: return "";
-        }
-        
+    public UserTypes getUserType() {
+        return type;
     }
     
     
