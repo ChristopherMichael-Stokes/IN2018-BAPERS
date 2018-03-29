@@ -34,11 +34,9 @@ import bapers.data.dataAccess.JobTaskJpaController;
 import bapers.data.dataAccess.TaskDiscountJpaController;
 import bapers.data.dataAccess.TaskJpaController;
 import bapers.data.domain.JobTask;
-import bapers.data.domain.Task;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
@@ -78,7 +76,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public ObservableList<JobTask> getTasks(String jobId) {
-    return jobTasks;
+        return jobTasks;
     }
 
     @Override

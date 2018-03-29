@@ -27,7 +27,16 @@ package bapers.userInterface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 
 /**
  * FXML Controller class
@@ -36,6 +45,31 @@ import javafx.fxml.Initializable;
  */
 public class AddPaymentController implements Initializable {
 
+    @FXML
+    private TextField txtAccNo;
+    @FXML
+    private ScrollPane scpJobs;
+    @FXML
+    private Button btnHome;
+    @FXML
+    private Label lblPaymentDue;
+    @FXML
+    private DatePicker dteDatePaid;
+    @FXML
+    private TextField txtPaymentAmount;
+    @FXML
+    private RadioButton rbCash;
+    @FXML
+    private RadioButton rbCard;
+    @FXML
+    private ComboBox<?> cmbCardType;
+    @FXML
+    private TextField txtCardNumber;
+    @FXML
+    private TextField txtExpiry;
+    @FXML
+    private Button btnAddPayment;
+
     /**
      * Initializes the controller class.
      * @param url
@@ -43,7 +77,10 @@ public class AddPaymentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        ToggleGroup group = new ToggleGroup();
+        rbCard.setToggleGroup(group);
+        rbCash.setToggleGroup(group);
+
     }    
     
 }

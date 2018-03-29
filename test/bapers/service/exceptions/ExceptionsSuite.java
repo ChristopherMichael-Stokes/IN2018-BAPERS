@@ -23,23 +23,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package bapers.service;
+package bapers.service.exceptions;
 
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
-import bapers.data.domain.Job;
-import javafx.collections.ObservableList;
-import java.util.Date;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  *
  * @author chris
  */
-public interface PaymentService {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({bapers.service.exceptions.InvalidPermissionExceptionTest.class})
+public class ExceptionsSuite {
 
-    public ObservableList<Job> getJobs(String accountNumber);
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String ... jobs) throws PreexistingEntityException, Exception;
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String cardDigits, Date expiryDate, String cardType, String ... jobs) 
-            throws PreexistingEntityException, Exception;
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+    
 }

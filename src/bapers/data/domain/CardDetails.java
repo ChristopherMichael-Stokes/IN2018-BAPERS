@@ -49,7 +49,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CardDetails.findAll", query = "SELECT c FROM CardDetails c")
     , @NamedQuery(name = "CardDetails.findByLastDigits", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.lastDigits = :lastDigits")
     , @NamedQuery(name = "CardDetails.findByExpiryDate", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.expiryDate = :expiryDate")
-    , @NamedQuery(name = "CardDetails.findByFkPaymentId", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.fkPaymentId = :fkPaymentId")
     , @NamedQuery(name = "CardDetails.findByCardType", query = "SELECT c FROM CardDetails c WHERE c.cardType = :cardType")
     , @NamedQuery(name = "CardDetails.findByFkTransactionId", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.fkTransactionId = :fkTransactionId")})
 public class CardDetails implements Serializable {
@@ -76,8 +75,8 @@ public class CardDetails implements Serializable {
         this.cardType = cardType;
     }
 
-    public CardDetails(String lastDigits, Date expiryDate, int fkPaymentId, String fkTransactionId) {
-        this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate, fkPaymentId, fkTransactionId);
+    public CardDetails(String lastDigits, Date expiryDate, String fkTransactionId) {
+        this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate, fkTransactionId);
     }
 
     public CardDetailsPK getCardDetailsPK() {

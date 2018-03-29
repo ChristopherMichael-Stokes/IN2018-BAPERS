@@ -34,8 +34,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -79,16 +77,14 @@ public class Job implements Serializable {
     @Basic(optional = false)
     @Column(name = "urgent")
     private boolean urgent;
-    @JoinTable(name = "payment", joinColumns = {
-        @JoinColumn(name = "fk_job_id", referencedColumnName = "job_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "fk_transaction_id", referencedColumnName = "transaction_id")})
-    @ManyToMany
-    private List<PaymentInfo> paymentInfoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
     private List<JobTask> jobTaskList;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number")
     @ManyToOne(optional = false)
     private CustomerAccount fkAccountNumber;
+    @JoinColumn(name = "fk_transaction_id", referencedColumnName = "transaction_id")
+    @ManyToOne
+    private PaymentInfo fkTransactionId;
 
     public Job() {
     }
@@ -145,15 +141,6 @@ public class Job implements Serializable {
     }
 
     @XmlTransient
-    public List<PaymentInfo> getPaymentInfoList() {
-        return paymentInfoList;
-    }
-
-    public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
-        this.paymentInfoList = paymentInfoList;
-    }
-
-    @XmlTransient
     public List<JobTask> getJobTaskList() {
         return jobTaskList;
     }
@@ -168,6 +155,14 @@ public class Job implements Serializable {
 
     public void setFkAccountNumber(CustomerAccount fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
+    }
+
+    public PaymentInfo getFkTransactionId() {
+        return fkTransactionId;
+    }
+
+    public void setFkTransactionId(PaymentInfo fkTransactionId) {
+        this.fkTransactionId = fkTransactionId;
     }
 
     @Override

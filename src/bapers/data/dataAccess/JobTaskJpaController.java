@@ -60,8 +60,8 @@ public class JobTaskJpaController implements Serializable {
         if (jobTask.getJobTaskPK() == null) {
             jobTask.setJobTaskPK(new JobTaskPK());
         }
-        jobTask.getJobTaskPK().setFkTaskId(jobTask.getTask().getTaskId());
         jobTask.getJobTaskPK().setFkJobId(jobTask.getJob().getJobId());
+        jobTask.getJobTaskPK().setFkTaskId(jobTask.getTask().getTaskId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -108,8 +108,8 @@ public class JobTaskJpaController implements Serializable {
     }
 
     public void edit(JobTask jobTask) throws NonexistentEntityException, Exception {
-        jobTask.getJobTaskPK().setFkTaskId(jobTask.getTask().getTaskId());
         jobTask.getJobTaskPK().setFkJobId(jobTask.getJob().getJobId());
+        jobTask.getJobTaskPK().setFkTaskId(jobTask.getTask().getTaskId());
         EntityManager em = null;
         try {
             em = getEntityManager();

@@ -48,19 +48,15 @@ public class CardDetailsPK implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date expiryDate;
     @Basic(optional = false)
-    @Column(name = "fk_payment_id")
-    private int fkPaymentId;
-    @Basic(optional = false)
     @Column(name = "fk_transaction_id")
     private String fkTransactionId;
 
     public CardDetailsPK() {
     }
 
-    public CardDetailsPK(String lastDigits, Date expiryDate, int fkPaymentId, String fkTransactionId) {
+    public CardDetailsPK(String lastDigits, Date expiryDate, String fkTransactionId) {
         this.lastDigits = lastDigits;
         this.expiryDate = expiryDate;
-        this.fkPaymentId = fkPaymentId;
         this.fkTransactionId = fkTransactionId;
     }
 
@@ -80,14 +76,6 @@ public class CardDetailsPK implements Serializable {
         this.expiryDate = expiryDate;
     }
 
-    public int getFkPaymentId() {
-        return fkPaymentId;
-    }
-
-    public void setFkPaymentId(int fkPaymentId) {
-        this.fkPaymentId = fkPaymentId;
-    }
-
     public String getFkTransactionId() {
         return fkTransactionId;
     }
@@ -101,7 +89,6 @@ public class CardDetailsPK implements Serializable {
         int hash = 0;
         hash += (lastDigits != null ? lastDigits.hashCode() : 0);
         hash += (expiryDate != null ? expiryDate.hashCode() : 0);
-        hash += (int) fkPaymentId;
         hash += (fkTransactionId != null ? fkTransactionId.hashCode() : 0);
         return hash;
     }
@@ -119,9 +106,6 @@ public class CardDetailsPK implements Serializable {
         if ((this.expiryDate == null && other.expiryDate != null) || (this.expiryDate != null && !this.expiryDate.equals(other.expiryDate))) {
             return false;
         }
-        if (this.fkPaymentId != other.fkPaymentId) {
-            return false;
-        }
         if ((this.fkTransactionId == null && other.fkTransactionId != null) || (this.fkTransactionId != null && !this.fkTransactionId.equals(other.fkTransactionId))) {
             return false;
         }
@@ -130,7 +114,7 @@ public class CardDetailsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.CardDetailsPK[ lastDigits=" + lastDigits + ", expiryDate=" + expiryDate + ", fkPaymentId=" + fkPaymentId + ", fkTransactionId=" + fkTransactionId + " ]";
+        return "bapers.data.domain.CardDetailsPK[ lastDigits=" + lastDigits + ", expiryDate=" + expiryDate + ", fkTransactionId=" + fkTransactionId + " ]";
     }
     
 }

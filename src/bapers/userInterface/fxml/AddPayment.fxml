@@ -15,7 +15,7 @@
         <URL value="@/bapers/userInterface/styles/addpayment.css" />
     </stylesheets>
    <children>
-      <VBox prefHeight="789.0" prefWidth="1140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="700.0" prefWidth="704.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator prefWidth="200.0">
                <VBox.margin>
@@ -24,56 +24,89 @@
             </Separator>
             <Label prefHeight="26.0" prefWidth="152.0" text="Payment">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="10.0" left="30.0" top="10.0" />
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
                </VBox.margin>
             </Label>
-            <Separator prefWidth="200.0">
+            <Separator prefWidth="200.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
-                  <Insets left="30.0" right="20.0" />
+                  <Insets left="30.0" right="30.0" />
                </VBox.margin>
             </Separator>
-            <TextField fx:id="txtAccNo" maxWidth="-Infinity" prefHeight="25.0" prefWidth="150.0" promptText="Customer ID..." VBox.vgrow="NEVER">
+            <TextField fx:id="txtAccNo" maxWidth="-Infinity" prefHeight="39.0" prefWidth="174.0" promptText="Enter Customer ID..." VBox.vgrow="NEVER">
                <VBox.margin>
-                  <Insets bottom="20.0" left="50.0" top="20.0" />
+                  <Insets bottom="20.0" left="20.0" top="20.0" />
                </VBox.margin>
             </TextField>
+            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" text="Payment Due: £XXXX">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="20.0" />
+               </VBox.margin>
+            </Label>
             <HBox prefHeight="329.0" prefWidth="1275.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ScrollPane fx:id="scpJobs" prefHeight="247.0" prefWidth="358.0" HBox.hgrow="ALWAYS">
+                  <ScrollPane fx:id="scpJobs" prefHeight="358.0" prefWidth="249.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="10.0" />
-                     </HBox.margin></ScrollPane>
+                     </HBox.margin>
+                  </ScrollPane>
                   <Separator orientation="VERTICAL" prefHeight="200.0">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </Separator>
-                  <VBox alignment="CENTER_LEFT" prefHeight="495.0" prefWidth="695.0" HBox.hgrow="ALWAYS">
+                  <VBox alignment="CENTER_LEFT" prefHeight="348.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <RadioButton mnemonicParsing="false" text="Cash" VBox.vgrow="ALWAYS">
+                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date">
                            <VBox.margin>
-                              <Insets />
+                              <Insets bottom="10.0" left="10.0" right="20.0" top="8.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                        <TextField fx:id="txtPaymentAmount" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="282.0" promptText="Enter Payment Amount">
+                           <VBox.margin>
+                              <Insets bottom="8.0" left="10.0" right="20.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <RadioButton fx:id="rbCash" mnemonicParsing="false" text="Cash" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Card" VBox.vgrow="ALWAYS">
+                        <RadioButton fx:id="rbCard" mnemonicParsing="false" text="Card" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin></RadioButton>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <ComboBox fx:id="cmbCardType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="284.0" promptText="Card Type">
+                           <VBox.margin>
+                              <Insets left="10.0" right="20.0" top="8.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <TextField fx:id="txtCardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="287.0" promptText="Enter Card Number">
+                           <VBox.margin>
+                              <Insets left="10.0" right="20.0" top="8.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="txtExpiry" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="289.0" promptText="Enter Expiry Date MM/YY">
+                           <VBox.margin>
+                              <Insets left="10.0" right="20.0" top="8.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Button fx:id="btnAddPayment" mnemonicParsing="false" text="Add Payment">
+                           <VBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                      <HBox.margin>
                         <Insets bottom="10.0" />
                      </HBox.margin>
                   </VBox>
+                  <Pane prefHeight="200.0" prefWidth="200.0" />
                </children>
             </HBox>
-            <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="39.0" prefWidth="97.0" text="Home">
-               <VBox.margin>
-                  <Insets left="10.0" top="50.0" />
-               </VBox.margin>
-            </Button>
             <Separator maxWidth="-Infinity" prefWidth="200.0">
                <VBox.margin>
                   <Insets />
@@ -82,14 +115,24 @@
                   <Insets left="20.0" top="10.0" />
                </padding>
             </Separator>
-            <Label text="Home&gt;Payment">
-               <VBox.margin>
-                  <Insets left="20.0" top="17.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="21.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="38.0" prefWidth="704.0">
+               <children>
+                  <Label text="Home&gt;Payment" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnHome" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>

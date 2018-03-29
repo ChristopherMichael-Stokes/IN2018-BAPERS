@@ -23,23 +23,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package bapers.service;
+package bapers.service.exceptions;
 
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
-import bapers.data.domain.Job;
-import javafx.collections.ObservableList;
-import java.util.Date;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author chris
  */
-public interface PaymentService {
+public class InvalidPermissionExceptionTest {
+    
+    public InvalidPermissionExceptionTest() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
 
-    public ObservableList<Job> getJobs(String accountNumber);
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String ... jobs) throws PreexistingEntityException, Exception;
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String cardDigits, Date expiryDate, String cardType, String ... jobs) 
-            throws PreexistingEntityException, Exception;
+    @Test
+    public void testSomeMethod() {
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    
 }

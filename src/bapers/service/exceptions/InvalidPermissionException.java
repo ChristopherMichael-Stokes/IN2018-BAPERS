@@ -23,23 +23,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package bapers.service;
-
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
-import bapers.data.domain.Job;
-import javafx.collections.ObservableList;
-import java.util.Date;
+package bapers.service.exceptions;
 
 /**
- *
+ * This exception is needed to handle actions when a user attempts an action 
+ * for which they should not be allowed to do.  For example, a receptionist 
+ * should not be allowed reload the system from a backup.
  * @author chris
  */
-public interface PaymentService {
-
-    public ObservableList<Job> getJobs(String accountNumber);
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String ... jobs) throws PreexistingEntityException, Exception;
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String cardDigits, Date expiryDate, String cardType, String ... jobs) 
-            throws PreexistingEntityException, Exception;
+public class InvalidPermissionException extends Exception {
+    public InvalidPermissionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    public InvalidPermissionException(String message) {
+        super(message);
+    }
 }

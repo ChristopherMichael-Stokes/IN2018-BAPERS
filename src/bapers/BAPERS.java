@@ -6,6 +6,7 @@
 package bapers;
 
 import bapers.data.domain.Staff;
+import bapers.service.UserServiceImpl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -38,7 +39,9 @@ public class BAPERS extends Application {
     /**
      *
      */
+    public static final boolean TESTING = true;
     public static Staff USER;
+    public static Stage primaryStage;
     private static URL url
             = BAPERS.class.getResource("/bapers/userInterface/fxml/Login.fxml");
 
@@ -46,27 +49,33 @@ public class BAPERS extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
-        Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
-        String[] options = Arrays.stream(resources).map(r -> r.getFilename()).toArray(String[]::new);
-        String selection;
-        Map<String, Resource> forms = new HashMap<>();
-        for (int i = 0; i < resources.length; ++i) {
-            forms.put(options[i], resources[i]);
-        }
-        selection = (String) JOptionPane.showInputDialog(
-                null, "Select a form", "form",
-                JOptionPane.QUESTION_MESSAGE, null,
-                options, null);
-        if (selection != null) {
-            url = forms.get(selection).getURL();
+        if (!TESTING) {
             launch(args);
+        } else {
+            PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
+            Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
+            String[] options = Arrays.stream(resources).map(r -> r.getFilename()).toArray(String[]::new);
+            String selection;
+            Map<String, Resource> forms = new HashMap<>();
+            for (int i = 0; i < resources.length; ++i) {
+                forms.put(options[i], resources[i]);
+            }
+            USER = new UserServiceImpl().getUser("0000");
+            selection = (String) JOptionPane.showInputDialog(
+                    null, "Select a form", "form",
+                    JOptionPane.QUESTION_MESSAGE, null,
+                    options, null);
+            if (selection != null) {
+                url = forms.get(selection).getURL();
+                launch(args);
+            }
         }
         Platform.exit();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        BAPERS.primaryStage = primaryStage;
         Parent root = FXMLLoader.load(url);
         Scene scene = new Scene(root, 800, 450);
         primaryStage.setScene(scene);
