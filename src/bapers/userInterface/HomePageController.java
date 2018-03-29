@@ -38,10 +38,13 @@ import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToolBar;
 import javafx.util.Duration;
 
 /**
@@ -79,6 +82,8 @@ public class HomePageController implements Initializable {
     private final HomeService dao = new HomeServiceImpl();
     @FXML
     private Label lblBriefing;
+    @FXML
+    private ToolBar tbNavigation;
 
     /**
      * Initializes the controller class.
@@ -102,10 +107,21 @@ public class HomePageController implements Initializable {
         btnReports.setOnAction((event) -> switchScene(Scenes.report));
         btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
         btnLogout.setOnAction((event) -> logout());
-        
-        
-        
+                      
         lblBriefing.setText(dao.getBriefing());
+        
+        ObservableList<Node> buttons = tbNavigation.getItems();
+        switch (dao.getUserType()) {
+            case receptionist:
+                buttons.clear();
+                buttons.addAll(btnPlaceOrder, btnPayment);
+            case shiftManager:
+                buttons.clear();
+                buttons.addAll(btnPlaceOrder, btnJobProcessing, btnReports);
+            case technician:
+                buttons.clear();
+                buttons.addAll(btnJobProcessing);
+        }
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0), (event) -> {
