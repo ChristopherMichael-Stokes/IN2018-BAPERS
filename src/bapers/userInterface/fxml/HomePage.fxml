@@ -97,13 +97,16 @@
                      <VBox.margin>
                         <Insets left="20.0" />
                      </VBox.margin></Label>
-                  <Label text="briefing here">
+                  <Label fx:id="lblBriefing" text="briefing here">
                      <VBox.margin>
                         <Insets left="30.0" />
                      </VBox.margin></Label>
                </children>
             </VBox>
          </center>
+         <right>
+            <Pane prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </right>
       </BorderPane>
    </children>
 </AnchorPane>
