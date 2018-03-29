@@ -34,13 +34,15 @@ public interface HomeService {
     public enum UserTypes{
         officeManager, shiftManager, receptionist, technician;
         public static HomeServiceImpl.UserTypes getType(String type) {
-            switch(type){
+            switch(type.trim().toLowerCase()){
                 case "office manager":
                     return officeManager;
                 case "shift manager":
                     return shiftManager;
                 case "receptionist":
-                    return receptionist;                  
+                    return receptionist;       
+                case "technician":
+                    return technician;
                 default: return null;
             }                
         }

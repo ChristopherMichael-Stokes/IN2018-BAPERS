@@ -58,7 +58,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
         customerController.create(account);
     }
     public boolean customerExists(String accountNumber){
-        return customerController.findCustomerAccount(accountNumber) != null;
+        return customerController.findCustomerAccount(Integer.parseInt(accountNumber)) != null;
     }
     public void updateAccount(CustomerAccount account, Address address) throws IllegalOrphanException, NonexistentEntityException, Exception {
         account.getAddressList().clear();

@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean userExists(String id) {
-        return controller.findStaff(id) != null;
+        return controller.findStaff(Integer.parseInt(id)) != null;
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean validHash(String id, String input) {
-        Staff user = controller.findStaff(id);
+        Staff user = controller.findStaff(Integer.parseInt(id));
         if (input == null || user == null) {
             return false;
         }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Staff getUser(String id) {
-        return controller.findStaff(id);
+        return controller.findStaff(Integer.parseInt(id));
     }
 
     /**
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException {
-        controller.destroy(id);
+        controller.destroy(Integer.parseInt(id));
     }
 
     /**
