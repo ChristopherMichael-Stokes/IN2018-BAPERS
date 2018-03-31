@@ -30,7 +30,6 @@ import bapers.data.dataAccess.AddressJpaController;
 import bapers.data.dataAccess.CustomerAccountJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
 import javafx.collections.FXCollections;
@@ -50,21 +49,66 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
         addressController = new AddressJpaController(EMF);
         customers = FXCollections.observableArrayList(customerController.findCustomerAccountEntities());
     }
+
+   /**
+     *
+     * @return a list of all the customer accounts stored in the system
+     */
+    @Override
     public ObservableList<CustomerAccount> getCustomerAccounts(){
         return customers;
     }
-    public void addCustomer(CustomerAccount account, Address address) throws PreexistingEntityException, Exception {
+
+    /**
+     *
+     * @param account the new account to be added
+     * @param address the address of the new customer
+     */
+    @Override
+    public void addCustomer(CustomerAccount account, Address address){
         account.getAddressList().add(address);
         customerController.create(account);
     }
+
+    /**
+     *
+     * @param accountNumber of the customer to look up
+     * @return true if the customer record is in the database
+     */
+    @Override
     public boolean customerExists(String accountNumber){
-        return customerController.findCustomerAccount(Integer.parseInt(accountNumber)) != null;
-    }
-    public void updateAccount(CustomerAccount account, Address address) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        account.getAddressList().clear();
-        account.getAddressList().add(address);
-        customerController.edit(account);
-        
+        return customerController
+                .findCustomerAccount(Integer.parseInt(accountNumber)) != null;
     }
 
+    /**
+     *
+     * @param account the modified customer account that is to be edited
+     * @param address the modified address
+     * @throws IllegalOrphanException if there are any other entities which rely 
+     * upon data that has now been changed
+     * @throws NonexistentEntityException if the account does not already exist
+     * @throws Exception if db connection fails
+     */
+    @Override
+    public void updateAccount(CustomerAccount account, Address address) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception {
+        account.getAddressList().clear();
+        account.getAddressList().add(address);
+        customerController.edit(account);   
+    }
+
+    /**
+     *
+     * @param account the modified customer account that is to be edited
+     * @throws IllegalOrphanException if there are any other entities which rely 
+     * upon data that has now been changed
+     * @throws NonexistentEntityException if the account does not already exist
+     * @throws Exception if db connection fails
+     */
+    @Override
+    public void updateAccount(CustomerAccount account) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception {
+        customerController.edit(account);     
+    }
 }

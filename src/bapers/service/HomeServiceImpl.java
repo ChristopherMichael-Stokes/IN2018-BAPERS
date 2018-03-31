@@ -39,27 +39,32 @@ public class HomeServiceImpl implements HomeService{
         type = UserTypes.getType(USER.getFkType().getType());
     }   
     
+    /**
+     *
+     * @return briefing specific to the user that is currently logged in
+     */
     @Override
-    public String getBriefing() {
-        
+    public String getBriefing() {        
         switch (type){
             case officeManager:                 
-                return null;
+                return "";
             case shiftManager:                 
-                return null;
+                return "";
             case receptionist:                 
-                return null;
+                return "";
             case technician:                 
-                return null;    
-            default: return "";
+                return "";    
+            default: 
+                return "";
         }        
     }
 
+    /**
+     * 
+     * @return the type of the user that is currently logged in
+     */
     @Override
     public UserTypes getUserType() {
         return type;
     }
-    
-    
-
 }

@@ -31,9 +31,14 @@ package bapers.service;
  * @author chris
  */
 public interface HomeService {
+
+    /**
+     * enumeration to translate from a user type string to a more 
+     * efficient representation
+     */
     public enum UserTypes{
         officeManager, shiftManager, receptionist, technician;
-        public static HomeServiceImpl.UserTypes getType(String type) {
+        public static UserTypes getType(String type) {
             switch(type.trim().toLowerCase()){
                 case "office manager":
                     return officeManager;
@@ -47,6 +52,16 @@ public interface HomeService {
             }                
         }
     };
+
+    /**
+     *
+     * @return briefing specific to the user that is currently logged in
+     */
     public String getBriefing();    
+
+    /**
+     *
+     * @return the type of the user that is currently logged in
+     */
     public UserTypes getUserType();
 }
