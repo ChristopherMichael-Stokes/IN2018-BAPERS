@@ -27,7 +27,6 @@ package bapers.service;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
 import javafx.collections.ObservableList;
@@ -38,8 +37,46 @@ import javafx.collections.ObservableList;
  */
 public interface CustomerAccountService {
 
+    /**
+     *
+     * @return a list of all the customer accounts stored in the system
+     */
     public ObservableList<CustomerAccount> getCustomerAccounts();
-    public void addCustomer(CustomerAccount account, Address address) throws PreexistingEntityException, Exception ;
+
+    /**
+     *
+     * @param account the new account to be added
+     * @param address the address of the new customer
+     */
+    public void addCustomer(CustomerAccount account, Address address);
+
+    /**
+     *
+     * @param accountNumber of the customer to look up
+     * @return true if the customer record is in the database
+     */
     public boolean customerExists(String accountNumber);
-    public void updateAccount(CustomerAccount account, Address address) throws IllegalOrphanException, NonexistentEntityException, Exception ;
+
+    /**
+     *
+     * @param account the modified customer account that is to be edited
+     * @param address the modified address
+     * @throws IllegalOrphanException if there are any other entities which rely 
+     * upon data that has now been changed
+     * @throws NonexistentEntityException if the account does not already exist
+     * @throws Exception if db connection fails
+     */
+    public void updateAccount(CustomerAccount account, Address address) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception;
+    
+    /**
+     *
+     * @param account the modified customer account that is to be edited
+     * @throws IllegalOrphanException if there are any other entities which rely 
+     * upon data that has now been changed
+     * @throws NonexistentEntityException if the account does not already exist
+     * @throws Exception if db connection fails
+     */
+    public void updateAccount(CustomerAccount account) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception;
 }
