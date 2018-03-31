@@ -201,43 +201,4 @@ public class UserServiceTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class UserServiceImpl implements UserService {
-
-        public ObservableList<Staff> getStaff() {
-            return null;
-        }
-
-        public ObservableList<UserType> getUserTypes() {
-            return null;
-        }
-
-        public boolean userExists(String id) {
-            return false;
-        }
-
-        public boolean validHash(String id, String input) {
-            return false;
-        }
-
-        public Staff getUser(String id) {
-            return null;
-        }
-
-        public void addUser(Staff staff) throws PreexistingEntityException, Exception {
-        }
-
-        public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException {
-        }
-
-        public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        }
-
-        public void addUserType(String type) throws PreexistingEntityException, Exception {
-        }
-
-        public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException {
-        }
-    }
-    
 }

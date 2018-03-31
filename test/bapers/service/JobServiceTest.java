@@ -66,10 +66,11 @@ public class JobServiceTest {
     @Test
     public void testSetTaskComplete() {
         System.out.println("setTaskComplete");
+        String jobId = "";
         int taskId = 0;
         Date time = null;
         JobService instance = new JobServiceImpl();
-        instance.setTaskComplete(taskId, time);
+        instance.setTaskComplete(jobId, taskId, time);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -101,18 +102,4 @@ public class JobServiceTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class JobServiceImpl implements JobService {
-
-        public void setTaskComplete(int taskId, Date time) {
-        }
-
-        public ObservableList<JobTask> getTasks(String jobId) {
-            return null;
-        }
-
-        public void printLabel(String jobId) {
-        }
-    }
-    
 }

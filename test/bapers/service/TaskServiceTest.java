@@ -102,17 +102,16 @@ public class TaskServiceTest {
         fail("The test case is a prototype.");
     }
 
-    public class TaskServiceImpl implements TaskService {
-
-        public ObservableList<Task> getTasks() {
-            return null;
-        }
-
-        public void addTask(Task task) throws PreexistingEntityException, Exception {
-        }
-
-        public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        }
+    /**
+     * Test of removeTask method, of class TaskService.
+     */
+    @Test
+    public void testRemoveTask() throws Exception {
+        System.out.println("removeTask");
+        int taskId = 0;
+        TaskService instance = new TaskServiceImpl();
+        instance.removeTask(taskId);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
-    
 }

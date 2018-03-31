@@ -67,7 +67,7 @@ public class PaymentServiceTest {
     @Test
     public void testGetJobs() {
         System.out.println("getJobs");
-        String accountNumber = "";
+        int accountNumber = 0;
         PaymentService instance = new PaymentServiceImpl();
         ObservableList<Job> expResult = null;
         ObservableList<Job> result = instance.getJobs(accountNumber);
@@ -82,7 +82,7 @@ public class PaymentServiceTest {
     @Test
     public void testAddPayment_4args() throws Exception {
         System.out.println("addPayment");
-        String accountNumber = "";
+        int accountNumber = 0;
         int amountPaid = 0;
         Date datePaid = null;
         String[] jobs = null;
@@ -98,7 +98,7 @@ public class PaymentServiceTest {
     @Test
     public void testAddPayment_7args() throws Exception {
         System.out.println("addPayment");
-        String accountNumber = "";
+        int accountNumber = 0;
         int amountPaid = 0;
         Date datePaid = null;
         String cardDigits = "";
@@ -110,18 +110,4 @@ public class PaymentServiceTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class PaymentServiceImpl implements PaymentService {
-
-        public ObservableList<Job> getJobs(String accountNumber) {
-            return null;
-        }
-
-        public void addPayment(String accountNumber, int amountPaid, Date datePaid, String[] jobs) throws PreexistingEntityException, Exception {
-        }
-
-        public void addPayment(String accountNumber, int amountPaid, Date datePaid, String cardDigits, Date expiryDate, String cardType, String[] jobs) throws PreexistingEntityException, Exception {
-        }
-    }
-    
 }
