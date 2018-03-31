@@ -50,43 +50,78 @@ public class PaymentServiceImpl implements PaymentService {
     private final CardDetailsJpaController cardController;
     private final JobJpaController jobController;
 
+    /**
+     *
+     */
     public PaymentServiceImpl() {
         paymentController = new PaymentInfoJpaController(EMF);
         cardController = new CardDetailsJpaController(EMF);
         jobController = new JobJpaController(EMF);
     }
 
+    /**
+     *
+     * @param accountNumber
+     * @return
+     */
     @Override
-    public ObservableList<Job> getJobs(String accountNumber) {
+    public ObservableList<Job> getJobs(int accountNumber) {
         return jobController.findJobEntities().stream()
                 .filter(j -> j.getFkAccountNumber().getAccountNumber()
-                    .equals(accountNumber) && j.getAmountDue() > 0)
+                    == accountNumber && j.getAmountDue() > 0)
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
+    /**
+     *
+     * @param accountNumber
+     * @param amountPaid
+     * @param datePaid
+     * @param jobs
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
+    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
             String... jobs) throws PreexistingEntityException, Exception {
+
         String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
-                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0,8);
-        PaymentInfo pi = new PaymentInfo(transactionId, datePaid, 
+                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0, 8);
+
+        PaymentInfo pi = new PaymentInfo(transactionId, datePaid,
                 amountPaid, "cash");
+
         paymentController.create(pi);
     }
 
+    /**
+     *
+     * @param accountNumber
+     * @param amountPaid
+     * @param datePaid
+     * @param cardDigits
+     * @param expiryDate
+     * @param cardType
+     * @param jobs
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String cardDigits, Date expiryDate, String cardType, String... jobs) 
+    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
+            String cardDigits, Date expiryDate, String cardType, String... jobs)
             throws PreexistingEntityException, Exception {
+
         String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
-                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0,8);
-        PaymentInfo pi = new PaymentInfo(transactionId, datePaid, 
+                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0, 8);
+
+        PaymentInfo pi = new PaymentInfo(transactionId, datePaid,
                 amountPaid, "card");
+
         paymentController.create(pi);
         CardDetails cd = new CardDetails(cardDigits, expiryDate, transactionId);
         cd.setCardType(cardType);
         cardController.create(cd);
-        
+
     }
 
 }
