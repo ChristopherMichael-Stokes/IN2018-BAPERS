@@ -34,7 +34,9 @@ import bapers.data.dataAccess.JobTaskJpaController;
 import bapers.data.dataAccess.TaskDiscountJpaController;
 import bapers.data.dataAccess.TaskJpaController;
 import bapers.data.domain.JobTask;
+import bapers.data.domain.JobTaskPK;
 import java.util.Date;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -51,8 +53,10 @@ public class JobServiceImpl implements JobService {
     private final TaskDiscountJpaController taskDiscountController;
     private final DiscountJpaController discountController;
     private final TaskJpaController taskController;
-    private final ObservableList<JobTask> jobTasks;
 
+    /**
+     *
+     */
     public JobServiceImpl() {
         jobController = new JobJpaController(EMF);
         jobTaskController = new JobTaskJpaController(EMF);
@@ -61,24 +65,36 @@ public class JobServiceImpl implements JobService {
         discountBandController = new DiscountBandJpaController(EMF);
         taskDiscountController = new TaskDiscountJpaController(EMF);
         discountController = new DiscountJpaController(EMF);
-        jobTasks = FXCollections.observableArrayList(jobTaskController.findJobTaskEntities());
     }
 
+    /**
+     *
+     * @param jobId
+     * @param taskId
+     * @param time
+     */
     @Override
-    public void setTaskComplete(int taskId, Date time) {
-        int n = 0;
-        while (n < jobTasks.size()) {
-            if (taskId == jobTasks.get(n).getJobTaskPK().getFkTaskId()) {
-                jobTasks.get(n).setEndTime(time);
-            }
-        }
+    public void setTaskComplete(String jobId, int taskId, Date time) {        
+        jobTaskController.findJobTask(new JobTaskPK(jobId, taskId))
+                .setEndTime(time);        
     }
 
+    /**
+     *
+     * @param jobId
+     * @return
+     */
     @Override
     public ObservableList<JobTask> getTasks(String jobId) {
-        return jobTasks;
-    }
+        return jobTaskController.findJobTaskEntities().stream()
+                .filter(j -> j.getJob().getJobId().equals(jobId))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+   }
 
+    /**
+     *
+     * @param jobId
+     */
     @Override
     public void printLabel(String jobId) {
 //        https://docs.oracle.com/javase/8/javafx/api/javafx/print/PrinterJob.html
