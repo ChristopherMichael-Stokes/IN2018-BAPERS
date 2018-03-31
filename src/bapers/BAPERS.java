@@ -31,27 +31,38 @@ import org.springframework.core.io.Resource;
 public class BAPERS extends Application {
 
     /**
-     *
+     * 
      */
     public static final EntityManagerFactory EMF
             = Persistence.createEntityManagerFactory("BAPERSPU");
 
     /**
-     *
+     * constant for testing and debugging purposes.  Should be set to false
+     * for normal user operation
      */
     public static final boolean TESTING = true;
+
+    /**
+     * the logged in user
+     */
     public static Staff USER;
+
+    /**
+     * the main window for the application
+     */
     public static Stage primaryStage;
     private static URL url
             = BAPERS.class.getResource("/bapers/userInterface/fxml/Login.fxml");
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException if the specified fxml form cannot be opened
      */
     public static void main(String[] args) throws IOException {
         if (!TESTING) {
             launch(args);
         } else {
+            //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
             String[] options = Arrays.stream(resources).map(r -> r.getFilename()).toArray(String[]::new);
@@ -60,7 +71,7 @@ public class BAPERS extends Application {
             for (int i = 0; i < resources.length; ++i) {
                 forms.put(options[i], resources[i]);
             }
-            USER = new UserServiceImpl().getUser("0000");
+            USER = new UserServiceImpl().getUser("7"); //me
             selection = (String) JOptionPane.showInputDialog(
                     null, "Select a form", "form",
                     JOptionPane.QUESTION_MESSAGE, null,
