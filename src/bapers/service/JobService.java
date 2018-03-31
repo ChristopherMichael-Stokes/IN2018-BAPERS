@@ -35,10 +35,25 @@ import javafx.collections.ObservableList;
  */
 public interface JobService {
 
-    public void setTaskComplete(int taskId, Date time);
+    /**
+     *
+     * @param jobId
+     * @param taskId
+     * @param time
+     */
+    public void setTaskComplete(String jobId, int taskId, Date time);
 
+    /**
+     *
+     * @param jobId
+     * @return
+     */
     public ObservableList<JobTask> getTasks(String jobId);
 
+    /**
+     *
+     * @param jobId
+     */
     public void printLabel(String jobId);
 
 }

@@ -37,9 +37,34 @@ import javafx.collections.ObservableList;
  */
 public interface TaskService {
 
+    /**
+     *
+     * @return
+     */
     public ObservableList<Task> getTasks();
 
+    /**
+     *
+     * @param task
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     public void addTask(Task task) throws PreexistingEntityException, Exception;
 
+    /**
+     *
+     * @param task
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception;
+    
+    /**
+     *
+     * @param taskId
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     */
+    public void removeTask(int taskId) throws IllegalOrphanException, NonexistentEntityException;
 }

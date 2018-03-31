@@ -18,8 +18,16 @@ import javafx.collections.ObservableList;
  */
 public interface UserService {
 
+    /**
+     *
+     * @return
+     */
     public ObservableList<Staff> getStaff();
 
+    /**
+     *
+     * @return
+     */
     public ObservableList<UserType> getUserTypes();
 
     /**
@@ -47,30 +55,41 @@ public interface UserService {
     /**
      *
      * @param staff
+     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
+     * @throws java.lang.Exception
      */
     public void addUser(Staff staff) throws PreexistingEntityException, Exception;
 
     /**
      *
      * @param id
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException;
 
     /**
      *
      * @param staff
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
+     * @throws java.lang.Exception
      */
     public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception;
 
     /**
      *
      * @param type
+     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
+     * @throws java.lang.Exception
      */
     public void addUserType(String type) throws PreexistingEntityException, Exception;
 
     /**
      *
      * @param type
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException;
 }

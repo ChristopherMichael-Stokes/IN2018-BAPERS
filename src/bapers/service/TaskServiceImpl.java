@@ -43,24 +43,58 @@ public class TaskServiceImpl implements TaskService {
     private final TaskJpaController taskController;
     private final ObservableList<Task> tasks;
 
+    /**
+     *
+     */
     public TaskServiceImpl() {
         taskController = new TaskJpaController(EMF);
         tasks = FXCollections.observableArrayList(taskController.findTaskEntities());
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ObservableList<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     *
+     * @param task
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
-    public void addTask(Task task) throws PreexistingEntityException, Exception {
+    public void addTask(Task task) 
+            throws PreexistingEntityException, Exception {
         taskController.create(task);
     }
 
+    /**
+     *
+     * @param task
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     @Override
-    public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void updateTask(Task task) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception {
         taskController.edit(task);
+    }
+
+    /**
+     *
+     * @param taskId
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     */
+    @Override
+    public void removeTask(int taskId) 
+            throws IllegalOrphanException, NonexistentEntityException {
+        taskController.destroy(taskId);
     }
 
 }

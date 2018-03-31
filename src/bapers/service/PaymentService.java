@@ -36,10 +36,38 @@ import java.util.Date;
  */
 public interface PaymentService {
 
-    public ObservableList<Job> getJobs(String accountNumber);
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String ... jobs) throws PreexistingEntityException, Exception;
-    public void addPayment(String accountNumber, int amountPaid, Date datePaid, 
-            String cardDigits, Date expiryDate, String cardType, String ... jobs) 
+    /**
+     *
+     * @param accountNumber
+     * @return
+     */
+    public ObservableList<Job> getJobs(int accountNumber);
+
+    /**
+     *
+     * @param accountNumber
+     * @param amountPaid
+     * @param datePaid
+     * @param jobs
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
+    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
+            String... jobs) throws PreexistingEntityException, Exception;
+
+    /**
+     *
+     * @param accountNumber
+     * @param amountPaid
+     * @param datePaid
+     * @param cardDigits
+     * @param expiryDate
+     * @param cardType
+     * @param jobs
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
+    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
+            String cardDigits, Date expiryDate, String cardType, String... jobs)
             throws PreexistingEntityException, Exception;
 }

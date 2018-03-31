@@ -38,6 +38,10 @@ import javafx.stage.Stage;
  * @author chris
  */
 public class SceneController {
+
+    /**
+     *
+     */
     public static enum Scenes {
         payment("AddPayment"), createAccount("CreateAccount"), 
         home("HomePage"), jobProcessing("JobProcessing"), 
@@ -51,6 +55,12 @@ public class SceneController {
         private Scenes(String fxml) {
             this.fxml = fxml;
         }
+
+        /**
+         *
+         * @param fxml
+         * @return
+         */
         public boolean equals(String fxml) {
             return this.fxml.equals(fxml);
         }        
@@ -61,6 +71,10 @@ public class SceneController {
         
     }
     
+    /**
+     *
+     * @param scene
+     */
     public static void switchScene(Scenes scene) {
         Stage stage = BAPERS.primaryStage;
         double height = 0.0, width = 0.0;
@@ -112,6 +126,9 @@ public class SceneController {
         }       
     }
     
+    /**
+     *
+     */
     public static void logout() {
         switchScene(Scenes.login);
     }

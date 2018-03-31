@@ -78,53 +78,77 @@ public class UserServiceImpl implements UserService {
     /**
      *
      * @param staff
+     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
+     * @throws java.lang.Exception
      */
     @Override
-    public void addUser(Staff staff) throws PreexistingEntityException, Exception {
+    public void addUser(Staff staff) 
+            throws PreexistingEntityException, Exception {
         controller.create(staff);
     }
 
     /**
      *
      * @param id
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     @Override
-    public void removeUser(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void removeUser(String id) 
+            throws IllegalOrphanException, NonexistentEntityException {
         controller.destroy(Integer.parseInt(id));
     }
 
     /**
      *
      * @param staff
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
+     * @throws java.lang.Exception
      */
     @Override
-    public void updateUser(Staff staff) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void updateUser(Staff staff) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception {
         controller.edit(staff);
     }
 
     /**
      *
      * @param type
+     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
+     * @throws java.lang.Exception
      */
     @Override
-    public void addUserType(String type) throws PreexistingEntityException, Exception {
+    public void addUserType(String type) 
+            throws PreexistingEntityException, Exception {
         typeController.create(new UserType(type));
     }
 
     /**
      *
      * @param type
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     @Override
-    public void removeUserType(String type) throws IllegalOrphanException, NonexistentEntityException {
+    public void removeUserType(String type) 
+            throws IllegalOrphanException, NonexistentEntityException {
         typeController.destroy(type);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ObservableList<Staff> getStaff() {
         return staff;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ObservableList<UserType> getUserTypes() {
         return userTypes;
