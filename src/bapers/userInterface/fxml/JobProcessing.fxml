@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="483.0" prefWidth="716.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
+<AnchorPane id="AnchorPane" prefHeight="483.0" prefWidth="716.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/jobprocessing.css" />
     </stylesheets>
    <children>
       <VBox layoutX="2.0" layoutY="4.0" prefHeight="476.0" prefWidth="716.0">
          <children>
-            <Separator prefWidth="200.0" />
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></Separator>
             <Label text="Job Process">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" top="20.0" />
+               </VBox.margin>
             </Label>
             <Separator prefWidth="200.0" />
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -35,6 +44,17 @@
             <HBox prefHeight="212.0" prefWidth="716.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" />
+                  <TableView prefHeight="212.0" prefWidth="559.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Task" />
+                      <TableColumn prefWidth="103.99992370605469" text="Task Description" />
+                        <TableColumn prefWidth="75.0" text="Location" />
+                        <TableColumn prefWidth="75.0" text="Shelf Slot" />
+                        <TableColumn prefWidth="75.0" text="Price" />
+                        <TableColumn prefWidth="75.0" text="Duration" />
+                        <TableColumn prefWidth="75.0" text="Status" />
+                    </columns>
+                  </TableView>
                </children>
             </HBox>
          </children>
