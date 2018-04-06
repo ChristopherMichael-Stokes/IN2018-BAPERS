@@ -25,8 +25,8 @@
  */
 package bapers.userInterface;
 
-import bapers.BAPERS;
 import static bapers.BAPERS.USER;
+import static bapers.BAPERS.primaryStage;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -76,7 +76,7 @@ public class SceneController {
      * @param scene
      */
     public static void switchScene(Scenes scene) {
-        Stage stage = BAPERS.primaryStage;
+        Stage stage = primaryStage;
         double height = 0.0, width = 0.0;
         try {            
             switch(scene) {
