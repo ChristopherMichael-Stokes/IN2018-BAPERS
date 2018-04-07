@@ -14,6 +14,7 @@ import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Staff;
 import bapers.data.domain.UserType;
 import static bapers.utility.SimpleHash.getStringHash;
+import java.security.NoSuchAlgorithmException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -61,7 +62,14 @@ public class UserServiceImpl implements UserService {
         if (input == null || user == null) {
             return false;
         }
-        String hash = getStringHash(input.trim().getBytes(), "SHA-512");
+        
+        String algorithm = "SHA-512", hash = null;
+        try {
+            hash = getStringHash(input.trim().getBytes(), algorithm);
+        } catch (NoSuchAlgorithmException ex) {
+            System.err.println(algorithm+" is not valid\n"+ex.getMessage());
+            System.exit(-1);
+        }
         return hash.equals(user.getPassphrase());
     }
 
