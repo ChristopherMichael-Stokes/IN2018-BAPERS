@@ -27,17 +27,15 @@ package bapers.data.domain;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -47,42 +45,52 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author chris
  */
 @Entity
-@Table(name = "discount")
+@Table(name = "contact")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Discount.findAll", query = "SELECT d FROM Discount d")
-    , @NamedQuery(name = "Discount.findByFkAccountNumber", query = "SELECT d FROM Discount d WHERE d.fkAccountNumber = :fkAccountNumber")})
-public class Discount implements Serializable {
+    @NamedQuery(name = "Contact.findAll", query = "SELECT c FROM Contact c")
+    , @NamedQuery(name = "Contact.findByForename", query = "SELECT c FROM Contact c WHERE c.contactPK.forename = :forename")
+    , @NamedQuery(name = "Contact.findBySurname", query = "SELECT c FROM Contact c WHERE c.contactPK.surname = :surname")
+    , @NamedQuery(name = "Contact.findByMobile", query = "SELECT c FROM Contact c WHERE c.mobile = :mobile")
+    , @NamedQuery(name = "Contact.findByFkAccountNumber", query = "SELECT c FROM Contact c WHERE c.contactPK.fkAccountNumber = :fkAccountNumber")})
+public class Contact implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @Column(name = "fk_account_number")
-    private Integer fkAccountNumber;
+    @EmbeddedId
+    protected ContactPK contactPK;
+    @Column(name = "mobile")
+    private String mobile;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private CustomerAccount customerAccount;
-    @JoinColumn(name = "fk_type", referencedColumnName = "type")
     @ManyToOne(optional = false)
-    private DiscountPlan fkType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discount")
-    private List<TaskDiscount> taskDiscountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "discount")
-    private List<DiscountBand> discountBandList;
+    private CustomerAccount customerAccount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contact")
+    private List<Job> jobList;
 
-    public Discount() {
+    public Contact() {
     }
 
-    public Discount(Integer fkAccountNumber) {
-        this.fkAccountNumber = fkAccountNumber;
+    public Contact(ContactPK contactPK) {
+        this.contactPK = contactPK;
     }
 
-    public Integer getFkAccountNumber() {
-        return fkAccountNumber;
+    public Contact(String forename, String surname, short fkAccountNumber) {
+        this.contactPK = new ContactPK(forename, surname, fkAccountNumber);
     }
 
-    public void setFkAccountNumber(Integer fkAccountNumber) {
-        this.fkAccountNumber = fkAccountNumber;
+    public ContactPK getContactPK() {
+        return contactPK;
+    }
+
+    public void setContactPK(ContactPK contactPK) {
+        this.contactPK = contactPK;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public CustomerAccount getCustomerAccount() {
@@ -93,47 +101,30 @@ public class Discount implements Serializable {
         this.customerAccount = customerAccount;
     }
 
-    public DiscountPlan getFkType() {
-        return fkType;
-    }
-
-    public void setFkType(DiscountPlan fkType) {
-        this.fkType = fkType;
-    }
-
     @XmlTransient
-    public List<TaskDiscount> getTaskDiscountList() {
-        return taskDiscountList;
+    public List<Job> getJobList() {
+        return jobList;
     }
 
-    public void setTaskDiscountList(List<TaskDiscount> taskDiscountList) {
-        this.taskDiscountList = taskDiscountList;
-    }
-
-    @XmlTransient
-    public List<DiscountBand> getDiscountBandList() {
-        return discountBandList;
-    }
-
-    public void setDiscountBandList(List<DiscountBand> discountBandList) {
-        this.discountBandList = discountBandList;
+    public void setJobList(List<Job> jobList) {
+        this.jobList = jobList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (fkAccountNumber != null ? fkAccountNumber.hashCode() : 0);
+        hash += (contactPK != null ? contactPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Discount)) {
+        if (!(object instanceof Contact)) {
             return false;
         }
-        Discount other = (Discount) object;
-        if ((this.fkAccountNumber == null && other.fkAccountNumber != null) || (this.fkAccountNumber != null && !this.fkAccountNumber.equals(other.fkAccountNumber))) {
+        Contact other = (Contact) object;
+        if ((this.contactPK == null && other.contactPK != null) || (this.contactPK != null && !this.contactPK.equals(other.contactPK))) {
             return false;
         }
         return true;
@@ -141,7 +132,7 @@ public class Discount implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.Discount[ fkAccountNumber=" + fkAccountNumber + " ]";
+        return "bapers.data.domain.Contact[ contactPK=" + contactPK + " ]";
     }
     
 }

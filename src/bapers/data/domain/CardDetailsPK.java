@@ -47,17 +47,13 @@ public class CardDetailsPK implements Serializable {
     @Column(name = "expiry_date")
     @Temporal(TemporalType.DATE)
     private Date expiryDate;
-    @Basic(optional = false)
-    @Column(name = "fk_transaction_id")
-    private String fkTransactionId;
 
     public CardDetailsPK() {
     }
 
-    public CardDetailsPK(String lastDigits, Date expiryDate, String fkTransactionId) {
+    public CardDetailsPK(String lastDigits, Date expiryDate) {
         this.lastDigits = lastDigits;
         this.expiryDate = expiryDate;
-        this.fkTransactionId = fkTransactionId;
     }
 
     public String getLastDigits() {
@@ -76,20 +72,11 @@ public class CardDetailsPK implements Serializable {
         this.expiryDate = expiryDate;
     }
 
-    public String getFkTransactionId() {
-        return fkTransactionId;
-    }
-
-    public void setFkTransactionId(String fkTransactionId) {
-        this.fkTransactionId = fkTransactionId;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (lastDigits != null ? lastDigits.hashCode() : 0);
         hash += (expiryDate != null ? expiryDate.hashCode() : 0);
-        hash += (fkTransactionId != null ? fkTransactionId.hashCode() : 0);
         return hash;
     }
 
@@ -106,15 +93,12 @@ public class CardDetailsPK implements Serializable {
         if ((this.expiryDate == null && other.expiryDate != null) || (this.expiryDate != null && !this.expiryDate.equals(other.expiryDate))) {
             return false;
         }
-        if ((this.fkTransactionId == null && other.fkTransactionId != null) || (this.fkTransactionId != null && !this.fkTransactionId.equals(other.fkTransactionId))) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "bapers.data.domain.CardDetailsPK[ lastDigits=" + lastDigits + ", expiryDate=" + expiryDate + ", fkTransactionId=" + fkTransactionId + " ]";
+        return "bapers.data.domain.CardDetailsPK[ lastDigits=" + lastDigits + ", expiryDate=" + expiryDate + " ]";
     }
     
 }

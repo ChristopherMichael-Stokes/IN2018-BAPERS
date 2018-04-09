@@ -27,16 +27,15 @@ package bapers.data.dataAccess;
 
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.data.domain.CustomerAccount;
+import bapers.data.domain.Contact;
 import bapers.data.domain.Job;
 import bapers.data.domain.PaymentInfo;
-import bapers.data.domain.JobTask;
+import bapers.data.domain.JobComponent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -57,54 +56,49 @@ public class JobJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Job job) throws PreexistingEntityException, Exception {
-        if (job.getJobTaskList() == null) {
-            job.setJobTaskList(new ArrayList<JobTask>());
+    public void create(Job job) {
+        if (job.getJobComponentList() == null) {
+            job.setJobComponentList(new ArrayList<JobComponent>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            CustomerAccount fkAccountNumber = job.getFkAccountNumber();
-            if (fkAccountNumber != null) {
-                fkAccountNumber = em.getReference(fkAccountNumber.getClass(), fkAccountNumber.getAccountNumber());
-                job.setFkAccountNumber(fkAccountNumber);
+            Contact contact = job.getContact();
+            if (contact != null) {
+                contact = em.getReference(contact.getClass(), contact.getContactPK());
+                job.setContact(contact);
             }
             PaymentInfo fkTransactionId = job.getFkTransactionId();
             if (fkTransactionId != null) {
                 fkTransactionId = em.getReference(fkTransactionId.getClass(), fkTransactionId.getTransactionId());
                 job.setFkTransactionId(fkTransactionId);
             }
-            List<JobTask> attachedJobTaskList = new ArrayList<JobTask>();
-            for (JobTask jobTaskListJobTaskToAttach : job.getJobTaskList()) {
-                jobTaskListJobTaskToAttach = em.getReference(jobTaskListJobTaskToAttach.getClass(), jobTaskListJobTaskToAttach.getJobTaskPK());
-                attachedJobTaskList.add(jobTaskListJobTaskToAttach);
+            List<JobComponent> attachedJobComponentList = new ArrayList<JobComponent>();
+            for (JobComponent jobComponentListJobComponentToAttach : job.getJobComponentList()) {
+                jobComponentListJobComponentToAttach = em.getReference(jobComponentListJobComponentToAttach.getClass(), jobComponentListJobComponentToAttach.getJobComponentPK());
+                attachedJobComponentList.add(jobComponentListJobComponentToAttach);
             }
-            job.setJobTaskList(attachedJobTaskList);
+            job.setJobComponentList(attachedJobComponentList);
             em.persist(job);
-            if (fkAccountNumber != null) {
-                fkAccountNumber.getJobList().add(job);
-                fkAccountNumber = em.merge(fkAccountNumber);
+            if (contact != null) {
+                contact.getJobList().add(job);
+                contact = em.merge(contact);
             }
             if (fkTransactionId != null) {
                 fkTransactionId.getJobList().add(job);
                 fkTransactionId = em.merge(fkTransactionId);
             }
-            for (JobTask jobTaskListJobTask : job.getJobTaskList()) {
-                Job oldJobOfJobTaskListJobTask = jobTaskListJobTask.getJob();
-                jobTaskListJobTask.setJob(job);
-                jobTaskListJobTask = em.merge(jobTaskListJobTask);
-                if (oldJobOfJobTaskListJobTask != null) {
-                    oldJobOfJobTaskListJobTask.getJobTaskList().remove(jobTaskListJobTask);
-                    oldJobOfJobTaskListJobTask = em.merge(oldJobOfJobTaskListJobTask);
+            for (JobComponent jobComponentListJobComponent : job.getJobComponentList()) {
+                Job oldJobOfJobComponentListJobComponent = jobComponentListJobComponent.getJob();
+                jobComponentListJobComponent.setJob(job);
+                jobComponentListJobComponent = em.merge(jobComponentListJobComponent);
+                if (oldJobOfJobComponentListJobComponent != null) {
+                    oldJobOfJobComponentListJobComponent.getJobComponentList().remove(jobComponentListJobComponent);
+                    oldJobOfJobComponentListJobComponent = em.merge(oldJobOfJobComponentListJobComponent);
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findJob(job.getJobId()) != null) {
-                throw new PreexistingEntityException("Job " + job + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -118,47 +112,47 @@ public class JobJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Job persistentJob = em.find(Job.class, job.getJobId());
-            CustomerAccount fkAccountNumberOld = persistentJob.getFkAccountNumber();
-            CustomerAccount fkAccountNumberNew = job.getFkAccountNumber();
+            Contact contactOld = persistentJob.getContact();
+            Contact contactNew = job.getContact();
             PaymentInfo fkTransactionIdOld = persistentJob.getFkTransactionId();
             PaymentInfo fkTransactionIdNew = job.getFkTransactionId();
-            List<JobTask> jobTaskListOld = persistentJob.getJobTaskList();
-            List<JobTask> jobTaskListNew = job.getJobTaskList();
+            List<JobComponent> jobComponentListOld = persistentJob.getJobComponentList();
+            List<JobComponent> jobComponentListNew = job.getJobComponentList();
             List<String> illegalOrphanMessages = null;
-            for (JobTask jobTaskListOldJobTask : jobTaskListOld) {
-                if (!jobTaskListNew.contains(jobTaskListOldJobTask)) {
+            for (JobComponent jobComponentListOldJobComponent : jobComponentListOld) {
+                if (!jobComponentListNew.contains(jobComponentListOldJobComponent)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain JobTask " + jobTaskListOldJobTask + " since its job field is not nullable.");
+                    illegalOrphanMessages.add("You must retain JobComponent " + jobComponentListOldJobComponent + " since its job field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (fkAccountNumberNew != null) {
-                fkAccountNumberNew = em.getReference(fkAccountNumberNew.getClass(), fkAccountNumberNew.getAccountNumber());
-                job.setFkAccountNumber(fkAccountNumberNew);
+            if (contactNew != null) {
+                contactNew = em.getReference(contactNew.getClass(), contactNew.getContactPK());
+                job.setContact(contactNew);
             }
             if (fkTransactionIdNew != null) {
                 fkTransactionIdNew = em.getReference(fkTransactionIdNew.getClass(), fkTransactionIdNew.getTransactionId());
                 job.setFkTransactionId(fkTransactionIdNew);
             }
-            List<JobTask> attachedJobTaskListNew = new ArrayList<JobTask>();
-            for (JobTask jobTaskListNewJobTaskToAttach : jobTaskListNew) {
-                jobTaskListNewJobTaskToAttach = em.getReference(jobTaskListNewJobTaskToAttach.getClass(), jobTaskListNewJobTaskToAttach.getJobTaskPK());
-                attachedJobTaskListNew.add(jobTaskListNewJobTaskToAttach);
+            List<JobComponent> attachedJobComponentListNew = new ArrayList<JobComponent>();
+            for (JobComponent jobComponentListNewJobComponentToAttach : jobComponentListNew) {
+                jobComponentListNewJobComponentToAttach = em.getReference(jobComponentListNewJobComponentToAttach.getClass(), jobComponentListNewJobComponentToAttach.getJobComponentPK());
+                attachedJobComponentListNew.add(jobComponentListNewJobComponentToAttach);
             }
-            jobTaskListNew = attachedJobTaskListNew;
-            job.setJobTaskList(jobTaskListNew);
+            jobComponentListNew = attachedJobComponentListNew;
+            job.setJobComponentList(jobComponentListNew);
             job = em.merge(job);
-            if (fkAccountNumberOld != null && !fkAccountNumberOld.equals(fkAccountNumberNew)) {
-                fkAccountNumberOld.getJobList().remove(job);
-                fkAccountNumberOld = em.merge(fkAccountNumberOld);
+            if (contactOld != null && !contactOld.equals(contactNew)) {
+                contactOld.getJobList().remove(job);
+                contactOld = em.merge(contactOld);
             }
-            if (fkAccountNumberNew != null && !fkAccountNumberNew.equals(fkAccountNumberOld)) {
-                fkAccountNumberNew.getJobList().add(job);
-                fkAccountNumberNew = em.merge(fkAccountNumberNew);
+            if (contactNew != null && !contactNew.equals(contactOld)) {
+                contactNew.getJobList().add(job);
+                contactNew = em.merge(contactNew);
             }
             if (fkTransactionIdOld != null && !fkTransactionIdOld.equals(fkTransactionIdNew)) {
                 fkTransactionIdOld.getJobList().remove(job);
@@ -168,14 +162,14 @@ public class JobJpaController implements Serializable {
                 fkTransactionIdNew.getJobList().add(job);
                 fkTransactionIdNew = em.merge(fkTransactionIdNew);
             }
-            for (JobTask jobTaskListNewJobTask : jobTaskListNew) {
-                if (!jobTaskListOld.contains(jobTaskListNewJobTask)) {
-                    Job oldJobOfJobTaskListNewJobTask = jobTaskListNewJobTask.getJob();
-                    jobTaskListNewJobTask.setJob(job);
-                    jobTaskListNewJobTask = em.merge(jobTaskListNewJobTask);
-                    if (oldJobOfJobTaskListNewJobTask != null && !oldJobOfJobTaskListNewJobTask.equals(job)) {
-                        oldJobOfJobTaskListNewJobTask.getJobTaskList().remove(jobTaskListNewJobTask);
-                        oldJobOfJobTaskListNewJobTask = em.merge(oldJobOfJobTaskListNewJobTask);
+            for (JobComponent jobComponentListNewJobComponent : jobComponentListNew) {
+                if (!jobComponentListOld.contains(jobComponentListNewJobComponent)) {
+                    Job oldJobOfJobComponentListNewJobComponent = jobComponentListNewJobComponent.getJob();
+                    jobComponentListNewJobComponent.setJob(job);
+                    jobComponentListNewJobComponent = em.merge(jobComponentListNewJobComponent);
+                    if (oldJobOfJobComponentListNewJobComponent != null && !oldJobOfJobComponentListNewJobComponent.equals(job)) {
+                        oldJobOfJobComponentListNewJobComponent.getJobComponentList().remove(jobComponentListNewJobComponent);
+                        oldJobOfJobComponentListNewJobComponent = em.merge(oldJobOfJobComponentListNewJobComponent);
                     }
                 }
             }
@@ -183,7 +177,7 @@ public class JobJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = job.getJobId();
+                Integer id = job.getJobId();
                 if (findJob(id) == null) {
                     throw new NonexistentEntityException("The job with id " + id + " no longer exists.");
                 }
@@ -196,7 +190,7 @@ public class JobJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -209,20 +203,20 @@ public class JobJpaController implements Serializable {
                 throw new NonexistentEntityException("The job with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<JobTask> jobTaskListOrphanCheck = job.getJobTaskList();
-            for (JobTask jobTaskListOrphanCheckJobTask : jobTaskListOrphanCheck) {
+            List<JobComponent> jobComponentListOrphanCheck = job.getJobComponentList();
+            for (JobComponent jobComponentListOrphanCheckJobComponent : jobComponentListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Job (" + job + ") cannot be destroyed since the JobTask " + jobTaskListOrphanCheckJobTask + " in its jobTaskList field has a non-nullable job field.");
+                illegalOrphanMessages.add("This Job (" + job + ") cannot be destroyed since the JobComponent " + jobComponentListOrphanCheckJobComponent + " in its jobComponentList field has a non-nullable job field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            CustomerAccount fkAccountNumber = job.getFkAccountNumber();
-            if (fkAccountNumber != null) {
-                fkAccountNumber.getJobList().remove(job);
-                fkAccountNumber = em.merge(fkAccountNumber);
+            Contact contact = job.getContact();
+            if (contact != null) {
+                contact.getJobList().remove(job);
+                contact = em.merge(contact);
             }
             PaymentInfo fkTransactionId = job.getFkTransactionId();
             if (fkTransactionId != null) {
@@ -262,7 +256,7 @@ public class JobJpaController implements Serializable {
         }
     }
 
-    public Job findJob(String id) {
+    public Job findJob(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Job.class, id);

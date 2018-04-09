@@ -6,13 +6,11 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.dataAccess.StaffJpaController;
-import bapers.data.dataAccess.UserTypeJpaController;
+import bapers.data.dataAccess.UserJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
-import bapers.data.domain.Staff;
-import bapers.data.domain.UserType;
+import bapers.data.domain.User;
 import static bapers.utility.SimpleHash.getStringHash;
 import java.security.NoSuchAlgorithmException;
 import javafx.collections.FXCollections;
@@ -24,41 +22,37 @@ import javafx.collections.ObservableList;
  */
 public class UserServiceImpl implements UserService {
 
-    private final StaffJpaController controller;
-    private final UserTypeJpaController typeController;
-    private final ObservableList<Staff> staff;
-    private final ObservableList<UserType> userTypes;
+    private final UserJpaController controller;
+    private final ObservableList<User> users;
 
     /**
      *
      */
     public UserServiceImpl() {
-        controller = new StaffJpaController(EMF);
-        typeController = new UserTypeJpaController(EMF);
-        staff = FXCollections.observableArrayList(controller.findStaffEntities());
-        userTypes = FXCollections.observableArrayList(typeController.findUserTypeEntities());
+        controller = new UserJpaController(EMF);
+        users = FXCollections.observableArrayList(controller.findUserEntities());
     }
 
     /**
      * determines whether staff member is in system
      *
-     * @param id of staff member
+     * @param username of user
      * @return true if the staff member exists in the system
      */
     @Override
-    public boolean userExists(String id) {
-        return controller.findStaff(Integer.parseInt(id)) != null;
+    public boolean userExists(String username) {
+        return controller.findUser(username) != null;
     }
 
     /**
      *
-     * @param id
+     * @param username
      * @param input
      * @return
      */
     @Override
-    public boolean validHash(String id, String input) {
-        Staff user = controller.findStaff(Integer.parseInt(id));
+    public boolean validHash(String username, String input) {
+        User user = controller.findUser(username);
         if (input == null || user == null) {
             return false;
         }
@@ -75,90 +69,57 @@ public class UserServiceImpl implements UserService {
 
     /**
      *
-     * @param id
+     * @param username
      * @return
      */
     @Override
-    public Staff getUser(String id) {
-        return controller.findStaff(Integer.parseInt(id));
+    public User getUser(String username) {
+        return controller.findUser(username);
     }
 
     /**
      *
-     * @param staff
+     * @param user
      * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
      * @throws java.lang.Exception
      */
     @Override
-    public void addUser(Staff staff) 
+    public void addUser(User user) 
             throws PreexistingEntityException, Exception {
-        controller.create(staff);
+        controller.create(user);
     }
 
     /**
      *
-     * @param id
+     * @param username
      * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
      * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     @Override
-    public void removeUser(String id) 
+    public void removeUser(String username) 
             throws IllegalOrphanException, NonexistentEntityException {
-        controller.destroy(Integer.parseInt(id));
+        controller.destroy(username);
     }
 
     /**
      *
-     * @param staff
+     * @param user
      * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
      * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      * @throws java.lang.Exception
      */
     @Override
-    public void updateUser(Staff staff) 
+    public void updateUser(User user) 
             throws IllegalOrphanException, NonexistentEntityException, Exception {
-        controller.edit(staff);
+        controller.edit(user);
     }
 
-    /**
-     *
-     * @param type
-     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
-     * @throws java.lang.Exception
-     */
-    @Override
-    public void addUserType(String type) 
-            throws PreexistingEntityException, Exception {
-        typeController.create(new UserType(type));
-    }
-
-    /**
-     *
-     * @param type
-     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
-     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
-     */
-    @Override
-    public void removeUserType(String type) 
-            throws IllegalOrphanException, NonexistentEntityException {
-        typeController.destroy(type);
-    }
-
-    /**
+   /**
      *
      * @return
      */
     @Override
-    public ObservableList<Staff> getStaff() {
-        return staff;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public ObservableList<UserType> getUserTypes() {
-        return userTypes;
+    public ObservableList<User> getUsers() {
+        return users;
     }
 }

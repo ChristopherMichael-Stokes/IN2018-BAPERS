@@ -26,78 +26,83 @@
 package bapers.data.domain;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author chris
  */
-@Entity
-@Table(name = "user_type")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UserType.findAll", query = "SELECT u FROM UserType u")
-    , @NamedQuery(name = "UserType.findByType", query = "SELECT u FROM UserType u WHERE u.type = :type")})
-public class UserType implements Serializable {
+@Embeddable
+public class ContactPK implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
     @Basic(optional = false)
-    @Column(name = "type")
-    private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkType")
-    private List<Staff> staffList;
+    @Column(name = "forename")
+    private String forename;
+    @Basic(optional = false)
+    @Column(name = "surname")
+    private String surname;
+    @Basic(optional = false)
+    @Column(name = "fk_account_number")
+    private short fkAccountNumber;
 
-    public UserType() {
+    public ContactPK() {
     }
 
-    public UserType(String type) {
-        this.type = type;
+    public ContactPK(String forename, String surname, short fkAccountNumber) {
+        this.forename = forename;
+        this.surname = surname;
+        this.fkAccountNumber = fkAccountNumber;
     }
 
-    public String getType() {
-        return type;
+    public String getForename() {
+        return forename;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setForename(String forename) {
+        this.forename = forename;
     }
 
-    @XmlTransient
-    public List<Staff> getStaffList() {
-        return staffList;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setStaffList(List<Staff> staffList) {
-        this.staffList = staffList;
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public short getFkAccountNumber() {
+        return fkAccountNumber;
+    }
+
+    public void setFkAccountNumber(short fkAccountNumber) {
+        this.fkAccountNumber = fkAccountNumber;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (type != null ? type.hashCode() : 0);
+        hash += (forename != null ? forename.hashCode() : 0);
+        hash += (surname != null ? surname.hashCode() : 0);
+        hash += (int) fkAccountNumber;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserType)) {
+        if (!(object instanceof ContactPK)) {
             return false;
         }
-        UserType other = (UserType) object;
-        if ((this.type == null && other.type != null) || (this.type != null && !this.type.equals(other.type))) {
+        ContactPK other = (ContactPK) object;
+        if ((this.forename == null && other.forename != null) || (this.forename != null && !this.forename.equals(other.forename))) {
+            return false;
+        }
+        if ((this.surname == null && other.surname != null) || (this.surname != null && !this.surname.equals(other.surname))) {
+            return false;
+        }
+        if (this.fkAccountNumber != other.fkAccountNumber) {
             return false;
         }
         return true;
@@ -105,7 +110,7 @@ public class UserType implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.UserType[ type=" + type + " ]";
+        return "bapers.data.domain.ContactPK[ forename=" + forename + ", surname=" + surname + ", fkAccountNumber=" + fkAccountNumber + " ]";
     }
     
 }

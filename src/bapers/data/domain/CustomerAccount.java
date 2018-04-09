@@ -37,7 +37,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -54,11 +53,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "CustomerAccount.findByAccountNumber", query = "SELECT c FROM CustomerAccount c WHERE c.accountNumber = :accountNumber")
     , @NamedQuery(name = "CustomerAccount.findByEmail", query = "SELECT c FROM CustomerAccount c WHERE c.email = :email")
     , @NamedQuery(name = "CustomerAccount.findByAccountHolderName", query = "SELECT c FROM CustomerAccount c WHERE c.accountHolderName = :accountHolderName")
-    , @NamedQuery(name = "CustomerAccount.findByTitle", query = "SELECT c FROM CustomerAccount c WHERE c.title = :title")
-    , @NamedQuery(name = "CustomerAccount.findByFirstName", query = "SELECT c FROM CustomerAccount c WHERE c.firstName = :firstName")
-    , @NamedQuery(name = "CustomerAccount.findBySurname", query = "SELECT c FROM CustomerAccount c WHERE c.surname = :surname")
-    , @NamedQuery(name = "CustomerAccount.findByHousePhone", query = "SELECT c FROM CustomerAccount c WHERE c.housePhone = :housePhone")
-    , @NamedQuery(name = "CustomerAccount.findByMobilePhone", query = "SELECT c FROM CustomerAccount c WHERE c.mobilePhone = :mobilePhone")})
+    , @NamedQuery(name = "CustomerAccount.findByLandline", query = "SELECT c FROM CustomerAccount c WHERE c.landline = :landline")
+    , @NamedQuery(name = "CustomerAccount.findByDiscountType", query = "SELECT c FROM CustomerAccount c WHERE c.discountType = :discountType")})
 public class CustomerAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,54 +62,42 @@ public class CustomerAccount implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "account_number")
-    private Integer accountNumber;
+    private Short accountNumber;
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
     @Column(name = "account_holder_name")
     private String accountHolderName;
-    @Basic(optional = false)
-    @Column(name = "title")
-    private String title;
-    @Basic(optional = false)
-    @Column(name = "first_name")
-    private String firstName;
-    @Basic(optional = false)
-    @Column(name = "surname")
-    private String surname;
-    @Basic(optional = false)
-    @Column(name = "house_phone")
-    private String housePhone;
-    @Column(name = "mobile_phone")
-    private String mobilePhone;
+    @Column(name = "landline")
+    private String landline;
+    @Column(name = "discount_type")
+    private Short discountType;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private List<TaskDiscount> taskDiscountList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
     private List<Address> addressList;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customerAccount")
-    private Discount discount;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccountNumber")
-    private List<Job> jobList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private List<Contact> contactList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private List<DiscountBand> discountBandList;
 
     public CustomerAccount() {
     }
 
-    public CustomerAccount(Integer accountNumber) {
+    public CustomerAccount(Short accountNumber) {
         this.accountNumber = accountNumber;
     }
 
-    public CustomerAccount(Integer accountNumber, String accountHolderName, String title, String firstName, String surname, String housePhone) {
+    public CustomerAccount(Short accountNumber, String accountHolderName) {
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
-        this.title = title;
-        this.firstName = firstName;
-        this.surname = surname;
-        this.housePhone = housePhone;
     }
 
-    public Integer getAccountNumber() {
+    public Short getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Integer accountNumber) {
+    public void setAccountNumber(Short accountNumber) {
         this.accountNumber = accountNumber;
     }
 
@@ -133,44 +117,29 @@ public class CustomerAccount implements Serializable {
         this.accountHolderName = accountHolderName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getLandline() {
+        return landline;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setLandline(String landline) {
+        this.landline = landline;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Short getDiscountType() {
+        return discountType;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setDiscountType(Short discountType) {
+        this.discountType = discountType;
     }
 
-    public String getSurname() {
-        return surname;
+    @XmlTransient
+    public List<TaskDiscount> getTaskDiscountList() {
+        return taskDiscountList;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getHousePhone() {
-        return housePhone;
-    }
-
-    public void setHousePhone(String housePhone) {
-        this.housePhone = housePhone;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
+    public void setTaskDiscountList(List<TaskDiscount> taskDiscountList) {
+        this.taskDiscountList = taskDiscountList;
     }
 
     @XmlTransient
@@ -182,21 +151,22 @@ public class CustomerAccount implements Serializable {
         this.addressList = addressList;
     }
 
-    public Discount getDiscount() {
-        return discount;
+    @XmlTransient
+    public List<Contact> getContactList() {
+        return contactList;
     }
 
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
+    public void setContactList(List<Contact> contactList) {
+        this.contactList = contactList;
     }
 
     @XmlTransient
-    public List<Job> getJobList() {
-        return jobList;
+    public List<DiscountBand> getDiscountBandList() {
+        return discountBandList;
     }
 
-    public void setJobList(List<Job> jobList) {
-        this.jobList = jobList;
+    public void setDiscountBandList(List<DiscountBand> discountBandList) {
+        this.discountBandList = discountBandList;
     }
 
     @Override

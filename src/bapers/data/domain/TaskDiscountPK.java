@@ -39,7 +39,7 @@ public class TaskDiscountPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private int fkAccountNumber;
+    private short fkAccountNumber;
     @Basic(optional = false)
     @Column(name = "fk_task_id")
     private int fkTaskId;
@@ -47,16 +47,16 @@ public class TaskDiscountPK implements Serializable {
     public TaskDiscountPK() {
     }
 
-    public TaskDiscountPK(int fkAccountNumber, int fkTaskId) {
+    public TaskDiscountPK(short fkAccountNumber, int fkTaskId) {
         this.fkAccountNumber = fkAccountNumber;
         this.fkTaskId = fkTaskId;
     }
 
-    public int getFkAccountNumber() {
+    public short getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(int fkAccountNumber) {
+    public void setFkAccountNumber(short fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 

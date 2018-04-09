@@ -48,12 +48,12 @@ public class AddressPK implements Serializable {
     private String city;
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private int fkAccountNumber;
+    private short fkAccountNumber;
 
     public AddressPK() {
     }
 
-    public AddressPK(String addressLine1, String postcode, String city, int fkAccountNumber) {
+    public AddressPK(String addressLine1, String postcode, String city, short fkAccountNumber) {
         this.addressLine1 = addressLine1;
         this.postcode = postcode;
         this.city = city;
@@ -84,11 +84,11 @@ public class AddressPK implements Serializable {
         this.city = city;
     }
 
-    public int getFkAccountNumber() {
+    public short getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(int fkAccountNumber) {
+    public void setFkAccountNumber(short fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 

@@ -35,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.data.domain.PaymentInfo;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -58,20 +59,28 @@ public class CardDetailsJpaController implements Serializable {
         if (cardDetails.getCardDetailsPK() == null) {
             cardDetails.setCardDetailsPK(new CardDetailsPK());
         }
-        cardDetails.getCardDetailsPK().setFkTransactionId(cardDetails.getPaymentInfo().getTransactionId());
+        if (cardDetails.getPaymentInfoList() == null) {
+            cardDetails.setPaymentInfoList(new ArrayList<PaymentInfo>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PaymentInfo paymentInfo = cardDetails.getPaymentInfo();
-            if (paymentInfo != null) {
-                paymentInfo = em.getReference(paymentInfo.getClass(), paymentInfo.getTransactionId());
-                cardDetails.setPaymentInfo(paymentInfo);
+            List<PaymentInfo> attachedPaymentInfoList = new ArrayList<PaymentInfo>();
+            for (PaymentInfo paymentInfoListPaymentInfoToAttach : cardDetails.getPaymentInfoList()) {
+                paymentInfoListPaymentInfoToAttach = em.getReference(paymentInfoListPaymentInfoToAttach.getClass(), paymentInfoListPaymentInfoToAttach.getTransactionId());
+                attachedPaymentInfoList.add(paymentInfoListPaymentInfoToAttach);
             }
+            cardDetails.setPaymentInfoList(attachedPaymentInfoList);
             em.persist(cardDetails);
-            if (paymentInfo != null) {
-                paymentInfo.getCardDetailsList().add(cardDetails);
-                paymentInfo = em.merge(paymentInfo);
+            for (PaymentInfo paymentInfoListPaymentInfo : cardDetails.getPaymentInfoList()) {
+                CardDetails oldCardDetailsOfPaymentInfoListPaymentInfo = paymentInfoListPaymentInfo.getCardDetails();
+                paymentInfoListPaymentInfo.setCardDetails(cardDetails);
+                paymentInfoListPaymentInfo = em.merge(paymentInfoListPaymentInfo);
+                if (oldCardDetailsOfPaymentInfoListPaymentInfo != null) {
+                    oldCardDetailsOfPaymentInfoListPaymentInfo.getPaymentInfoList().remove(paymentInfoListPaymentInfo);
+                    oldCardDetailsOfPaymentInfoListPaymentInfo = em.merge(oldCardDetailsOfPaymentInfoListPaymentInfo);
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -87,26 +96,37 @@ public class CardDetailsJpaController implements Serializable {
     }
 
     public void edit(CardDetails cardDetails) throws NonexistentEntityException, Exception {
-        cardDetails.getCardDetailsPK().setFkTransactionId(cardDetails.getPaymentInfo().getTransactionId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             CardDetails persistentCardDetails = em.find(CardDetails.class, cardDetails.getCardDetailsPK());
-            PaymentInfo paymentInfoOld = persistentCardDetails.getPaymentInfo();
-            PaymentInfo paymentInfoNew = cardDetails.getPaymentInfo();
-            if (paymentInfoNew != null) {
-                paymentInfoNew = em.getReference(paymentInfoNew.getClass(), paymentInfoNew.getTransactionId());
-                cardDetails.setPaymentInfo(paymentInfoNew);
+            List<PaymentInfo> paymentInfoListOld = persistentCardDetails.getPaymentInfoList();
+            List<PaymentInfo> paymentInfoListNew = cardDetails.getPaymentInfoList();
+            List<PaymentInfo> attachedPaymentInfoListNew = new ArrayList<PaymentInfo>();
+            for (PaymentInfo paymentInfoListNewPaymentInfoToAttach : paymentInfoListNew) {
+                paymentInfoListNewPaymentInfoToAttach = em.getReference(paymentInfoListNewPaymentInfoToAttach.getClass(), paymentInfoListNewPaymentInfoToAttach.getTransactionId());
+                attachedPaymentInfoListNew.add(paymentInfoListNewPaymentInfoToAttach);
             }
+            paymentInfoListNew = attachedPaymentInfoListNew;
+            cardDetails.setPaymentInfoList(paymentInfoListNew);
             cardDetails = em.merge(cardDetails);
-            if (paymentInfoOld != null && !paymentInfoOld.equals(paymentInfoNew)) {
-                paymentInfoOld.getCardDetailsList().remove(cardDetails);
-                paymentInfoOld = em.merge(paymentInfoOld);
+            for (PaymentInfo paymentInfoListOldPaymentInfo : paymentInfoListOld) {
+                if (!paymentInfoListNew.contains(paymentInfoListOldPaymentInfo)) {
+                    paymentInfoListOldPaymentInfo.setCardDetails(null);
+                    paymentInfoListOldPaymentInfo = em.merge(paymentInfoListOldPaymentInfo);
+                }
             }
-            if (paymentInfoNew != null && !paymentInfoNew.equals(paymentInfoOld)) {
-                paymentInfoNew.getCardDetailsList().add(cardDetails);
-                paymentInfoNew = em.merge(paymentInfoNew);
+            for (PaymentInfo paymentInfoListNewPaymentInfo : paymentInfoListNew) {
+                if (!paymentInfoListOld.contains(paymentInfoListNewPaymentInfo)) {
+                    CardDetails oldCardDetailsOfPaymentInfoListNewPaymentInfo = paymentInfoListNewPaymentInfo.getCardDetails();
+                    paymentInfoListNewPaymentInfo.setCardDetails(cardDetails);
+                    paymentInfoListNewPaymentInfo = em.merge(paymentInfoListNewPaymentInfo);
+                    if (oldCardDetailsOfPaymentInfoListNewPaymentInfo != null && !oldCardDetailsOfPaymentInfoListNewPaymentInfo.equals(cardDetails)) {
+                        oldCardDetailsOfPaymentInfoListNewPaymentInfo.getPaymentInfoList().remove(paymentInfoListNewPaymentInfo);
+                        oldCardDetailsOfPaymentInfoListNewPaymentInfo = em.merge(oldCardDetailsOfPaymentInfoListNewPaymentInfo);
+                    }
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -137,10 +157,10 @@ public class CardDetailsJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The cardDetails with id " + id + " no longer exists.", enfe);
             }
-            PaymentInfo paymentInfo = cardDetails.getPaymentInfo();
-            if (paymentInfo != null) {
-                paymentInfo.getCardDetailsList().remove(cardDetails);
-                paymentInfo = em.merge(paymentInfo);
+            List<PaymentInfo> paymentInfoList = cardDetails.getPaymentInfoList();
+            for (PaymentInfo paymentInfoListPaymentInfo : paymentInfoList) {
+                paymentInfoListPaymentInfo.setCardDetails(null);
+                paymentInfoListPaymentInfo = em.merge(paymentInfoListPaymentInfo);
             }
             em.remove(cardDetails);
             em.getTransaction().commit();

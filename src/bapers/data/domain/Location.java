@@ -44,60 +44,71 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author chris
  */
 @Entity
-@Table(name = "discount_plan")
+@Table(name = "location")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "DiscountPlan.findAll", query = "SELECT d FROM DiscountPlan d")
-    , @NamedQuery(name = "DiscountPlan.findByType", query = "SELECT d FROM DiscountPlan d WHERE d.type = :type")})
-public class DiscountPlan implements Serializable {
+    @NamedQuery(name = "Location.findAll", query = "SELECT l FROM Location l")
+    , @NamedQuery(name = "Location.findByLocation", query = "SELECT l FROM Location l WHERE l.location = :location")})
+public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "type")
-    private String type;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkType")
-    private List<Discount> discountList;
+    @Column(name = "location")
+    private String location;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkLocation")
+    private List<Task> taskList;
+    @OneToMany(mappedBy = "fkLocation")
+    private List<User> userList;
 
-    public DiscountPlan() {
+    public Location() {
     }
 
-    public DiscountPlan(String type) {
-        this.type = type;
+    public Location(String location) {
+        this.location = location;
     }
 
-    public String getType() {
-        return type;
+    public String getLocation() {
+        return location;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @XmlTransient
-    public List<Discount> getDiscountList() {
-        return discountList;
+    public List<Task> getTaskList() {
+        return taskList;
     }
 
-    public void setDiscountList(List<Discount> discountList) {
-        this.discountList = discountList;
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
+    }
+
+    @XmlTransient
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (type != null ? type.hashCode() : 0);
+        hash += (location != null ? location.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DiscountPlan)) {
+        if (!(object instanceof Location)) {
             return false;
         }
-        DiscountPlan other = (DiscountPlan) object;
-        if ((this.type == null && other.type != null) || (this.type != null && !this.type.equals(other.type))) {
+        Location other = (Location) object;
+        if ((this.location == null && other.location != null) || (this.location != null && !this.location.equals(other.location))) {
             return false;
         }
         return true;
@@ -105,7 +116,7 @@ public class DiscountPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.DiscountPlan[ type=" + type + " ]";
+        return "bapers.data.domain.Location[ location=" + location + " ]";
     }
     
 }

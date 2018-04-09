@@ -32,8 +32,11 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -55,33 +58,41 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Job.findAll", query = "SELECT j FROM Job j")
     , @NamedQuery(name = "Job.findByJobId", query = "SELECT j FROM Job j WHERE j.jobId = :jobId")
     , @NamedQuery(name = "Job.findByDescription", query = "SELECT j FROM Job j WHERE j.description = :description")
-    , @NamedQuery(name = "Job.findByAmountDue", query = "SELECT j FROM Job j WHERE j.amountDue = :amountDue")
+    , @NamedQuery(name = "Job.findByDateIssued", query = "SELECT j FROM Job j WHERE j.dateIssued = :dateIssued")
+    , @NamedQuery(name = "Job.findByQuanity", query = "SELECT j FROM Job j WHERE j.quanity = :quanity")
     , @NamedQuery(name = "Job.findByDeadline", query = "SELECT j FROM Job j WHERE j.deadline = :deadline")
-    , @NamedQuery(name = "Job.findByUrgent", query = "SELECT j FROM Job j WHERE j.urgent = :urgent")})
+    , @NamedQuery(name = "Job.findByAddedPercentage", query = "SELECT j FROM Job j WHERE j.addedPercentage = :addedPercentage")})
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "job_id")
-    private String jobId;
-    @Basic(optional = false)
+    private Integer jobId;
     @Column(name = "description")
     private String description;
     @Basic(optional = false)
-    @Column(name = "amount_due")
-    private int amountDue;
-    @Column(name = "deadline")
+    @Column(name = "date_issued")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date deadline;
+    private Date dateIssued;
     @Basic(optional = false)
-    @Column(name = "urgent")
-    private boolean urgent;
+    @Column(name = "quanity")
+    private short quanity;
+    @Column(name = "deadline")
+    @Temporal(TemporalType.TIME)
+    private Date deadline;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "added_percentage")
+    private Float addedPercentage;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
-    private List<JobTask> jobTaskList;
-    @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number")
+    private List<JobComponent> jobComponentList;
+    @JoinColumns({
+        @JoinColumn(name = "fk_forename", referencedColumnName = "forename")
+        , @JoinColumn(name = "fk_surname", referencedColumnName = "surname")
+        , @JoinColumn(name = "fk_account_number", referencedColumnName = "fk_account_number")})
     @ManyToOne(optional = false)
-    private CustomerAccount fkAccountNumber;
+    private Contact contact;
     @JoinColumn(name = "fk_transaction_id", referencedColumnName = "transaction_id")
     @ManyToOne
     private PaymentInfo fkTransactionId;
@@ -89,22 +100,21 @@ public class Job implements Serializable {
     public Job() {
     }
 
-    public Job(String jobId) {
+    public Job(Integer jobId) {
         this.jobId = jobId;
     }
 
-    public Job(String jobId, String description, int amountDue, boolean urgent) {
+    public Job(Integer jobId, Date dateIssued, short quanity) {
         this.jobId = jobId;
-        this.description = description;
-        this.amountDue = amountDue;
-        this.urgent = urgent;
+        this.dateIssued = dateIssued;
+        this.quanity = quanity;
     }
 
-    public String getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
+    public void setJobId(Integer jobId) {
         this.jobId = jobId;
     }
 
@@ -116,12 +126,20 @@ public class Job implements Serializable {
         this.description = description;
     }
 
-    public int getAmountDue() {
-        return amountDue;
+    public Date getDateIssued() {
+        return dateIssued;
     }
 
-    public void setAmountDue(int amountDue) {
-        this.amountDue = amountDue;
+    public void setDateIssued(Date dateIssued) {
+        this.dateIssued = dateIssued;
+    }
+
+    public short getQuanity() {
+        return quanity;
+    }
+
+    public void setQuanity(short quanity) {
+        this.quanity = quanity;
     }
 
     public Date getDeadline() {
@@ -132,29 +150,29 @@ public class Job implements Serializable {
         this.deadline = deadline;
     }
 
-    public boolean getUrgent() {
-        return urgent;
+    public Float getAddedPercentage() {
+        return addedPercentage;
     }
 
-    public void setUrgent(boolean urgent) {
-        this.urgent = urgent;
+    public void setAddedPercentage(Float addedPercentage) {
+        this.addedPercentage = addedPercentage;
     }
 
     @XmlTransient
-    public List<JobTask> getJobTaskList() {
-        return jobTaskList;
+    public List<JobComponent> getJobComponentList() {
+        return jobComponentList;
     }
 
-    public void setJobTaskList(List<JobTask> jobTaskList) {
-        this.jobTaskList = jobTaskList;
+    public void setJobComponentList(List<JobComponent> jobComponentList) {
+        this.jobComponentList = jobComponentList;
     }
 
-    public CustomerAccount getFkAccountNumber() {
-        return fkAccountNumber;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setFkAccountNumber(CustomerAccount fkAccountNumber) {
-        this.fkAccountNumber = fkAccountNumber;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public PaymentInfo getFkTransactionId() {

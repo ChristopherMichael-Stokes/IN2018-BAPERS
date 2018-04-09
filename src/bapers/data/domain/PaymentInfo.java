@@ -29,10 +29,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -53,49 +57,48 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "PaymentInfo.findAll", query = "SELECT p FROM PaymentInfo p")
     , @NamedQuery(name = "PaymentInfo.findByTransactionId", query = "SELECT p FROM PaymentInfo p WHERE p.transactionId = :transactionId")
     , @NamedQuery(name = "PaymentInfo.findByDatePaid", query = "SELECT p FROM PaymentInfo p WHERE p.datePaid = :datePaid")
-    , @NamedQuery(name = "PaymentInfo.findByAmountPaid", query = "SELECT p FROM PaymentInfo p WHERE p.amountPaid = :amountPaid")
     , @NamedQuery(name = "PaymentInfo.findByPaymentType", query = "SELECT p FROM PaymentInfo p WHERE p.paymentType = :paymentType")})
 public class PaymentInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "transaction_id")
-    private String transactionId;
+    private Integer transactionId;
     @Basic(optional = false)
     @Column(name = "date_paid")
     @Temporal(TemporalType.DATE)
     private Date datePaid;
     @Basic(optional = false)
-    @Column(name = "amount_paid")
-    private int amountPaid;
-    @Basic(optional = false)
     @Column(name = "payment_type")
-    private String paymentType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
-    private List<CardDetails> cardDetailsList;
+    private boolean paymentType;
+    @JoinColumns({
+        @JoinColumn(name = "fk_last_digits", referencedColumnName = "last_digits")
+        , @JoinColumn(name = "fk_expiry_date", referencedColumnName = "expiry_date")})
+    @ManyToOne
+    private CardDetails cardDetails;
     @OneToMany(mappedBy = "fkTransactionId")
     private List<Job> jobList;
 
     public PaymentInfo() {
     }
 
-    public PaymentInfo(String transactionId) {
+    public PaymentInfo(Integer transactionId) {
         this.transactionId = transactionId;
     }
 
-    public PaymentInfo(String transactionId, Date datePaid, int amountPaid, String paymentType) {
+    public PaymentInfo(Integer transactionId, Date datePaid, boolean paymentType) {
         this.transactionId = transactionId;
         this.datePaid = datePaid;
-        this.amountPaid = amountPaid;
         this.paymentType = paymentType;
     }
 
-    public String getTransactionId() {
+    public Integer getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -107,29 +110,20 @@ public class PaymentInfo implements Serializable {
         this.datePaid = datePaid;
     }
 
-    public int getAmountPaid() {
-        return amountPaid;
-    }
-
-    public void setAmountPaid(int amountPaid) {
-        this.amountPaid = amountPaid;
-    }
-
-    public String getPaymentType() {
+    public boolean getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(String paymentType) {
+    public void setPaymentType(boolean paymentType) {
         this.paymentType = paymentType;
     }
 
-    @XmlTransient
-    public List<CardDetails> getCardDetailsList() {
-        return cardDetailsList;
+    public CardDetails getCardDetails() {
+        return cardDetails;
     }
 
-    public void setCardDetailsList(List<CardDetails> cardDetailsList) {
-        this.cardDetailsList = cardDetailsList;
+    public void setCardDetails(CardDetails cardDetails) {
+        this.cardDetails = cardDetails;
     }
 
     @XmlTransient
