@@ -115,12 +115,15 @@ public class HomePageController implements Initializable {
             case receptionist:
                 buttons.clear();
                 buttons.addAll(btnPlaceOrder, btnPayment);
+                break;
             case shiftManager:
                 buttons.clear();
                 buttons.addAll(btnPlaceOrder, btnJobProcessing, btnReports);
+                break;
             case technician:
                 buttons.clear();
                 buttons.addAll(btnJobProcessing);
+                break;
         }
 
         Timeline timeline = new Timeline(
