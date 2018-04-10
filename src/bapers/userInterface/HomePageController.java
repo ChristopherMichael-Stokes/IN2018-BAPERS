@@ -25,7 +25,6 @@
  */
 package bapers.userInterface;
 
-import static bapers.BAPERS.USER;
 import bapers.service.HomeService;
 import bapers.service.HomeServiceImpl;
 import bapers.userInterface.SceneController.Scenes;
@@ -46,6 +45,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.util.Duration;
+import static bapers.BAPERS.USER;
 
 /**
  * FXML Controller class

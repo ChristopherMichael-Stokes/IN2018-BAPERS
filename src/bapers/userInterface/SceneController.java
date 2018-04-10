@@ -25,13 +25,14 @@
  */
 package bapers.userInterface;
 
-import static bapers.BAPERS.USER;
+
 import static bapers.BAPERS.primaryStage;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import static bapers.BAPERS.USER;
 
 /**
  *
