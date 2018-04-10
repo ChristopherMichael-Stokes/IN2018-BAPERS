@@ -5,7 +5,7 @@
  */
 package bapers;
 
-import bapers.data.domain.Staff;
+import bapers.data.domain.User;
 import bapers.service.UserServiceImpl;
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +45,7 @@ public class BAPERS extends Application {
     /**
      * the logged in user
      */
-    public static Staff USER;
+    public static User USER;
 
     /**
      * the main window for the application
@@ -72,7 +72,7 @@ public class BAPERS extends Application {
                 forms.put(options[i], resources[i]);
             }
             
-            USER = new UserServiceImpl().getUser("7"); //me
+            USER = new UserServiceImpl().getUser("Manager");
             String selection = (String) JOptionPane.showInputDialog(
                     null, "Select a form", "form",
                     JOptionPane.QUESTION_MESSAGE, null,
