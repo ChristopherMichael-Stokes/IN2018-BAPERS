@@ -25,10 +25,13 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.Job;
+import bapers.data.domain.PaymentInfo;
 import javafx.collections.ObservableList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -45,29 +48,28 @@ public interface PaymentService {
 
     /**
      *
-     * @param accountNumber
-     * @param amountPaid
-     * @param datePaid
+     * @param payment
      * @param jobs
      * @throws PreexistingEntityException
      * @throws Exception
      */
-    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
-            String... jobs) throws PreexistingEntityException, Exception;
+    public void addPayment(PaymentInfo payment, List<Job> jobs) 
+            throws PreexistingEntityException, Exception;
 
     /**
      *
-     * @param accountNumber
-     * @param amountPaid
-     * @param datePaid
+     * @param payment
      * @param cardDigits
      * @param expiryDate
      * @param cardType
      * @param jobs
      * @throws PreexistingEntityException
+     * @throws IllegalOrphanException
      * @throws Exception
      */
-    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
-            String cardDigits, Date expiryDate, String cardType, String... jobs)
-            throws PreexistingEntityException, Exception;
+    public void addPayment(PaymentInfo payment, String cardDigits, 
+            Date expiryDate, String cardType, List<Job> jobs)
+            throws PreexistingEntityException, IllegalOrphanException, Exception;
+    
+    //TODO - needs other function to work out all unpaid jobs
 }

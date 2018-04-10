@@ -27,15 +27,18 @@ package bapers.service;
 
 import static bapers.BAPERS.EMF;
 import bapers.data.dataAccess.CardDetailsJpaController;
+import bapers.data.dataAccess.ContactJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.PaymentInfoJpaController;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.CardDetails;
+import bapers.data.domain.CardDetailsPK;
+import bapers.data.domain.Contact;
 import bapers.data.domain.Job;
 import bapers.data.domain.PaymentInfo;
-import bapers.utility.SimpleHash;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,6 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentInfoJpaController paymentController;
     private final CardDetailsJpaController cardController;
     private final JobJpaController jobController;
+    private final ContactJpaController contactController;
 
     /**
      *
@@ -57,6 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentController = new PaymentInfoJpaController(EMF);
         cardController = new CardDetailsJpaController(EMF);
         jobController = new JobJpaController(EMF);
+        contactController = new ContactJpaController(EMF);
     }
 
     /**
@@ -66,62 +71,72 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Override
     public ObservableList<Job> getJobs(int accountNumber) {
-        return jobController.findJobEntities().stream()
-                .filter(j -> j.getFkAccountNumber().getAccountNumber()
-                    == accountNumber && j.getAmountDue() > 0)
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        return contactController.findContactEntities().stream()
+                .filter(c -> c.getContactPK().getFkAccountNumber() == accountNumber)
+                .map(Contact::getJobList)
+                .flatMap(j -> j.stream()
+                        .filter(jb -> jb.getFkTransactionId() == null))
+                .collect(Collectors
+                        .toCollection(FXCollections::observableArrayList));
     }
+        
 
     /**
      *
-     * @param accountNumber
-     * @param amountPaid
-     * @param datePaid
+     * @param payment
      * @param jobs
      * @throws PreexistingEntityException
      * @throws Exception
      */
     @Override
-    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
-            String... jobs) throws PreexistingEntityException, Exception {
-
-        String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
-                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0, 8);
-
-        PaymentInfo pi = new PaymentInfo(transactionId, datePaid,
-                amountPaid, "cash");
-
+    public void addPayment(PaymentInfo payment, List<Job> jobs) 
+            throws PreexistingEntityException, Exception {
+        PaymentInfo pi = new PaymentInfo(0, new Date(), false);
+        pi.setJobList(jobs);
         paymentController.create(pi);
+        //transaction id uses auto increment, so need to use lookup to get the
+        //id of the payment
+        int count = paymentController.getPaymentInfoCount();
+        pi = paymentController.findPaymentInfoEntities(1, count).get(0);
+        for (Job j : jobs) {
+            j.setFkTransactionId(pi);
+            jobController.edit(j);
+        } 
     }
 
     /**
      *
-     * @param accountNumber
-     * @param amountPaid
-     * @param datePaid
+     * @param payment
      * @param cardDigits
      * @param expiryDate
      * @param cardType
      * @param jobs
      * @throws PreexistingEntityException
+     * @throws IllegalOrphanException
      * @throws Exception
      */
     @Override
-    public void addPayment(int accountNumber, int amountPaid, Date datePaid,
-            String cardDigits, Date expiryDate, String cardType, String... jobs)
-            throws PreexistingEntityException, Exception {
-
-        String transactionId = new SimpleDateFormat("dd/MM/yy:HH:mm:SS")
-                .format(datePaid) + SimpleHash.getStringHash(jobs).substring(0, 8);
-
-        PaymentInfo pi = new PaymentInfo(transactionId, datePaid,
-                amountPaid, "card");
-
-        paymentController.create(pi);
-        CardDetails cd = new CardDetails(cardDigits, expiryDate, transactionId);
-        cd.setCardType(cardType);
+    public void addPayment(PaymentInfo payment, String cardDigits, 
+            Date expiryDate, String cardType, List<Job> jobs)
+            throws PreexistingEntityException, IllegalOrphanException, Exception {
+        PaymentInfo pi = new PaymentInfo(0, new Date(), true);
+        CardDetailsPK cpk = new CardDetailsPK(cardDigits, expiryDate);
+        CardDetails cd;
+        if ((cd = cardController.findCardDetails(cpk)) == null) {
+            cd = new CardDetails(cpk, cardType);
+        }        
         cardController.create(cd);
-
+        pi.setCardDetails(cd);
+        pi.setJobList(jobs);
+        paymentController.create(pi);
+        //transaction id uses auto increment, so need to use lookup to get the
+        //id of the payment
+        int count = paymentController.getPaymentInfoCount();
+        pi = paymentController.findPaymentInfoEntities(1, count).get(0);
+        for (Job j : jobs) {
+            j.setFkTransactionId(pi);
+            jobController.edit(j);
+        }      
     }
 
 }
