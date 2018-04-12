@@ -26,18 +26,12 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
-import bapers.data.dataAccess.DiscountBandJpaController;
-import bapers.data.dataAccess.DiscountJpaController;
-import bapers.data.dataAccess.DiscountPlanJpaController;
+import bapers.data.dataAccess.JobComponentJpaController;
 import bapers.data.dataAccess.JobJpaController;
-import bapers.data.dataAccess.JobTaskJpaController;
-import bapers.data.dataAccess.TaskDiscountJpaController;
 import bapers.data.dataAccess.TaskJpaController;
-import bapers.data.domain.JobTask;
-import bapers.data.domain.JobTaskPK;
+import bapers.data.domain.JobComponent;
+import bapers.data.domain.JobComponentPK;
 import java.util.Date;
-import java.util.stream.Collectors;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -47,11 +41,7 @@ import javafx.collections.ObservableList;
 public class JobServiceImpl implements JobService {
 
     private final JobJpaController jobController;
-    private final JobTaskJpaController jobTaskController;
-    private final DiscountPlanJpaController discountPlanController;
-    private final DiscountBandJpaController discountBandController;
-    private final TaskDiscountJpaController taskDiscountController;
-    private final DiscountJpaController discountController;
+    private final JobComponentJpaController jobComponentController;
     private final TaskJpaController taskController;
 
     /**
@@ -59,24 +49,20 @@ public class JobServiceImpl implements JobService {
      */
     public JobServiceImpl() {
         jobController = new JobJpaController(EMF);
-        jobTaskController = new JobTaskJpaController(EMF);
+        jobComponentController = new JobComponentJpaController(EMF);
         taskController = new TaskJpaController(EMF);
-        discountPlanController = new DiscountPlanJpaController(EMF);
-        discountBandController = new DiscountBandJpaController(EMF);
-        taskDiscountController = new TaskDiscountJpaController(EMF);
-        discountController = new DiscountJpaController(EMF);
     }
 
     /**
      *
      * @param jobId
-     * @param taskId
+     * @param compId
      * @param time
      */
     @Override
-    public void setTaskComplete(String jobId, int taskId, Date time) {        
-        jobTaskController.findJobTask(new JobTaskPK(jobId, taskId))
-                .setEndTime(time);        
+    public void setTaskComplete(int jobId, int compId, Date time) {        
+        jobComponentController.findJobComponent(new JobComponentPK(jobId, compId))
+                .setEndTime(time);
     }
 
     /**
@@ -85,10 +71,12 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public ObservableList<JobTask> getTasks(String jobId) {
-        return jobTaskController.findJobTaskEntities().stream()
-                .filter(j -> j.getJob().getJobId().equals(jobId))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    public ObservableList<JobComponent> getTasks(int jobId) {
+//        return jobTaskController.findJobComponentEntities().stream()
+//                .filter(j -> j.getJob().getJobId() == jobId)
+//                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    //TODO - fix
+        return null;
    }
 
     /**
@@ -96,7 +84,7 @@ public class JobServiceImpl implements JobService {
      * @param jobId
      */
     @Override
-    public void printLabel(String jobId) {
+    public void printLabel(int jobId) {
 //        https://docs.oracle.com/javase/8/javafx/api/javafx/print/PrinterJob.html
 //        Node node = new Circle(100, 200, 200);
 //        PrinterJob job = PrinterJob.createPrinterJob();

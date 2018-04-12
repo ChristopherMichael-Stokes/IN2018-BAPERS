@@ -32,7 +32,12 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -61,6 +66,7 @@ public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "task_id")
     private Integer taskId;
@@ -80,10 +86,13 @@ public class Task implements Serializable {
     @Column(name = "duration")
     @Temporal(TemporalType.TIME)
     private Date duration;
+    @ManyToMany(mappedBy = "taskList")
+    private List<JobComponent> jobComponentList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     private List<TaskDiscount> taskDiscountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
-    private List<JobTask> jobTaskList;
+    @JoinColumn(name = "fk_location", referencedColumnName = "location")
+    @ManyToOne(optional = false)
+    private Location fkLocation;
 
     public Task() {
     }
@@ -150,6 +159,15 @@ public class Task implements Serializable {
     }
 
     @XmlTransient
+    public List<JobComponent> getJobComponentList() {
+        return jobComponentList;
+    }
+
+    public void setJobComponentList(List<JobComponent> jobComponentList) {
+        this.jobComponentList = jobComponentList;
+    }
+
+    @XmlTransient
     public List<TaskDiscount> getTaskDiscountList() {
         return taskDiscountList;
     }
@@ -158,13 +176,12 @@ public class Task implements Serializable {
         this.taskDiscountList = taskDiscountList;
     }
 
-    @XmlTransient
-    public List<JobTask> getJobTaskList() {
-        return jobTaskList;
+    public Location getFkLocation() {
+        return fkLocation;
     }
 
-    public void setJobTaskList(List<JobTask> jobTaskList) {
-        this.jobTaskList = jobTaskList;
+    public void setFkLocation(Location fkLocation) {
+        this.fkLocation = fkLocation;
     }
 
     @Override

@@ -25,7 +25,6 @@
  */
 package bapers.userInterface;
 
-import static bapers.BAPERS.USER;
 import bapers.service.HomeService;
 import bapers.service.HomeServiceImpl;
 import bapers.userInterface.SceneController.Scenes;
@@ -46,6 +45,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.util.Duration;
+import static bapers.BAPERS.USER;
 
 /**
  * FXML Controller class
@@ -115,12 +115,15 @@ public class HomePageController implements Initializable {
             case receptionist:
                 buttons.clear();
                 buttons.addAll(btnPlaceOrder, btnPayment);
+                break;
             case shiftManager:
                 buttons.clear();
                 buttons.addAll(btnPlaceOrder, btnJobProcessing, btnReports);
+                break;
             case technician:
                 buttons.clear();
                 buttons.addAll(btnJobProcessing);
+                break;
         }
 
         Timeline timeline = new Timeline(

@@ -57,9 +57,9 @@ public class DiscountBand implements Serializable {
     @Basic(optional = false)
     @Column(name = "percentage")
     private float percentage;
-    @JoinColumn(name = "fk_account_number", referencedColumnName = "fk_account_number", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Discount discount;
+    private CustomerAccount customerAccount;
 
     public DiscountBand() {
     }
@@ -73,7 +73,7 @@ public class DiscountBand implements Serializable {
         this.percentage = percentage;
     }
 
-    public DiscountBand(int fkAccountNumber, int price) {
+    public DiscountBand(short fkAccountNumber, int price) {
         this.discountBandPK = new DiscountBandPK(fkAccountNumber, price);
     }
 
@@ -93,12 +93,12 @@ public class DiscountBand implements Serializable {
         this.percentage = percentage;
     }
 
-    public Discount getDiscount() {
-        return discount;
+    public CustomerAccount getCustomerAccount() {
+        return customerAccount;
     }
 
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
+    public void setCustomerAccount(CustomerAccount customerAccount) {
+        this.customerAccount = customerAccount;
     }
 
     @Override

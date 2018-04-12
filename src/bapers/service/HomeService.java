@@ -36,23 +36,21 @@ public interface HomeService {
      * enumeration to translate from a user type string to a more 
      * efficient representation
      */
+    
+    
     public enum UserTypes{
         officeManager, shiftManager, receptionist, technician;
-        public static UserTypes getType(String type) {
-            switch(type.trim().toLowerCase()){
-                case "office manager":
-                    return officeManager;
-                case "shift manager":
-                    return shiftManager;
-                case "receptionist":
-                    return receptionist;       
-                case "technician":
-                    return technician;
+        public static UserTypes getType(int type) {
+            switch(type){
+                case 0: return officeManager;
+                case 1: return shiftManager;
+                case 2: return receptionist;
+                case 3: return technician;
                 default: return null;
             }                
         }
     };
-
+    
     /**
      *
      * @return briefing specific to the user that is currently logged in

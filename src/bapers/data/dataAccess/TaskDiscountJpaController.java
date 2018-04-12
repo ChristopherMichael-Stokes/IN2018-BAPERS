@@ -33,7 +33,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.data.domain.Task;
-import bapers.data.domain.Discount;
+import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.TaskDiscount;
 import bapers.data.domain.TaskDiscountPK;
 import java.util.List;
@@ -59,8 +59,8 @@ public class TaskDiscountJpaController implements Serializable {
         if (taskDiscount.getTaskDiscountPK() == null) {
             taskDiscount.setTaskDiscountPK(new TaskDiscountPK());
         }
-        taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getDiscount().getFkAccountNumber());
         taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
+        taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getCustomerAccount().getAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -70,19 +70,19 @@ public class TaskDiscountJpaController implements Serializable {
                 task = em.getReference(task.getClass(), task.getTaskId());
                 taskDiscount.setTask(task);
             }
-            Discount discount = taskDiscount.getDiscount();
-            if (discount != null) {
-                discount = em.getReference(discount.getClass(), discount.getFkAccountNumber());
-                taskDiscount.setDiscount(discount);
+            CustomerAccount customerAccount = taskDiscount.getCustomerAccount();
+            if (customerAccount != null) {
+                customerAccount = em.getReference(customerAccount.getClass(), customerAccount.getAccountNumber());
+                taskDiscount.setCustomerAccount(customerAccount);
             }
             em.persist(taskDiscount);
             if (task != null) {
                 task.getTaskDiscountList().add(taskDiscount);
                 task = em.merge(task);
             }
-            if (discount != null) {
-                discount.getTaskDiscountList().add(taskDiscount);
-                discount = em.merge(discount);
+            if (customerAccount != null) {
+                customerAccount.getTaskDiscountList().add(taskDiscount);
+                customerAccount = em.merge(customerAccount);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -98,8 +98,8 @@ public class TaskDiscountJpaController implements Serializable {
     }
 
     public void edit(TaskDiscount taskDiscount) throws NonexistentEntityException, Exception {
-        taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getDiscount().getFkAccountNumber());
         taskDiscount.getTaskDiscountPK().setFkTaskId(taskDiscount.getTask().getTaskId());
+        taskDiscount.getTaskDiscountPK().setFkAccountNumber(taskDiscount.getCustomerAccount().getAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -107,15 +107,15 @@ public class TaskDiscountJpaController implements Serializable {
             TaskDiscount persistentTaskDiscount = em.find(TaskDiscount.class, taskDiscount.getTaskDiscountPK());
             Task taskOld = persistentTaskDiscount.getTask();
             Task taskNew = taskDiscount.getTask();
-            Discount discountOld = persistentTaskDiscount.getDiscount();
-            Discount discountNew = taskDiscount.getDiscount();
+            CustomerAccount customerAccountOld = persistentTaskDiscount.getCustomerAccount();
+            CustomerAccount customerAccountNew = taskDiscount.getCustomerAccount();
             if (taskNew != null) {
                 taskNew = em.getReference(taskNew.getClass(), taskNew.getTaskId());
                 taskDiscount.setTask(taskNew);
             }
-            if (discountNew != null) {
-                discountNew = em.getReference(discountNew.getClass(), discountNew.getFkAccountNumber());
-                taskDiscount.setDiscount(discountNew);
+            if (customerAccountNew != null) {
+                customerAccountNew = em.getReference(customerAccountNew.getClass(), customerAccountNew.getAccountNumber());
+                taskDiscount.setCustomerAccount(customerAccountNew);
             }
             taskDiscount = em.merge(taskDiscount);
             if (taskOld != null && !taskOld.equals(taskNew)) {
@@ -126,13 +126,13 @@ public class TaskDiscountJpaController implements Serializable {
                 taskNew.getTaskDiscountList().add(taskDiscount);
                 taskNew = em.merge(taskNew);
             }
-            if (discountOld != null && !discountOld.equals(discountNew)) {
-                discountOld.getTaskDiscountList().remove(taskDiscount);
-                discountOld = em.merge(discountOld);
+            if (customerAccountOld != null && !customerAccountOld.equals(customerAccountNew)) {
+                customerAccountOld.getTaskDiscountList().remove(taskDiscount);
+                customerAccountOld = em.merge(customerAccountOld);
             }
-            if (discountNew != null && !discountNew.equals(discountOld)) {
-                discountNew.getTaskDiscountList().add(taskDiscount);
-                discountNew = em.merge(discountNew);
+            if (customerAccountNew != null && !customerAccountNew.equals(customerAccountOld)) {
+                customerAccountNew.getTaskDiscountList().add(taskDiscount);
+                customerAccountNew = em.merge(customerAccountNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -168,10 +168,10 @@ public class TaskDiscountJpaController implements Serializable {
                 task.getTaskDiscountList().remove(taskDiscount);
                 task = em.merge(task);
             }
-            Discount discount = taskDiscount.getDiscount();
-            if (discount != null) {
-                discount.getTaskDiscountList().remove(taskDiscount);
-                discount = em.merge(discount);
+            CustomerAccount customerAccount = taskDiscount.getCustomerAccount();
+            if (customerAccount != null) {
+                customerAccount.getTaskDiscountList().remove(taskDiscount);
+                customerAccount = em.merge(customerAccount);
             }
             em.remove(taskDiscount);
             em.getTransaction().commit();

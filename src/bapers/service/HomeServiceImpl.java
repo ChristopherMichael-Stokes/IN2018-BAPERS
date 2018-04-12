@@ -36,7 +36,7 @@ public class HomeServiceImpl implements HomeService{
     private final UserTypes type;
 
     public HomeServiceImpl() {
-        type = UserTypes.getType(USER.getFkType().getType());
+        type = UserTypes.getType(USER.getType());
     }   
     
     /**

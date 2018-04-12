@@ -25,7 +25,6 @@
  */
 package bapers.userInterface;
 
-import static bapers.BAPERS.USER;
 import bapers.service.UserService;
 import bapers.service.UserServiceImpl;
 import static bapers.userInterface.SceneController.switchScene;
@@ -37,6 +36,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import static bapers.BAPERS.USER;
 
 /**
  * FXML Controller class
@@ -89,6 +89,7 @@ public class LoginController implements Initializable {
             lblOut.setText("valid input");
             attempts = 0;
             USER = DAO.getUser(txtId.getText());
+            
             System.out.println(USER.getFirstName()+" "+USER.getSurname());
             switchScene(SceneController.Scenes.home);
         } else {

@@ -23,37 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package bapers.service;
-
-import bapers.data.domain.JobComponent;
-import java.util.Date;
-import javafx.collections.ObservableList;
+package bapers.utility;
 
 /**
  *
  * @author chris
  */
-public interface JobService {
-
-    /**
-     *
-     * @param jobId
-     * @param compId
-     * @param time
-     */
-    public void setTaskComplete(int jobId, int compId, Date time);
-
-    /**
-     *
-     * @param jobId
-     * @return
-     */
-    public ObservableList<JobComponent> getTasks(int jobId);
-
-    /**
-     *
-     * @param jobId
-     */
-    public void printLabel(int jobId);
-
+public interface BackupService {
+    
 }

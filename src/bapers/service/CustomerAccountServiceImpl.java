@@ -78,7 +78,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
     @Override
     public boolean customerExists(String accountNumber){
         return customerController
-                .findCustomerAccount(Integer.parseInt(accountNumber)) != null;
+                .findCustomerAccount((short) Integer.parseInt(accountNumber)) != null;
     }
 
     /**

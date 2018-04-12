@@ -39,7 +39,7 @@ public class DiscountBandPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_account_number")
-    private int fkAccountNumber;
+    private short fkAccountNumber;
     @Basic(optional = false)
     @Column(name = "price")
     private int price;
@@ -47,16 +47,16 @@ public class DiscountBandPK implements Serializable {
     public DiscountBandPK() {
     }
 
-    public DiscountBandPK(int fkAccountNumber, int price) {
+    public DiscountBandPK(short fkAccountNumber, int price) {
         this.fkAccountNumber = fkAccountNumber;
         this.price = price;
     }
 
-    public int getFkAccountNumber() {
+    public short getFkAccountNumber() {
         return fkAccountNumber;
     }
 
-    public void setFkAccountNumber(int fkAccountNumber) {
+    public void setFkAccountNumber(short fkAccountNumber) {
         this.fkAccountNumber = fkAccountNumber;
     }
 

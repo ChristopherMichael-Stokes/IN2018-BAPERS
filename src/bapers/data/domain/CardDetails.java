@@ -27,16 +27,17 @@ package bapers.data.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -49,8 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CardDetails.findAll", query = "SELECT c FROM CardDetails c")
     , @NamedQuery(name = "CardDetails.findByLastDigits", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.lastDigits = :lastDigits")
     , @NamedQuery(name = "CardDetails.findByExpiryDate", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.expiryDate = :expiryDate")
-    , @NamedQuery(name = "CardDetails.findByCardType", query = "SELECT c FROM CardDetails c WHERE c.cardType = :cardType")
-    , @NamedQuery(name = "CardDetails.findByFkTransactionId", query = "SELECT c FROM CardDetails c WHERE c.cardDetailsPK.fkTransactionId = :fkTransactionId")})
+    , @NamedQuery(name = "CardDetails.findByCardType", query = "SELECT c FROM CardDetails c WHERE c.cardType = :cardType")})
 public class CardDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,9 +59,8 @@ public class CardDetails implements Serializable {
     @Basic(optional = false)
     @Column(name = "card_type")
     private String cardType;
-    @JoinColumn(name = "fk_transaction_id", referencedColumnName = "transaction_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private PaymentInfo paymentInfo;
+    @OneToMany(mappedBy = "cardDetails")
+    private List<PaymentInfo> paymentInfoList;
 
     public CardDetails() {
     }
@@ -75,8 +74,8 @@ public class CardDetails implements Serializable {
         this.cardType = cardType;
     }
 
-    public CardDetails(String lastDigits, Date expiryDate, String fkTransactionId) {
-        this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate, fkTransactionId);
+    public CardDetails(String lastDigits, Date expiryDate) {
+        this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate);
     }
 
     public CardDetailsPK getCardDetailsPK() {
@@ -95,12 +94,13 @@ public class CardDetails implements Serializable {
         this.cardType = cardType;
     }
 
-    public PaymentInfo getPaymentInfo() {
-        return paymentInfo;
+    @XmlTransient
+    public List<PaymentInfo> getPaymentInfoList() {
+        return paymentInfoList;
     }
 
-    public void setPaymentInfo(PaymentInfo paymentInfo) {
-        this.paymentInfo = paymentInfo;
+    public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
+        this.paymentInfoList = paymentInfoList;
     }
 
     @Override

@@ -23,37 +23,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package bapers.service;
+package bapers.utility;
 
-import bapers.data.domain.JobComponent;
-import java.util.Date;
-import javafx.collections.ObservableList;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
  * @author chris
  */
-public interface JobService {
+public class BackupServiceImpl implements BackupService {
 
-    /**
-     *
-     * @param jobId
-     * @param compId
-     * @param time
-     */
-    public void setTaskComplete(int jobId, int compId, Date time);
-
-    /**
-     *
-     * @param jobId
-     * @return
-     */
-    public ObservableList<JobComponent> getTasks(int jobId);
-
-    /**
-     *
-     * @param jobId
-     */
-    public void printLabel(int jobId);
+    public static void getBackup() throws IOException {
+        ProcessBuilder pb 
+                = new ProcessBuilder("mysqldbexport", 
+                        "--server=root:haddockexecellipsis@localhost", "-e", 
+                        "both", "bapers");
+        Process p = pb.start();
+        InputStream is = p.getInputStream();
+        int c;
+        while ((c = is.read()) != -1) {
+            System.out.print((char) c);
+        }
+    }
 
 }

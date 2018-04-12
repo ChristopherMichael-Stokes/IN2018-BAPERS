@@ -35,58 +35,58 @@ import javax.persistence.Embeddable;
  * @author chris
  */
 @Embeddable
-public class JobTaskPK implements Serializable {
+public class JobComponentPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_job_id")
-    private String fkJobId;
+    private int fkJobId;
     @Basic(optional = false)
-    @Column(name = "fk_task_id")
-    private int fkTaskId;
+    @Column(name = "component_id")
+    private int componentId;
 
-    public JobTaskPK() {
+    public JobComponentPK() {
     }
 
-    public JobTaskPK(String fkJobId, int fkTaskId) {
+    public JobComponentPK(int fkJobId, int componentId) {
         this.fkJobId = fkJobId;
-        this.fkTaskId = fkTaskId;
+        this.componentId = componentId;
     }
 
-    public String getFkJobId() {
+    public int getFkJobId() {
         return fkJobId;
     }
 
-    public void setFkJobId(String fkJobId) {
+    public void setFkJobId(int fkJobId) {
         this.fkJobId = fkJobId;
     }
 
-    public int getFkTaskId() {
-        return fkTaskId;
+    public int getComponentId() {
+        return componentId;
     }
 
-    public void setFkTaskId(int fkTaskId) {
-        this.fkTaskId = fkTaskId;
+    public void setComponentId(int componentId) {
+        this.componentId = componentId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (fkJobId != null ? fkJobId.hashCode() : 0);
-        hash += (int) fkTaskId;
+        hash += (int) fkJobId;
+        hash += (int) componentId;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof JobTaskPK)) {
+        if (!(object instanceof JobComponentPK)) {
             return false;
         }
-        JobTaskPK other = (JobTaskPK) object;
-        if ((this.fkJobId == null && other.fkJobId != null) || (this.fkJobId != null && !this.fkJobId.equals(other.fkJobId))) {
+        JobComponentPK other = (JobComponentPK) object;
+        if (this.fkJobId != other.fkJobId) {
             return false;
         }
-        if (this.fkTaskId != other.fkTaskId) {
+        if (this.componentId != other.componentId) {
             return false;
         }
         return true;
@@ -94,7 +94,7 @@ public class JobTaskPK implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.JobTaskPK[ fkJobId=" + fkJobId + ", fkTaskId=" + fkTaskId + " ]";
+        return "bapers.data.domain.JobComponentPK[ fkJobId=" + fkJobId + ", componentId=" + componentId + " ]";
     }
     
 }

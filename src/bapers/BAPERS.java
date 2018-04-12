@@ -5,7 +5,7 @@
  */
 package bapers;
 
-import bapers.data.domain.Staff;
+import bapers.data.domain.User;
 import bapers.service.UserServiceImpl;
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +45,7 @@ public class BAPERS extends Application {
     /**
      * the logged in user
      */
-    public static Staff USER;
+    public static User USER;
 
     /**
      * the main window for the application
@@ -65,14 +65,15 @@ public class BAPERS extends Application {
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
+            
             String[] options = Arrays.stream(resources).map(r -> r.getFilename()).toArray(String[]::new);
-            String selection;
             Map<String, Resource> forms = new HashMap<>();
             for (int i = 0; i < resources.length; ++i) {
                 forms.put(options[i], resources[i]);
             }
-            USER = new UserServiceImpl().getUser("7"); //me
-            selection = (String) JOptionPane.showInputDialog(
+            
+            USER = new UserServiceImpl().getUser("Manager");
+            String selection = (String) JOptionPane.showInputDialog(
                     null, "Select a form", "form",
                     JOptionPane.QUESTION_MESSAGE, null,
                     options, null);

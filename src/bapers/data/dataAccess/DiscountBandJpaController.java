@@ -32,7 +32,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.data.domain.Discount;
+import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.DiscountBand;
 import bapers.data.domain.DiscountBandPK;
 import java.util.List;
@@ -58,20 +58,20 @@ public class DiscountBandJpaController implements Serializable {
         if (discountBand.getDiscountBandPK() == null) {
             discountBand.setDiscountBandPK(new DiscountBandPK());
         }
-        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getDiscount().getFkAccountNumber());
+        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getCustomerAccount().getAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Discount discount = discountBand.getDiscount();
-            if (discount != null) {
-                discount = em.getReference(discount.getClass(), discount.getFkAccountNumber());
-                discountBand.setDiscount(discount);
+            CustomerAccount customerAccount = discountBand.getCustomerAccount();
+            if (customerAccount != null) {
+                customerAccount = em.getReference(customerAccount.getClass(), customerAccount.getAccountNumber());
+                discountBand.setCustomerAccount(customerAccount);
             }
             em.persist(discountBand);
-            if (discount != null) {
-                discount.getDiscountBandList().add(discountBand);
-                discount = em.merge(discount);
+            if (customerAccount != null) {
+                customerAccount.getDiscountBandList().add(discountBand);
+                customerAccount = em.merge(customerAccount);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -87,26 +87,26 @@ public class DiscountBandJpaController implements Serializable {
     }
 
     public void edit(DiscountBand discountBand) throws NonexistentEntityException, Exception {
-        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getDiscount().getFkAccountNumber());
+        discountBand.getDiscountBandPK().setFkAccountNumber(discountBand.getCustomerAccount().getAccountNumber());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             DiscountBand persistentDiscountBand = em.find(DiscountBand.class, discountBand.getDiscountBandPK());
-            Discount discountOld = persistentDiscountBand.getDiscount();
-            Discount discountNew = discountBand.getDiscount();
-            if (discountNew != null) {
-                discountNew = em.getReference(discountNew.getClass(), discountNew.getFkAccountNumber());
-                discountBand.setDiscount(discountNew);
+            CustomerAccount customerAccountOld = persistentDiscountBand.getCustomerAccount();
+            CustomerAccount customerAccountNew = discountBand.getCustomerAccount();
+            if (customerAccountNew != null) {
+                customerAccountNew = em.getReference(customerAccountNew.getClass(), customerAccountNew.getAccountNumber());
+                discountBand.setCustomerAccount(customerAccountNew);
             }
             discountBand = em.merge(discountBand);
-            if (discountOld != null && !discountOld.equals(discountNew)) {
-                discountOld.getDiscountBandList().remove(discountBand);
-                discountOld = em.merge(discountOld);
+            if (customerAccountOld != null && !customerAccountOld.equals(customerAccountNew)) {
+                customerAccountOld.getDiscountBandList().remove(discountBand);
+                customerAccountOld = em.merge(customerAccountOld);
             }
-            if (discountNew != null && !discountNew.equals(discountOld)) {
-                discountNew.getDiscountBandList().add(discountBand);
-                discountNew = em.merge(discountNew);
+            if (customerAccountNew != null && !customerAccountNew.equals(customerAccountOld)) {
+                customerAccountNew.getDiscountBandList().add(discountBand);
+                customerAccountNew = em.merge(customerAccountNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -137,10 +137,10 @@ public class DiscountBandJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The discountBand with id " + id + " no longer exists.", enfe);
             }
-            Discount discount = discountBand.getDiscount();
-            if (discount != null) {
-                discount.getDiscountBandList().remove(discountBand);
-                discount = em.merge(discount);
+            CustomerAccount customerAccount = discountBand.getCustomerAccount();
+            if (customerAccount != null) {
+                customerAccount.getDiscountBandList().remove(discountBand);
+                customerAccount = em.merge(customerAccount);
             }
             em.remove(discountBand);
             em.getTransaction().commit();

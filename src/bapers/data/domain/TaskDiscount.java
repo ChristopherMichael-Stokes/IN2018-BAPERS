@@ -60,9 +60,9 @@ public class TaskDiscount implements Serializable {
     @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Task task;
-    @JoinColumn(name = "fk_account_number", referencedColumnName = "fk_account_number", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Discount discount;
+    private CustomerAccount customerAccount;
 
     public TaskDiscount() {
     }
@@ -76,7 +76,7 @@ public class TaskDiscount implements Serializable {
         this.percentage = percentage;
     }
 
-    public TaskDiscount(int fkAccountNumber, int fkTaskId) {
+    public TaskDiscount(short fkAccountNumber, int fkTaskId) {
         this.taskDiscountPK = new TaskDiscountPK(fkAccountNumber, fkTaskId);
     }
 
@@ -104,12 +104,12 @@ public class TaskDiscount implements Serializable {
         this.task = task;
     }
 
-    public Discount getDiscount() {
-        return discount;
+    public CustomerAccount getCustomerAccount() {
+        return customerAccount;
     }
 
-    public void setDiscount(Discount discount) {
-        this.discount = discount;
+    public void setCustomerAccount(CustomerAccount customerAccount) {
+        this.customerAccount = customerAccount;
     }
 
     @Override

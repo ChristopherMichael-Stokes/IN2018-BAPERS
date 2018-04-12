@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Address.findByAddressLine2", query = "SELECT a FROM Address a WHERE a.addressLine2 = :addressLine2")
     , @NamedQuery(name = "Address.findByPostcode", query = "SELECT a FROM Address a WHERE a.addressPK.postcode = :postcode")
     , @NamedQuery(name = "Address.findByCity", query = "SELECT a FROM Address a WHERE a.addressPK.city = :city")
-    , @NamedQuery(name = "Address.findByCountry", query = "SELECT a FROM Address a WHERE a.country = :country")
+    , @NamedQuery(name = "Address.findByRegion", query = "SELECT a FROM Address a WHERE a.region = :region")
     , @NamedQuery(name = "Address.findByFkAccountNumber", query = "SELECT a FROM Address a WHERE a.addressPK.fkAccountNumber = :fkAccountNumber")})
 public class Address implements Serializable {
 
@@ -60,8 +60,8 @@ public class Address implements Serializable {
     @Column(name = "address_line2")
     private String addressLine2;
     @Basic(optional = false)
-    @Column(name = "country")
-    private String country;
+    @Column(name = "region")
+    private String region;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private CustomerAccount customerAccount;
@@ -73,12 +73,12 @@ public class Address implements Serializable {
         this.addressPK = addressPK;
     }
 
-    public Address(AddressPK addressPK, String country) {
+    public Address(AddressPK addressPK, String region) {
         this.addressPK = addressPK;
-        this.country = country;
+        this.region = region;
     }
 
-    public Address(String addressLine1, String postcode, String city, int fkAccountNumber) {
+    public Address(String addressLine1, String postcode, String city, short fkAccountNumber) {
         this.addressPK = new AddressPK(addressLine1, postcode, city, fkAccountNumber);
     }
 
@@ -98,12 +98,12 @@ public class Address implements Serializable {
         this.addressLine2 = addressLine2;
     }
 
-    public String getCountry() {
-        return country;
+    public String getRegion() {
+        return region;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public CustomerAccount getCustomerAccount() {

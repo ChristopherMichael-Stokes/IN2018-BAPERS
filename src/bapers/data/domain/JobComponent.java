@@ -27,11 +27,13 @@ package bapers.data.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -39,64 +41,73 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author chris
  */
 @Entity
-@Table(name = "job_task")
+@Table(name = "job_component")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "JobTask.findAll", query = "SELECT j FROM JobTask j")
-    , @NamedQuery(name = "JobTask.findByFkJobId", query = "SELECT j FROM JobTask j WHERE j.jobTaskPK.fkJobId = :fkJobId")
-    , @NamedQuery(name = "JobTask.findByFkTaskId", query = "SELECT j FROM JobTask j WHERE j.jobTaskPK.fkTaskId = :fkTaskId")
-    , @NamedQuery(name = "JobTask.findByStartTime", query = "SELECT j FROM JobTask j WHERE j.startTime = :startTime")
-    , @NamedQuery(name = "JobTask.findByEndTime", query = "SELECT j FROM JobTask j WHERE j.endTime = :endTime")})
-public class JobTask implements Serializable {
+    @NamedQuery(name = "JobComponent.findAll", query = "SELECT j FROM JobComponent j")
+    , @NamedQuery(name = "JobComponent.findByFkJobId", query = "SELECT j FROM JobComponent j WHERE j.jobComponentPK.fkJobId = :fkJobId")
+    , @NamedQuery(name = "JobComponent.findByComponentId", query = "SELECT j FROM JobComponent j WHERE j.jobComponentPK.componentId = :componentId")
+    , @NamedQuery(name = "JobComponent.findByDescription", query = "SELECT j FROM JobComponent j WHERE j.description = :description")
+    , @NamedQuery(name = "JobComponent.findByStartTime", query = "SELECT j FROM JobComponent j WHERE j.startTime = :startTime")
+    , @NamedQuery(name = "JobComponent.findByEndTime", query = "SELECT j FROM JobComponent j WHERE j.endTime = :endTime")})
+public class JobComponent implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected JobTaskPK jobTaskPK;
-    @Basic(optional = false)
+    protected JobComponentPK jobComponentPK;
+    @Column(name = "description")
+    private String description;
     @Column(name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
     @Column(name = "end_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
+    @JoinTable(name = "component_task", joinColumns = {
+        @JoinColumn(name = "fk_job_id", referencedColumnName = "fk_job_id")
+        , @JoinColumn(name = "fk_component_id", referencedColumnName = "component_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id")})
+    @ManyToMany
+    private List<Task> taskList;
     @JoinColumn(name = "fk_job_id", referencedColumnName = "job_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Job job;
-    @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Task task;
-    @JoinColumn(name = "fk_staff_id", referencedColumnName = "staff_id")
-    @ManyToOne(optional = false)
-    private Staff fkStaffId;
+    @JoinColumn(name = "fk_username", referencedColumnName = "username")
+    @ManyToOne
+    private User fkUsername;
 
-    public JobTask() {
+    public JobComponent() {
     }
 
-    public JobTask(JobTaskPK jobTaskPK) {
-        this.jobTaskPK = jobTaskPK;
+    public JobComponent(JobComponentPK jobComponentPK) {
+        this.jobComponentPK = jobComponentPK;
     }
 
-    public JobTask(JobTaskPK jobTaskPK, Date startTime) {
-        this.jobTaskPK = jobTaskPK;
-        this.startTime = startTime;
+    public JobComponent(int fkJobId, int componentId) {
+        this.jobComponentPK = new JobComponentPK(fkJobId, componentId);
     }
 
-    public JobTask(String fkJobId, int fkTaskId) {
-        this.jobTaskPK = new JobTaskPK(fkJobId, fkTaskId);
+    public JobComponentPK getJobComponentPK() {
+        return jobComponentPK;
     }
 
-    public JobTaskPK getJobTaskPK() {
-        return jobTaskPK;
+    public void setJobComponentPK(JobComponentPK jobComponentPK) {
+        this.jobComponentPK = jobComponentPK;
     }
 
-    public void setJobTaskPK(JobTaskPK jobTaskPK) {
-        this.jobTaskPK = jobTaskPK;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getStartTime() {
@@ -115,6 +126,15 @@ public class JobTask implements Serializable {
         this.endTime = endTime;
     }
 
+    @XmlTransient
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
+    }
+
     public Job getJob() {
         return job;
     }
@@ -123,37 +143,29 @@ public class JobTask implements Serializable {
         this.job = job;
     }
 
-    public Task getTask() {
-        return task;
+    public User getFkUsername() {
+        return fkUsername;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
-    }
-
-    public Staff getFkStaffId() {
-        return fkStaffId;
-    }
-
-    public void setFkStaffId(Staff fkStaffId) {
-        this.fkStaffId = fkStaffId;
+    public void setFkUsername(User fkUsername) {
+        this.fkUsername = fkUsername;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (jobTaskPK != null ? jobTaskPK.hashCode() : 0);
+        hash += (jobComponentPK != null ? jobComponentPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof JobTask)) {
+        if (!(object instanceof JobComponent)) {
             return false;
         }
-        JobTask other = (JobTask) object;
-        if ((this.jobTaskPK == null && other.jobTaskPK != null) || (this.jobTaskPK != null && !this.jobTaskPK.equals(other.jobTaskPK))) {
+        JobComponent other = (JobComponent) object;
+        if ((this.jobComponentPK == null && other.jobComponentPK != null) || (this.jobComponentPK != null && !this.jobComponentPK.equals(other.jobComponentPK))) {
             return false;
         }
         return true;
@@ -161,7 +173,7 @@ public class JobTask implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.JobTask[ jobTaskPK=" + jobTaskPK + " ]";
+        return "bapers.data.domain.JobComponent[ jobComponentPK=" + jobComponentPK + " ]";
     }
     
 }

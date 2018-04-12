@@ -28,11 +28,8 @@ package bapers.data.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -48,57 +45,57 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author chris
  */
 @Entity
-@Table(name = "staff")
+@Table(name = "user")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Staff.findAll", query = "SELECT s FROM Staff s")
-    , @NamedQuery(name = "Staff.findByStaffId", query = "SELECT s FROM Staff s WHERE s.staffId = :staffId")
-    , @NamedQuery(name = "Staff.findByFirstName", query = "SELECT s FROM Staff s WHERE s.firstName = :firstName")
-    , @NamedQuery(name = "Staff.findBySurname", query = "SELECT s FROM Staff s WHERE s.surname = :surname")
-    , @NamedQuery(name = "Staff.findByPassphrase", query = "SELECT s FROM Staff s WHERE s.passphrase = :passphrase")})
-public class Staff implements Serializable {
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    , @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username")
+    , @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName")
+    , @NamedQuery(name = "User.findBySurname", query = "SELECT u FROM User u WHERE u.surname = :surname")
+    , @NamedQuery(name = "User.findByPassphrase", query = "SELECT u FROM User u WHERE u.passphrase = :passphrase")
+    , @NamedQuery(name = "User.findByType", query = "SELECT u FROM User u WHERE u.type = :type")})
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "staff_id")
-    private Integer staffId;
-    @Basic(optional = false)
+    @Column(name = "username")
+    private String username;
     @Column(name = "first_name")
     private String firstName;
-    @Basic(optional = false)
     @Column(name = "surname")
     private String surname;
     @Basic(optional = false)
     @Column(name = "passphrase")
     private String passphrase;
-    @JoinColumn(name = "fk_type", referencedColumnName = "type")
-    @ManyToOne(optional = false)
-    private UserType fkType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkStaffId")
-    private List<JobTask> jobTaskList;
+    @Basic(optional = false)
+    @Column(name = "type")
+    private short type;
+    @OneToMany(mappedBy = "fkUsername")
+    private List<JobComponent> jobComponentList;
+    @JoinColumn(name = "fk_location", referencedColumnName = "location")
+    @ManyToOne
+    private Location fkLocation;
 
-    public Staff() {
+    public User() {
     }
 
-    public Staff(Integer staffId) {
-        this.staffId = staffId;
+    public User(String username) {
+        this.username = username;
     }
 
-    public Staff(Integer staffId, String firstName, String surname, String passphrase) {
-        this.staffId = staffId;
-        this.firstName = firstName;
-        this.surname = surname;
+    public User(String username, String passphrase, short type) {
+        this.username = username;
         this.passphrase = passphrase;
+        this.type = type;
     }
 
-    public Integer getStaffId() {
-        return staffId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setStaffId(Integer staffId) {
-        this.staffId = staffId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -125,38 +122,46 @@ public class Staff implements Serializable {
         this.passphrase = passphrase;
     }
 
-    public UserType getFkType() {
-        return fkType;
+    public short getType() {
+        return type;
     }
 
-    public void setFkType(UserType fkType) {
-        this.fkType = fkType;
+    public void setType(short type) {
+        this.type = type;
     }
 
     @XmlTransient
-    public List<JobTask> getJobTaskList() {
-        return jobTaskList;
+    public List<JobComponent> getJobComponentList() {
+        return jobComponentList;
     }
 
-    public void setJobTaskList(List<JobTask> jobTaskList) {
-        this.jobTaskList = jobTaskList;
+    public void setJobComponentList(List<JobComponent> jobComponentList) {
+        this.jobComponentList = jobComponentList;
+    }
+
+    public Location getFkLocation() {
+        return fkLocation;
+    }
+
+    public void setFkLocation(Location fkLocation) {
+        this.fkLocation = fkLocation;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (staffId != null ? staffId.hashCode() : 0);
+        hash += (username != null ? username.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Staff)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        Staff other = (Staff) object;
-        if ((this.staffId == null && other.staffId != null) || (this.staffId != null && !this.staffId.equals(other.staffId))) {
+        User other = (User) object;
+        if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
             return false;
         }
         return true;
@@ -164,7 +169,7 @@ public class Staff implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.Staff[ staffId=" + staffId + " ]";
+        return "bapers.data.domain.User[ username=" + username + " ]";
     }
     
 }
