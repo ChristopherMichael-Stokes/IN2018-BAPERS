@@ -62,7 +62,7 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Button">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>

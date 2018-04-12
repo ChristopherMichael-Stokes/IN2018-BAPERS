@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="796.0" prefWidth="1273.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="796.0" prefWidth="1273.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -75,7 +75,7 @@
                      </font>
                   </Label>
                   <Pane prefHeight="58.0" prefWidth="908.0" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Button">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
