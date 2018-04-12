@@ -44,7 +44,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
     private final AddressJpaController addressController;
     private final ObservableList<CustomerAccount> customers;
     
-    CustomerAccountServiceImpl(){
+    public CustomerAccountServiceImpl(){
         customerController = new CustomerAccountJpaController(EMF);
         addressController = new AddressJpaController(EMF);
         customers = FXCollections.observableArrayList(customerController.findCustomerAccountEntities());
