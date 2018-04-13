@@ -93,11 +93,14 @@ public class PaymentServiceImpl implements PaymentService {
             throws PreexistingEntityException, Exception {
         PaymentInfo pi = new PaymentInfo(0, new Date(), false);
         pi.setJobList(jobs);
+        
+        int count = paymentController.getPaymentInfoCount(); //Will break if there are multiple clients adding payments concurrently
         paymentController.create(pi);
+        
         //transaction id uses auto increment, so need to use lookup to get the
-        //id of the payment
-        int count = paymentController.getPaymentInfoCount();
+        //id of the payment        
         pi = paymentController.findPaymentInfoEntities(1, count).get(0);
+        jobs = pi.getJobList();
         for (Job j : jobs) {
             j.setFkTransactionId(pi);
             jobController.edit(j);

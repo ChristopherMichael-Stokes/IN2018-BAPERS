@@ -73,9 +73,9 @@ public class CustomerAccount implements Serializable {
     @Column(name = "discount_type")
     private Short discountType;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
-    private List<TaskDiscount> taskDiscountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
     private List<Address> addressList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    private List<TaskDiscount> taskDiscountList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
     private List<Contact> contactList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
@@ -134,21 +134,21 @@ public class CustomerAccount implements Serializable {
     }
 
     @XmlTransient
-    public List<TaskDiscount> getTaskDiscountList() {
-        return taskDiscountList;
-    }
-
-    public void setTaskDiscountList(List<TaskDiscount> taskDiscountList) {
-        this.taskDiscountList = taskDiscountList;
-    }
-
-    @XmlTransient
     public List<Address> getAddressList() {
         return addressList;
     }
 
     public void setAddressList(List<Address> addressList) {
         this.addressList = addressList;
+    }
+
+    @XmlTransient
+    public List<TaskDiscount> getTaskDiscountList() {
+        return taskDiscountList;
+    }
+
+    public void setTaskDiscountList(List<TaskDiscount> taskDiscountList) {
+        this.taskDiscountList = taskDiscountList;
     }
 
     @XmlTransient

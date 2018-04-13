@@ -36,7 +36,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -86,8 +85,8 @@ public class Task implements Serializable {
     @Column(name = "duration")
     @Temporal(TemporalType.TIME)
     private Date duration;
-    @ManyToMany(mappedBy = "taskList")
-    private List<JobComponent> jobComponentList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+    private List<ComponentTask> componentTaskList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     private List<TaskDiscount> taskDiscountList;
     @JoinColumn(name = "fk_location", referencedColumnName = "location")
@@ -159,12 +158,12 @@ public class Task implements Serializable {
     }
 
     @XmlTransient
-    public List<JobComponent> getJobComponentList() {
-        return jobComponentList;
+    public List<ComponentTask> getComponentTaskList() {
+        return componentTaskList;
     }
 
-    public void setJobComponentList(List<JobComponent> jobComponentList) {
-        this.jobComponentList = jobComponentList;
+    public void setComponentTaskList(List<ComponentTask> componentTaskList) {
+        this.componentTaskList = componentTaskList;
     }
 
     @XmlTransient

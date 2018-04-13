@@ -14,8 +14,9 @@
     <class>bapers.data.domain.TaskDiscount</class>
     <class>bapers.data.domain.Address</class>
     <class>bapers.data.domain.CustomerAccount</class>
+    <class>bapers.data.domain.ComponentTask</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bapers?zeroDateTimeBehavior=convertToNull&amp;amp;autoReconnect=true&amp;amp;useSSL=true"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bapers?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;useSSL=true"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.password" value="cevamaiscurt23"/>

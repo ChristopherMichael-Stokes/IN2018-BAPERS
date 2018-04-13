@@ -72,7 +72,7 @@ public class User implements Serializable {
     @Column(name = "type")
     private short type;
     @OneToMany(mappedBy = "fkUsername")
-    private List<JobComponent> jobComponentList;
+    private List<ComponentTask> componentTaskList;
     @JoinColumn(name = "fk_location", referencedColumnName = "location")
     @ManyToOne
     private Location fkLocation;
@@ -131,12 +131,12 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public List<JobComponent> getJobComponentList() {
-        return jobComponentList;
+    public List<ComponentTask> getComponentTaskList() {
+        return componentTaskList;
     }
 
-    public void setJobComponentList(List<JobComponent> jobComponentList) {
-        this.jobComponentList = jobComponentList;
+    public void setComponentTaskList(List<ComponentTask> componentTaskList) {
+        this.componentTaskList = componentTaskList;
     }
 
     public Location getFkLocation() {

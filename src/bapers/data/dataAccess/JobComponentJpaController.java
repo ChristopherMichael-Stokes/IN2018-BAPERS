@@ -25,6 +25,7 @@
  */
 package bapers.data.dataAccess;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import java.io.Serializable;
@@ -33,10 +34,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.data.domain.Job;
+import bapers.data.domain.ComponentTask;
 import bapers.data.domain.JobComponent;
 import bapers.data.domain.JobComponentPK;
-import bapers.data.domain.User;
-import bapers.data.domain.Task;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -61,8 +61,8 @@ public class JobComponentJpaController implements Serializable {
         if (jobComponent.getJobComponentPK() == null) {
             jobComponent.setJobComponentPK(new JobComponentPK());
         }
-        if (jobComponent.getTaskList() == null) {
-            jobComponent.setTaskList(new ArrayList<Task>());
+        if (jobComponent.getComponentTaskList() == null) {
+            jobComponent.setComponentTaskList(new ArrayList<ComponentTask>());
         }
         jobComponent.getJobComponentPK().setFkJobId(jobComponent.getJob().getJobId());
         EntityManager em = null;
@@ -74,29 +74,25 @@ public class JobComponentJpaController implements Serializable {
                 job = em.getReference(job.getClass(), job.getJobId());
                 jobComponent.setJob(job);
             }
-            User fkUsername = jobComponent.getFkUsername();
-            if (fkUsername != null) {
-                fkUsername = em.getReference(fkUsername.getClass(), fkUsername.getUsername());
-                jobComponent.setFkUsername(fkUsername);
+            List<ComponentTask> attachedComponentTaskList = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListComponentTaskToAttach : jobComponent.getComponentTaskList()) {
+                componentTaskListComponentTaskToAttach = em.getReference(componentTaskListComponentTaskToAttach.getClass(), componentTaskListComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskList.add(componentTaskListComponentTaskToAttach);
             }
-            List<Task> attachedTaskList = new ArrayList<Task>();
-            for (Task taskListTaskToAttach : jobComponent.getTaskList()) {
-                taskListTaskToAttach = em.getReference(taskListTaskToAttach.getClass(), taskListTaskToAttach.getTaskId());
-                attachedTaskList.add(taskListTaskToAttach);
-            }
-            jobComponent.setTaskList(attachedTaskList);
+            jobComponent.setComponentTaskList(attachedComponentTaskList);
             em.persist(jobComponent);
             if (job != null) {
                 job.getJobComponentList().add(jobComponent);
                 job = em.merge(job);
             }
-            if (fkUsername != null) {
-                fkUsername.getJobComponentList().add(jobComponent);
-                fkUsername = em.merge(fkUsername);
-            }
-            for (Task taskListTask : jobComponent.getTaskList()) {
-                taskListTask.getJobComponentList().add(jobComponent);
-                taskListTask = em.merge(taskListTask);
+            for (ComponentTask componentTaskListComponentTask : jobComponent.getComponentTaskList()) {
+                JobComponent oldJobComponentOfComponentTaskListComponentTask = componentTaskListComponentTask.getJobComponent();
+                componentTaskListComponentTask.setJobComponent(jobComponent);
+                componentTaskListComponentTask = em.merge(componentTaskListComponentTask);
+                if (oldJobComponentOfComponentTaskListComponentTask != null) {
+                    oldJobComponentOfComponentTaskListComponentTask.getComponentTaskList().remove(componentTaskListComponentTask);
+                    oldJobComponentOfComponentTaskListComponentTask = em.merge(oldJobComponentOfComponentTaskListComponentTask);
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -111,7 +107,7 @@ public class JobComponentJpaController implements Serializable {
         }
     }
 
-    public void edit(JobComponent jobComponent) throws NonexistentEntityException, Exception {
+    public void edit(JobComponent jobComponent) throws IllegalOrphanException, NonexistentEntityException, Exception {
         jobComponent.getJobComponentPK().setFkJobId(jobComponent.getJob().getJobId());
         EntityManager em = null;
         try {
@@ -120,25 +116,31 @@ public class JobComponentJpaController implements Serializable {
             JobComponent persistentJobComponent = em.find(JobComponent.class, jobComponent.getJobComponentPK());
             Job jobOld = persistentJobComponent.getJob();
             Job jobNew = jobComponent.getJob();
-            User fkUsernameOld = persistentJobComponent.getFkUsername();
-            User fkUsernameNew = jobComponent.getFkUsername();
-            List<Task> taskListOld = persistentJobComponent.getTaskList();
-            List<Task> taskListNew = jobComponent.getTaskList();
+            List<ComponentTask> componentTaskListOld = persistentJobComponent.getComponentTaskList();
+            List<ComponentTask> componentTaskListNew = jobComponent.getComponentTaskList();
+            List<String> illegalOrphanMessages = null;
+            for (ComponentTask componentTaskListOldComponentTask : componentTaskListOld) {
+                if (!componentTaskListNew.contains(componentTaskListOldComponentTask)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ComponentTask " + componentTaskListOldComponentTask + " since its jobComponent field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (jobNew != null) {
                 jobNew = em.getReference(jobNew.getClass(), jobNew.getJobId());
                 jobComponent.setJob(jobNew);
             }
-            if (fkUsernameNew != null) {
-                fkUsernameNew = em.getReference(fkUsernameNew.getClass(), fkUsernameNew.getUsername());
-                jobComponent.setFkUsername(fkUsernameNew);
+            List<ComponentTask> attachedComponentTaskListNew = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListNewComponentTaskToAttach : componentTaskListNew) {
+                componentTaskListNewComponentTaskToAttach = em.getReference(componentTaskListNewComponentTaskToAttach.getClass(), componentTaskListNewComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskListNew.add(componentTaskListNewComponentTaskToAttach);
             }
-            List<Task> attachedTaskListNew = new ArrayList<Task>();
-            for (Task taskListNewTaskToAttach : taskListNew) {
-                taskListNewTaskToAttach = em.getReference(taskListNewTaskToAttach.getClass(), taskListNewTaskToAttach.getTaskId());
-                attachedTaskListNew.add(taskListNewTaskToAttach);
-            }
-            taskListNew = attachedTaskListNew;
-            jobComponent.setTaskList(taskListNew);
+            componentTaskListNew = attachedComponentTaskListNew;
+            jobComponent.setComponentTaskList(componentTaskListNew);
             jobComponent = em.merge(jobComponent);
             if (jobOld != null && !jobOld.equals(jobNew)) {
                 jobOld.getJobComponentList().remove(jobComponent);
@@ -148,24 +150,15 @@ public class JobComponentJpaController implements Serializable {
                 jobNew.getJobComponentList().add(jobComponent);
                 jobNew = em.merge(jobNew);
             }
-            if (fkUsernameOld != null && !fkUsernameOld.equals(fkUsernameNew)) {
-                fkUsernameOld.getJobComponentList().remove(jobComponent);
-                fkUsernameOld = em.merge(fkUsernameOld);
-            }
-            if (fkUsernameNew != null && !fkUsernameNew.equals(fkUsernameOld)) {
-                fkUsernameNew.getJobComponentList().add(jobComponent);
-                fkUsernameNew = em.merge(fkUsernameNew);
-            }
-            for (Task taskListOldTask : taskListOld) {
-                if (!taskListNew.contains(taskListOldTask)) {
-                    taskListOldTask.getJobComponentList().remove(jobComponent);
-                    taskListOldTask = em.merge(taskListOldTask);
-                }
-            }
-            for (Task taskListNewTask : taskListNew) {
-                if (!taskListOld.contains(taskListNewTask)) {
-                    taskListNewTask.getJobComponentList().add(jobComponent);
-                    taskListNewTask = em.merge(taskListNewTask);
+            for (ComponentTask componentTaskListNewComponentTask : componentTaskListNew) {
+                if (!componentTaskListOld.contains(componentTaskListNewComponentTask)) {
+                    JobComponent oldJobComponentOfComponentTaskListNewComponentTask = componentTaskListNewComponentTask.getJobComponent();
+                    componentTaskListNewComponentTask.setJobComponent(jobComponent);
+                    componentTaskListNewComponentTask = em.merge(componentTaskListNewComponentTask);
+                    if (oldJobComponentOfComponentTaskListNewComponentTask != null && !oldJobComponentOfComponentTaskListNewComponentTask.equals(jobComponent)) {
+                        oldJobComponentOfComponentTaskListNewComponentTask.getComponentTaskList().remove(componentTaskListNewComponentTask);
+                        oldJobComponentOfComponentTaskListNewComponentTask = em.merge(oldJobComponentOfComponentTaskListNewComponentTask);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -185,7 +178,7 @@ public class JobComponentJpaController implements Serializable {
         }
     }
 
-    public void destroy(JobComponentPK id) throws NonexistentEntityException {
+    public void destroy(JobComponentPK id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -197,20 +190,21 @@ public class JobComponentJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The jobComponent with id " + id + " no longer exists.", enfe);
             }
+            List<String> illegalOrphanMessages = null;
+            List<ComponentTask> componentTaskListOrphanCheck = jobComponent.getComponentTaskList();
+            for (ComponentTask componentTaskListOrphanCheckComponentTask : componentTaskListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This JobComponent (" + jobComponent + ") cannot be destroyed since the ComponentTask " + componentTaskListOrphanCheckComponentTask + " in its componentTaskList field has a non-nullable jobComponent field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             Job job = jobComponent.getJob();
             if (job != null) {
                 job.getJobComponentList().remove(jobComponent);
                 job = em.merge(job);
-            }
-            User fkUsername = jobComponent.getFkUsername();
-            if (fkUsername != null) {
-                fkUsername.getJobComponentList().remove(jobComponent);
-                fkUsername = em.merge(fkUsername);
-            }
-            List<Task> taskList = jobComponent.getTaskList();
-            for (Task taskListTask : taskList) {
-                taskListTask.getJobComponentList().remove(jobComponent);
-                taskListTask = em.merge(taskListTask);
             }
             em.remove(jobComponent);
             em.getTransaction().commit();

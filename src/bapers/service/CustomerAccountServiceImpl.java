@@ -32,6 +32,9 @@ import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -42,12 +45,10 @@ import javafx.collections.ObservableList;
 public class CustomerAccountServiceImpl implements CustomerAccountService{
     private final CustomerAccountJpaController customerController;
     private final AddressJpaController addressController;
-    private final ObservableList<CustomerAccount> customers;
     
     public CustomerAccountServiceImpl(){
         customerController = new CustomerAccountJpaController(EMF);
         addressController = new AddressJpaController(EMF);
-        customers = FXCollections.observableArrayList(customerController.findCustomerAccountEntities());
     }
 
    /**
@@ -56,9 +57,18 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
      */
     @Override
     public ObservableList<CustomerAccount> getCustomerAccounts(){
-        return customers;
+        return FXCollections
+                .observableArrayList(
+                    customerController.findCustomerAccountEntities()
+                );
     }
 
+    private CustomerAccount setAddress(CustomerAccount account, Address address) {
+        List<Address> addressList = Collections.singletonList(address);
+        account.setAddressList(addressList);
+        return account;
+    }
+    
     /**
      *
      * @param account the new account to be added
@@ -66,8 +76,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
      */
     @Override
     public void addCustomer(CustomerAccount account, Address address){
-        account.getAddressList().add(address);
-        customerController.create(account);
+        customerController.create(setAddress(account, address));
     }
 
     /**
@@ -77,8 +86,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
      */
     @Override
     public boolean customerExists(String accountNumber){
+        
         return customerController
-                .findCustomerAccount((short) Integer.parseInt(accountNumber)) != null;
+                .findCustomerAccount(Short.parseShort(accountNumber)) != null;
     }
 
     /**
@@ -93,9 +103,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
     @Override
     public void updateAccount(CustomerAccount account, Address address) 
             throws IllegalOrphanException, NonexistentEntityException, Exception {
-        account.getAddressList().clear();
-        account.getAddressList().add(address);
-        customerController.edit(account);   
+        customerController.edit(setAddress(account, address));   
     }
 
     /**
