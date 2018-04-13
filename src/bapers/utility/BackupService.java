@@ -25,10 +25,48 @@
  */
 package bapers.utility;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author chris
  */
-public interface BackupService {
+public abstract class BackupService {
     
+    protected static final DateFormat DATE = new SimpleDateFormat("yyyyMMddHHmmss");
+    protected static final File BACKUP = new File("backups");    
+    
+    public static void restoreFromBackup(File file) throws IOException {
+        
+    }
+    
+    public static void backup() throws IOException { 
+        ProcessBuilder pb 
+                = new ProcessBuilder("mysqldbexport", 
+                        "--server=root:haddockexecellipsis@localhost", "-e", 
+                        "both", "bapers");
+        Process p = pb.start();
+        InputStream is = p.getInputStream();
+        if (!BACKUP.exists()) {
+            BACKUP.mkdir();
+        }
+        File file = new File(BACKUP.getAbsoluteFile()+"/"
+                +DATE.format(new Date())+".sql");
+//        Date date = DATE.parse(filename here);        
+        file.createNewFile();
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            for (byte[] buffer = new byte[512]; is.read(buffer) != -1; ) {
+                fos.write(buffer);
+            }        
+        }        
+    }
+    
+    public abstract List<File> getBackupList();
 }
