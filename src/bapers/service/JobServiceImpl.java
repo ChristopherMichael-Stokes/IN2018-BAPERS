@@ -26,12 +26,17 @@
 package bapers.service;
 
 import static bapers.BAPERS.EMF;
+import bapers.data.dataAccess.ComponentTaskJpaController;
 import bapers.data.dataAccess.JobComponentJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.TaskJpaController;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.domain.ComponentTask;
+import bapers.data.domain.ComponentTaskPK;
 import bapers.data.domain.JobComponent;
-import bapers.data.domain.JobComponentPK;
 import java.util.Date;
+import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -42,6 +47,7 @@ public class JobServiceImpl implements JobService {
 
     private final JobJpaController jobController;
     private final JobComponentJpaController jobComponentController;
+    private final ComponentTaskJpaController componentController;
     private final TaskJpaController taskController;
 
     /**
@@ -51,18 +57,21 @@ public class JobServiceImpl implements JobService {
         jobController = new JobJpaController(EMF);
         jobComponentController = new JobComponentJpaController(EMF);
         taskController = new TaskJpaController(EMF);
+        componentController = new ComponentTaskJpaController(EMF);
     }
 
     /**
-     *
+     * @param taskId
      * @param jobId
      * @param compId
      * @param time
      */
     @Override
-    public void setTaskComplete(int jobId, int compId, Date time) {        
-        jobComponentController.findJobComponent(new JobComponentPK(jobId, compId))
-                .setEndTime(time);
+    public void setTaskComplete(int jobId, String compId, int taskId, Date time) 
+            throws NonexistentEntityException, Exception {
+        ComponentTask task = componentController.findComponentTask(new ComponentTaskPK(jobId, compId, taskId));
+        task.setEndTime(time);
+        componentController.edit(task);
     }
 
     /**
@@ -71,12 +80,10 @@ public class JobServiceImpl implements JobService {
      * @return
      */
     @Override
-    public ObservableList<JobComponent> getTasks(int jobId) {
-//        return jobTaskController.findJobComponentEntities().stream()
-//                .filter(j -> j.getJob().getJobId() == jobId)
-//                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-    //TODO - fix
-        return null;
+    public ObservableList<JobComponent> getComponents(int jobId) {
+        return jobComponentController.findJobComponentEntities().stream()
+                .filter(j -> j.getJob().getJobId() == jobId)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
    }
 
     /**

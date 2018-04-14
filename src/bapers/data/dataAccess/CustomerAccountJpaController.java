@@ -32,10 +32,10 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import bapers.data.domain.TaskDiscount;
+import bapers.data.domain.Address;
 import java.util.ArrayList;
 import java.util.List;
-import bapers.data.domain.Address;
+import bapers.data.domain.TaskDiscount;
 import bapers.data.domain.Contact;
 import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.DiscountBand;
@@ -58,11 +58,11 @@ public class CustomerAccountJpaController implements Serializable {
     }
 
     public void create(CustomerAccount customerAccount) {
-        if (customerAccount.getTaskDiscountList() == null) {
-            customerAccount.setTaskDiscountList(new ArrayList<TaskDiscount>());
-        }
         if (customerAccount.getAddressList() == null) {
             customerAccount.setAddressList(new ArrayList<Address>());
+        }
+        if (customerAccount.getTaskDiscountList() == null) {
+            customerAccount.setTaskDiscountList(new ArrayList<TaskDiscount>());
         }
         if (customerAccount.getContactList() == null) {
             customerAccount.setContactList(new ArrayList<Contact>());
@@ -74,18 +74,18 @@ public class CustomerAccountJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<TaskDiscount> attachedTaskDiscountList = new ArrayList<TaskDiscount>();
-            for (TaskDiscount taskDiscountListTaskDiscountToAttach : customerAccount.getTaskDiscountList()) {
-                taskDiscountListTaskDiscountToAttach = em.getReference(taskDiscountListTaskDiscountToAttach.getClass(), taskDiscountListTaskDiscountToAttach.getTaskDiscountPK());
-                attachedTaskDiscountList.add(taskDiscountListTaskDiscountToAttach);
-            }
-            customerAccount.setTaskDiscountList(attachedTaskDiscountList);
             List<Address> attachedAddressList = new ArrayList<Address>();
             for (Address addressListAddressToAttach : customerAccount.getAddressList()) {
                 addressListAddressToAttach = em.getReference(addressListAddressToAttach.getClass(), addressListAddressToAttach.getAddressPK());
                 attachedAddressList.add(addressListAddressToAttach);
             }
             customerAccount.setAddressList(attachedAddressList);
+            List<TaskDiscount> attachedTaskDiscountList = new ArrayList<TaskDiscount>();
+            for (TaskDiscount taskDiscountListTaskDiscountToAttach : customerAccount.getTaskDiscountList()) {
+                taskDiscountListTaskDiscountToAttach = em.getReference(taskDiscountListTaskDiscountToAttach.getClass(), taskDiscountListTaskDiscountToAttach.getTaskDiscountPK());
+                attachedTaskDiscountList.add(taskDiscountListTaskDiscountToAttach);
+            }
+            customerAccount.setTaskDiscountList(attachedTaskDiscountList);
             List<Contact> attachedContactList = new ArrayList<Contact>();
             for (Contact contactListContactToAttach : customerAccount.getContactList()) {
                 contactListContactToAttach = em.getReference(contactListContactToAttach.getClass(), contactListContactToAttach.getContactPK());
@@ -99,15 +99,6 @@ public class CustomerAccountJpaController implements Serializable {
             }
             customerAccount.setDiscountBandList(attachedDiscountBandList);
             em.persist(customerAccount);
-            for (TaskDiscount taskDiscountListTaskDiscount : customerAccount.getTaskDiscountList()) {
-                CustomerAccount oldCustomerAccountOfTaskDiscountListTaskDiscount = taskDiscountListTaskDiscount.getCustomerAccount();
-                taskDiscountListTaskDiscount.setCustomerAccount(customerAccount);
-                taskDiscountListTaskDiscount = em.merge(taskDiscountListTaskDiscount);
-                if (oldCustomerAccountOfTaskDiscountListTaskDiscount != null) {
-                    oldCustomerAccountOfTaskDiscountListTaskDiscount.getTaskDiscountList().remove(taskDiscountListTaskDiscount);
-                    oldCustomerAccountOfTaskDiscountListTaskDiscount = em.merge(oldCustomerAccountOfTaskDiscountListTaskDiscount);
-                }
-            }
             for (Address addressListAddress : customerAccount.getAddressList()) {
                 CustomerAccount oldCustomerAccountOfAddressListAddress = addressListAddress.getCustomerAccount();
                 addressListAddress.setCustomerAccount(customerAccount);
@@ -115,6 +106,15 @@ public class CustomerAccountJpaController implements Serializable {
                 if (oldCustomerAccountOfAddressListAddress != null) {
                     oldCustomerAccountOfAddressListAddress.getAddressList().remove(addressListAddress);
                     oldCustomerAccountOfAddressListAddress = em.merge(oldCustomerAccountOfAddressListAddress);
+                }
+            }
+            for (TaskDiscount taskDiscountListTaskDiscount : customerAccount.getTaskDiscountList()) {
+                CustomerAccount oldCustomerAccountOfTaskDiscountListTaskDiscount = taskDiscountListTaskDiscount.getCustomerAccount();
+                taskDiscountListTaskDiscount.setCustomerAccount(customerAccount);
+                taskDiscountListTaskDiscount = em.merge(taskDiscountListTaskDiscount);
+                if (oldCustomerAccountOfTaskDiscountListTaskDiscount != null) {
+                    oldCustomerAccountOfTaskDiscountListTaskDiscount.getTaskDiscountList().remove(taskDiscountListTaskDiscount);
+                    oldCustomerAccountOfTaskDiscountListTaskDiscount = em.merge(oldCustomerAccountOfTaskDiscountListTaskDiscount);
                 }
             }
             for (Contact contactListContact : customerAccount.getContactList()) {
@@ -149,29 +149,29 @@ public class CustomerAccountJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             CustomerAccount persistentCustomerAccount = em.find(CustomerAccount.class, customerAccount.getAccountNumber());
-            List<TaskDiscount> taskDiscountListOld = persistentCustomerAccount.getTaskDiscountList();
-            List<TaskDiscount> taskDiscountListNew = customerAccount.getTaskDiscountList();
             List<Address> addressListOld = persistentCustomerAccount.getAddressList();
             List<Address> addressListNew = customerAccount.getAddressList();
+            List<TaskDiscount> taskDiscountListOld = persistentCustomerAccount.getTaskDiscountList();
+            List<TaskDiscount> taskDiscountListNew = customerAccount.getTaskDiscountList();
             List<Contact> contactListOld = persistentCustomerAccount.getContactList();
             List<Contact> contactListNew = customerAccount.getContactList();
             List<DiscountBand> discountBandListOld = persistentCustomerAccount.getDiscountBandList();
             List<DiscountBand> discountBandListNew = customerAccount.getDiscountBandList();
             List<String> illegalOrphanMessages = null;
-            for (TaskDiscount taskDiscountListOldTaskDiscount : taskDiscountListOld) {
-                if (!taskDiscountListNew.contains(taskDiscountListOldTaskDiscount)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain TaskDiscount " + taskDiscountListOldTaskDiscount + " since its customerAccount field is not nullable.");
-                }
-            }
             for (Address addressListOldAddress : addressListOld) {
                 if (!addressListNew.contains(addressListOldAddress)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain Address " + addressListOldAddress + " since its customerAccount field is not nullable.");
+                }
+            }
+            for (TaskDiscount taskDiscountListOldTaskDiscount : taskDiscountListOld) {
+                if (!taskDiscountListNew.contains(taskDiscountListOldTaskDiscount)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain TaskDiscount " + taskDiscountListOldTaskDiscount + " since its customerAccount field is not nullable.");
                 }
             }
             for (Contact contactListOldContact : contactListOld) {
@@ -193,13 +193,6 @@ public class CustomerAccountJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<TaskDiscount> attachedTaskDiscountListNew = new ArrayList<TaskDiscount>();
-            for (TaskDiscount taskDiscountListNewTaskDiscountToAttach : taskDiscountListNew) {
-                taskDiscountListNewTaskDiscountToAttach = em.getReference(taskDiscountListNewTaskDiscountToAttach.getClass(), taskDiscountListNewTaskDiscountToAttach.getTaskDiscountPK());
-                attachedTaskDiscountListNew.add(taskDiscountListNewTaskDiscountToAttach);
-            }
-            taskDiscountListNew = attachedTaskDiscountListNew;
-            customerAccount.setTaskDiscountList(taskDiscountListNew);
             List<Address> attachedAddressListNew = new ArrayList<Address>();
             for (Address addressListNewAddressToAttach : addressListNew) {
                 addressListNewAddressToAttach = em.getReference(addressListNewAddressToAttach.getClass(), addressListNewAddressToAttach.getAddressPK());
@@ -207,6 +200,13 @@ public class CustomerAccountJpaController implements Serializable {
             }
             addressListNew = attachedAddressListNew;
             customerAccount.setAddressList(addressListNew);
+            List<TaskDiscount> attachedTaskDiscountListNew = new ArrayList<TaskDiscount>();
+            for (TaskDiscount taskDiscountListNewTaskDiscountToAttach : taskDiscountListNew) {
+                taskDiscountListNewTaskDiscountToAttach = em.getReference(taskDiscountListNewTaskDiscountToAttach.getClass(), taskDiscountListNewTaskDiscountToAttach.getTaskDiscountPK());
+                attachedTaskDiscountListNew.add(taskDiscountListNewTaskDiscountToAttach);
+            }
+            taskDiscountListNew = attachedTaskDiscountListNew;
+            customerAccount.setTaskDiscountList(taskDiscountListNew);
             List<Contact> attachedContactListNew = new ArrayList<Contact>();
             for (Contact contactListNewContactToAttach : contactListNew) {
                 contactListNewContactToAttach = em.getReference(contactListNewContactToAttach.getClass(), contactListNewContactToAttach.getContactPK());
@@ -222,17 +222,6 @@ public class CustomerAccountJpaController implements Serializable {
             discountBandListNew = attachedDiscountBandListNew;
             customerAccount.setDiscountBandList(discountBandListNew);
             customerAccount = em.merge(customerAccount);
-            for (TaskDiscount taskDiscountListNewTaskDiscount : taskDiscountListNew) {
-                if (!taskDiscountListOld.contains(taskDiscountListNewTaskDiscount)) {
-                    CustomerAccount oldCustomerAccountOfTaskDiscountListNewTaskDiscount = taskDiscountListNewTaskDiscount.getCustomerAccount();
-                    taskDiscountListNewTaskDiscount.setCustomerAccount(customerAccount);
-                    taskDiscountListNewTaskDiscount = em.merge(taskDiscountListNewTaskDiscount);
-                    if (oldCustomerAccountOfTaskDiscountListNewTaskDiscount != null && !oldCustomerAccountOfTaskDiscountListNewTaskDiscount.equals(customerAccount)) {
-                        oldCustomerAccountOfTaskDiscountListNewTaskDiscount.getTaskDiscountList().remove(taskDiscountListNewTaskDiscount);
-                        oldCustomerAccountOfTaskDiscountListNewTaskDiscount = em.merge(oldCustomerAccountOfTaskDiscountListNewTaskDiscount);
-                    }
-                }
-            }
             for (Address addressListNewAddress : addressListNew) {
                 if (!addressListOld.contains(addressListNewAddress)) {
                     CustomerAccount oldCustomerAccountOfAddressListNewAddress = addressListNewAddress.getCustomerAccount();
@@ -241,6 +230,17 @@ public class CustomerAccountJpaController implements Serializable {
                     if (oldCustomerAccountOfAddressListNewAddress != null && !oldCustomerAccountOfAddressListNewAddress.equals(customerAccount)) {
                         oldCustomerAccountOfAddressListNewAddress.getAddressList().remove(addressListNewAddress);
                         oldCustomerAccountOfAddressListNewAddress = em.merge(oldCustomerAccountOfAddressListNewAddress);
+                    }
+                }
+            }
+            for (TaskDiscount taskDiscountListNewTaskDiscount : taskDiscountListNew) {
+                if (!taskDiscountListOld.contains(taskDiscountListNewTaskDiscount)) {
+                    CustomerAccount oldCustomerAccountOfTaskDiscountListNewTaskDiscount = taskDiscountListNewTaskDiscount.getCustomerAccount();
+                    taskDiscountListNewTaskDiscount.setCustomerAccount(customerAccount);
+                    taskDiscountListNewTaskDiscount = em.merge(taskDiscountListNewTaskDiscount);
+                    if (oldCustomerAccountOfTaskDiscountListNewTaskDiscount != null && !oldCustomerAccountOfTaskDiscountListNewTaskDiscount.equals(customerAccount)) {
+                        oldCustomerAccountOfTaskDiscountListNewTaskDiscount.getTaskDiscountList().remove(taskDiscountListNewTaskDiscount);
+                        oldCustomerAccountOfTaskDiscountListNewTaskDiscount = em.merge(oldCustomerAccountOfTaskDiscountListNewTaskDiscount);
                     }
                 }
             }
@@ -296,19 +296,19 @@ public class CustomerAccountJpaController implements Serializable {
                 throw new NonexistentEntityException("The customerAccount with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<TaskDiscount> taskDiscountListOrphanCheck = customerAccount.getTaskDiscountList();
-            for (TaskDiscount taskDiscountListOrphanCheckTaskDiscount : taskDiscountListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the TaskDiscount " + taskDiscountListOrphanCheckTaskDiscount + " in its taskDiscountList field has a non-nullable customerAccount field.");
-            }
             List<Address> addressListOrphanCheck = customerAccount.getAddressList();
             for (Address addressListOrphanCheckAddress : addressListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the Address " + addressListOrphanCheckAddress + " in its addressList field has a non-nullable customerAccount field.");
+            }
+            List<TaskDiscount> taskDiscountListOrphanCheck = customerAccount.getTaskDiscountList();
+            for (TaskDiscount taskDiscountListOrphanCheckTaskDiscount : taskDiscountListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This CustomerAccount (" + customerAccount + ") cannot be destroyed since the TaskDiscount " + taskDiscountListOrphanCheckTaskDiscount + " in its taskDiscountList field has a non-nullable customerAccount field.");
             }
             List<Contact> contactListOrphanCheck = customerAccount.getContactList();
             for (Contact contactListOrphanCheckContact : contactListOrphanCheck) {

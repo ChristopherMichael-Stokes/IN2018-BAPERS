@@ -33,7 +33,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.data.domain.Location;
-import bapers.data.domain.JobComponent;
+import bapers.data.domain.ComponentTask;
 import bapers.data.domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +56,8 @@ public class UserJpaController implements Serializable {
     }
 
     public void create(User user) throws PreexistingEntityException, Exception {
-        if (user.getJobComponentList() == null) {
-            user.setJobComponentList(new ArrayList<JobComponent>());
+        if (user.getComponentTaskList() == null) {
+            user.setComponentTaskList(new ArrayList<ComponentTask>());
         }
         EntityManager em = null;
         try {
@@ -68,24 +68,24 @@ public class UserJpaController implements Serializable {
                 fkLocation = em.getReference(fkLocation.getClass(), fkLocation.getLocation());
                 user.setFkLocation(fkLocation);
             }
-            List<JobComponent> attachedJobComponentList = new ArrayList<JobComponent>();
-            for (JobComponent jobComponentListJobComponentToAttach : user.getJobComponentList()) {
-                jobComponentListJobComponentToAttach = em.getReference(jobComponentListJobComponentToAttach.getClass(), jobComponentListJobComponentToAttach.getJobComponentPK());
-                attachedJobComponentList.add(jobComponentListJobComponentToAttach);
+            List<ComponentTask> attachedComponentTaskList = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListComponentTaskToAttach : user.getComponentTaskList()) {
+                componentTaskListComponentTaskToAttach = em.getReference(componentTaskListComponentTaskToAttach.getClass(), componentTaskListComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskList.add(componentTaskListComponentTaskToAttach);
             }
-            user.setJobComponentList(attachedJobComponentList);
+            user.setComponentTaskList(attachedComponentTaskList);
             em.persist(user);
             if (fkLocation != null) {
                 fkLocation.getUserList().add(user);
                 fkLocation = em.merge(fkLocation);
             }
-            for (JobComponent jobComponentListJobComponent : user.getJobComponentList()) {
-                User oldFkUsernameOfJobComponentListJobComponent = jobComponentListJobComponent.getFkUsername();
-                jobComponentListJobComponent.setFkUsername(user);
-                jobComponentListJobComponent = em.merge(jobComponentListJobComponent);
-                if (oldFkUsernameOfJobComponentListJobComponent != null) {
-                    oldFkUsernameOfJobComponentListJobComponent.getJobComponentList().remove(jobComponentListJobComponent);
-                    oldFkUsernameOfJobComponentListJobComponent = em.merge(oldFkUsernameOfJobComponentListJobComponent);
+            for (ComponentTask componentTaskListComponentTask : user.getComponentTaskList()) {
+                User oldFkUsernameOfComponentTaskListComponentTask = componentTaskListComponentTask.getFkUsername();
+                componentTaskListComponentTask.setFkUsername(user);
+                componentTaskListComponentTask = em.merge(componentTaskListComponentTask);
+                if (oldFkUsernameOfComponentTaskListComponentTask != null) {
+                    oldFkUsernameOfComponentTaskListComponentTask.getComponentTaskList().remove(componentTaskListComponentTask);
+                    oldFkUsernameOfComponentTaskListComponentTask = em.merge(oldFkUsernameOfComponentTaskListComponentTask);
                 }
             }
             em.getTransaction().commit();
@@ -109,19 +109,19 @@ public class UserJpaController implements Serializable {
             User persistentUser = em.find(User.class, user.getUsername());
             Location fkLocationOld = persistentUser.getFkLocation();
             Location fkLocationNew = user.getFkLocation();
-            List<JobComponent> jobComponentListOld = persistentUser.getJobComponentList();
-            List<JobComponent> jobComponentListNew = user.getJobComponentList();
+            List<ComponentTask> componentTaskListOld = persistentUser.getComponentTaskList();
+            List<ComponentTask> componentTaskListNew = user.getComponentTaskList();
             if (fkLocationNew != null) {
                 fkLocationNew = em.getReference(fkLocationNew.getClass(), fkLocationNew.getLocation());
                 user.setFkLocation(fkLocationNew);
             }
-            List<JobComponent> attachedJobComponentListNew = new ArrayList<JobComponent>();
-            for (JobComponent jobComponentListNewJobComponentToAttach : jobComponentListNew) {
-                jobComponentListNewJobComponentToAttach = em.getReference(jobComponentListNewJobComponentToAttach.getClass(), jobComponentListNewJobComponentToAttach.getJobComponentPK());
-                attachedJobComponentListNew.add(jobComponentListNewJobComponentToAttach);
+            List<ComponentTask> attachedComponentTaskListNew = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListNewComponentTaskToAttach : componentTaskListNew) {
+                componentTaskListNewComponentTaskToAttach = em.getReference(componentTaskListNewComponentTaskToAttach.getClass(), componentTaskListNewComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskListNew.add(componentTaskListNewComponentTaskToAttach);
             }
-            jobComponentListNew = attachedJobComponentListNew;
-            user.setJobComponentList(jobComponentListNew);
+            componentTaskListNew = attachedComponentTaskListNew;
+            user.setComponentTaskList(componentTaskListNew);
             user = em.merge(user);
             if (fkLocationOld != null && !fkLocationOld.equals(fkLocationNew)) {
                 fkLocationOld.getUserList().remove(user);
@@ -131,20 +131,20 @@ public class UserJpaController implements Serializable {
                 fkLocationNew.getUserList().add(user);
                 fkLocationNew = em.merge(fkLocationNew);
             }
-            for (JobComponent jobComponentListOldJobComponent : jobComponentListOld) {
-                if (!jobComponentListNew.contains(jobComponentListOldJobComponent)) {
-                    jobComponentListOldJobComponent.setFkUsername(null);
-                    jobComponentListOldJobComponent = em.merge(jobComponentListOldJobComponent);
+            for (ComponentTask componentTaskListOldComponentTask : componentTaskListOld) {
+                if (!componentTaskListNew.contains(componentTaskListOldComponentTask)) {
+                    componentTaskListOldComponentTask.setFkUsername(null);
+                    componentTaskListOldComponentTask = em.merge(componentTaskListOldComponentTask);
                 }
             }
-            for (JobComponent jobComponentListNewJobComponent : jobComponentListNew) {
-                if (!jobComponentListOld.contains(jobComponentListNewJobComponent)) {
-                    User oldFkUsernameOfJobComponentListNewJobComponent = jobComponentListNewJobComponent.getFkUsername();
-                    jobComponentListNewJobComponent.setFkUsername(user);
-                    jobComponentListNewJobComponent = em.merge(jobComponentListNewJobComponent);
-                    if (oldFkUsernameOfJobComponentListNewJobComponent != null && !oldFkUsernameOfJobComponentListNewJobComponent.equals(user)) {
-                        oldFkUsernameOfJobComponentListNewJobComponent.getJobComponentList().remove(jobComponentListNewJobComponent);
-                        oldFkUsernameOfJobComponentListNewJobComponent = em.merge(oldFkUsernameOfJobComponentListNewJobComponent);
+            for (ComponentTask componentTaskListNewComponentTask : componentTaskListNew) {
+                if (!componentTaskListOld.contains(componentTaskListNewComponentTask)) {
+                    User oldFkUsernameOfComponentTaskListNewComponentTask = componentTaskListNewComponentTask.getFkUsername();
+                    componentTaskListNewComponentTask.setFkUsername(user);
+                    componentTaskListNewComponentTask = em.merge(componentTaskListNewComponentTask);
+                    if (oldFkUsernameOfComponentTaskListNewComponentTask != null && !oldFkUsernameOfComponentTaskListNewComponentTask.equals(user)) {
+                        oldFkUsernameOfComponentTaskListNewComponentTask.getComponentTaskList().remove(componentTaskListNewComponentTask);
+                        oldFkUsernameOfComponentTaskListNewComponentTask = em.merge(oldFkUsernameOfComponentTaskListNewComponentTask);
                     }
                 }
             }
@@ -182,10 +182,10 @@ public class UserJpaController implements Serializable {
                 fkLocation.getUserList().remove(user);
                 fkLocation = em.merge(fkLocation);
             }
-            List<JobComponent> jobComponentList = user.getJobComponentList();
-            for (JobComponent jobComponentListJobComponent : jobComponentList) {
-                jobComponentListJobComponent.setFkUsername(null);
-                jobComponentListJobComponent = em.merge(jobComponentListJobComponent);
+            List<ComponentTask> componentTaskList = user.getComponentTaskList();
+            for (ComponentTask componentTaskListComponentTask : componentTaskList) {
+                componentTaskListComponentTask.setFkUsername(null);
+                componentTaskListComponentTask = em.merge(componentTaskListComponentTask);
             }
             em.remove(user);
             em.getTransaction().commit();

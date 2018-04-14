@@ -25,6 +25,8 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.domain.ComponentTask;
 import bapers.data.domain.JobComponent;
 import java.util.Date;
 import javafx.collections.ObservableList;
@@ -36,19 +38,20 @@ import javafx.collections.ObservableList;
 public interface JobService {
 
     /**
-     *
+     * @param taskId
      * @param jobId
      * @param compId
      * @param time
      */
-    public void setTaskComplete(int jobId, int compId, Date time);
+    public void setTaskComplete(int jobId, String compId, int taskId, Date time) 
+            throws NonexistentEntityException, Exception;
 
     /**
      *
      * @param jobId
      * @return
      */
-    public ObservableList<JobComponent> getTasks(int jobId);
+    public ObservableList<JobComponent> getComponents(int jobId);
 
     /**
      *

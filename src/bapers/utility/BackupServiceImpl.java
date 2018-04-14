@@ -25,26 +25,17 @@
  */
 package bapers.utility;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
+import java.util.List;
 
 /**
  *
  * @author chris
  */
-public class BackupServiceImpl implements BackupService {
+public class BackupServiceImpl extends BackupService {
 
-    public static void getBackup() throws IOException {
-        ProcessBuilder pb 
-                = new ProcessBuilder("mysqldbexport", 
-                        "--server=root:haddockexecellipsis@localhost", "-e", 
-                        "both", "bapers");
-        Process p = pb.start();
-        InputStream is = p.getInputStream();
-        int c;
-        while ((c = is.read()) != -1) {
-            System.out.print((char) c);
-        }
+    @Override
+    public List<File> getBackupList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

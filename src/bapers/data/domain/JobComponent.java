@@ -26,20 +26,17 @@
 package bapers.data.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -54,9 +51,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "JobComponent.findAll", query = "SELECT j FROM JobComponent j")
     , @NamedQuery(name = "JobComponent.findByFkJobId", query = "SELECT j FROM JobComponent j WHERE j.jobComponentPK.fkJobId = :fkJobId")
     , @NamedQuery(name = "JobComponent.findByComponentId", query = "SELECT j FROM JobComponent j WHERE j.jobComponentPK.componentId = :componentId")
-    , @NamedQuery(name = "JobComponent.findByDescription", query = "SELECT j FROM JobComponent j WHERE j.description = :description")
-    , @NamedQuery(name = "JobComponent.findByStartTime", query = "SELECT j FROM JobComponent j WHERE j.startTime = :startTime")
-    , @NamedQuery(name = "JobComponent.findByEndTime", query = "SELECT j FROM JobComponent j WHERE j.endTime = :endTime")})
+    , @NamedQuery(name = "JobComponent.findByDescription", query = "SELECT j FROM JobComponent j WHERE j.description = :description")})
 public class JobComponent implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,24 +59,11 @@ public class JobComponent implements Serializable {
     protected JobComponentPK jobComponentPK;
     @Column(name = "description")
     private String description;
-    @Column(name = "start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
-    @Column(name = "end_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
-    @JoinTable(name = "component_task", joinColumns = {
-        @JoinColumn(name = "fk_job_id", referencedColumnName = "fk_job_id")
-        , @JoinColumn(name = "fk_component_id", referencedColumnName = "component_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id")})
-    @ManyToMany
-    private List<Task> taskList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobComponent")
+    private List<ComponentTask> componentTaskList;
     @JoinColumn(name = "fk_job_id", referencedColumnName = "job_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Job job;
-    @JoinColumn(name = "fk_username", referencedColumnName = "username")
-    @ManyToOne
-    private User fkUsername;
 
     public JobComponent() {
     }
@@ -90,7 +72,7 @@ public class JobComponent implements Serializable {
         this.jobComponentPK = jobComponentPK;
     }
 
-    public JobComponent(int fkJobId, int componentId) {
+    public JobComponent(int fkJobId, String componentId) {
         this.jobComponentPK = new JobComponentPK(fkJobId, componentId);
     }
 
@@ -110,29 +92,13 @@ public class JobComponent implements Serializable {
         this.description = description;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
     @XmlTransient
-    public List<Task> getTaskList() {
-        return taskList;
+    public List<ComponentTask> getComponentTaskList() {
+        return componentTaskList;
     }
 
-    public void setTaskList(List<Task> taskList) {
-        this.taskList = taskList;
+    public void setComponentTaskList(List<ComponentTask> componentTaskList) {
+        this.componentTaskList = componentTaskList;
     }
 
     public Job getJob() {
@@ -141,14 +107,6 @@ public class JobComponent implements Serializable {
 
     public void setJob(Job job) {
         this.job = job;
-    }
-
-    public User getFkUsername() {
-        return fkUsername;
-    }
-
-    public void setFkUsername(User fkUsername) {
-        this.fkUsername = fkUsername;
     }
 
     @Override

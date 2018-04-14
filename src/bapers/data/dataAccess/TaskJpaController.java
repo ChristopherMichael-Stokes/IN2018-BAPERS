@@ -33,7 +33,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import bapers.data.domain.Location;
-import bapers.data.domain.JobComponent;
+import bapers.data.domain.ComponentTask;
 import bapers.data.domain.Task;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +57,8 @@ public class TaskJpaController implements Serializable {
     }
 
     public void create(Task task) {
-        if (task.getJobComponentList() == null) {
-            task.setJobComponentList(new ArrayList<JobComponent>());
+        if (task.getComponentTaskList() == null) {
+            task.setComponentTaskList(new ArrayList<ComponentTask>());
         }
         if (task.getTaskDiscountList() == null) {
             task.setTaskDiscountList(new ArrayList<TaskDiscount>());
@@ -72,12 +72,12 @@ public class TaskJpaController implements Serializable {
                 fkLocation = em.getReference(fkLocation.getClass(), fkLocation.getLocation());
                 task.setFkLocation(fkLocation);
             }
-            List<JobComponent> attachedJobComponentList = new ArrayList<JobComponent>();
-            for (JobComponent jobComponentListJobComponentToAttach : task.getJobComponentList()) {
-                jobComponentListJobComponentToAttach = em.getReference(jobComponentListJobComponentToAttach.getClass(), jobComponentListJobComponentToAttach.getJobComponentPK());
-                attachedJobComponentList.add(jobComponentListJobComponentToAttach);
+            List<ComponentTask> attachedComponentTaskList = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListComponentTaskToAttach : task.getComponentTaskList()) {
+                componentTaskListComponentTaskToAttach = em.getReference(componentTaskListComponentTaskToAttach.getClass(), componentTaskListComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskList.add(componentTaskListComponentTaskToAttach);
             }
-            task.setJobComponentList(attachedJobComponentList);
+            task.setComponentTaskList(attachedComponentTaskList);
             List<TaskDiscount> attachedTaskDiscountList = new ArrayList<TaskDiscount>();
             for (TaskDiscount taskDiscountListTaskDiscountToAttach : task.getTaskDiscountList()) {
                 taskDiscountListTaskDiscountToAttach = em.getReference(taskDiscountListTaskDiscountToAttach.getClass(), taskDiscountListTaskDiscountToAttach.getTaskDiscountPK());
@@ -89,9 +89,14 @@ public class TaskJpaController implements Serializable {
                 fkLocation.getTaskList().add(task);
                 fkLocation = em.merge(fkLocation);
             }
-            for (JobComponent jobComponentListJobComponent : task.getJobComponentList()) {
-                jobComponentListJobComponent.getTaskList().add(task);
-                jobComponentListJobComponent = em.merge(jobComponentListJobComponent);
+            for (ComponentTask componentTaskListComponentTask : task.getComponentTaskList()) {
+                Task oldTaskOfComponentTaskListComponentTask = componentTaskListComponentTask.getTask();
+                componentTaskListComponentTask.setTask(task);
+                componentTaskListComponentTask = em.merge(componentTaskListComponentTask);
+                if (oldTaskOfComponentTaskListComponentTask != null) {
+                    oldTaskOfComponentTaskListComponentTask.getComponentTaskList().remove(componentTaskListComponentTask);
+                    oldTaskOfComponentTaskListComponentTask = em.merge(oldTaskOfComponentTaskListComponentTask);
+                }
             }
             for (TaskDiscount taskDiscountListTaskDiscount : task.getTaskDiscountList()) {
                 Task oldTaskOfTaskDiscountListTaskDiscount = taskDiscountListTaskDiscount.getTask();
@@ -118,11 +123,19 @@ public class TaskJpaController implements Serializable {
             Task persistentTask = em.find(Task.class, task.getTaskId());
             Location fkLocationOld = persistentTask.getFkLocation();
             Location fkLocationNew = task.getFkLocation();
-            List<JobComponent> jobComponentListOld = persistentTask.getJobComponentList();
-            List<JobComponent> jobComponentListNew = task.getJobComponentList();
+            List<ComponentTask> componentTaskListOld = persistentTask.getComponentTaskList();
+            List<ComponentTask> componentTaskListNew = task.getComponentTaskList();
             List<TaskDiscount> taskDiscountListOld = persistentTask.getTaskDiscountList();
             List<TaskDiscount> taskDiscountListNew = task.getTaskDiscountList();
             List<String> illegalOrphanMessages = null;
+            for (ComponentTask componentTaskListOldComponentTask : componentTaskListOld) {
+                if (!componentTaskListNew.contains(componentTaskListOldComponentTask)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ComponentTask " + componentTaskListOldComponentTask + " since its task field is not nullable.");
+                }
+            }
             for (TaskDiscount taskDiscountListOldTaskDiscount : taskDiscountListOld) {
                 if (!taskDiscountListNew.contains(taskDiscountListOldTaskDiscount)) {
                     if (illegalOrphanMessages == null) {
@@ -138,13 +151,13 @@ public class TaskJpaController implements Serializable {
                 fkLocationNew = em.getReference(fkLocationNew.getClass(), fkLocationNew.getLocation());
                 task.setFkLocation(fkLocationNew);
             }
-            List<JobComponent> attachedJobComponentListNew = new ArrayList<JobComponent>();
-            for (JobComponent jobComponentListNewJobComponentToAttach : jobComponentListNew) {
-                jobComponentListNewJobComponentToAttach = em.getReference(jobComponentListNewJobComponentToAttach.getClass(), jobComponentListNewJobComponentToAttach.getJobComponentPK());
-                attachedJobComponentListNew.add(jobComponentListNewJobComponentToAttach);
+            List<ComponentTask> attachedComponentTaskListNew = new ArrayList<ComponentTask>();
+            for (ComponentTask componentTaskListNewComponentTaskToAttach : componentTaskListNew) {
+                componentTaskListNewComponentTaskToAttach = em.getReference(componentTaskListNewComponentTaskToAttach.getClass(), componentTaskListNewComponentTaskToAttach.getComponentTaskPK());
+                attachedComponentTaskListNew.add(componentTaskListNewComponentTaskToAttach);
             }
-            jobComponentListNew = attachedJobComponentListNew;
-            task.setJobComponentList(jobComponentListNew);
+            componentTaskListNew = attachedComponentTaskListNew;
+            task.setComponentTaskList(componentTaskListNew);
             List<TaskDiscount> attachedTaskDiscountListNew = new ArrayList<TaskDiscount>();
             for (TaskDiscount taskDiscountListNewTaskDiscountToAttach : taskDiscountListNew) {
                 taskDiscountListNewTaskDiscountToAttach = em.getReference(taskDiscountListNewTaskDiscountToAttach.getClass(), taskDiscountListNewTaskDiscountToAttach.getTaskDiscountPK());
@@ -161,16 +174,15 @@ public class TaskJpaController implements Serializable {
                 fkLocationNew.getTaskList().add(task);
                 fkLocationNew = em.merge(fkLocationNew);
             }
-            for (JobComponent jobComponentListOldJobComponent : jobComponentListOld) {
-                if (!jobComponentListNew.contains(jobComponentListOldJobComponent)) {
-                    jobComponentListOldJobComponent.getTaskList().remove(task);
-                    jobComponentListOldJobComponent = em.merge(jobComponentListOldJobComponent);
-                }
-            }
-            for (JobComponent jobComponentListNewJobComponent : jobComponentListNew) {
-                if (!jobComponentListOld.contains(jobComponentListNewJobComponent)) {
-                    jobComponentListNewJobComponent.getTaskList().add(task);
-                    jobComponentListNewJobComponent = em.merge(jobComponentListNewJobComponent);
+            for (ComponentTask componentTaskListNewComponentTask : componentTaskListNew) {
+                if (!componentTaskListOld.contains(componentTaskListNewComponentTask)) {
+                    Task oldTaskOfComponentTaskListNewComponentTask = componentTaskListNewComponentTask.getTask();
+                    componentTaskListNewComponentTask.setTask(task);
+                    componentTaskListNewComponentTask = em.merge(componentTaskListNewComponentTask);
+                    if (oldTaskOfComponentTaskListNewComponentTask != null && !oldTaskOfComponentTaskListNewComponentTask.equals(task)) {
+                        oldTaskOfComponentTaskListNewComponentTask.getComponentTaskList().remove(componentTaskListNewComponentTask);
+                        oldTaskOfComponentTaskListNewComponentTask = em.merge(oldTaskOfComponentTaskListNewComponentTask);
+                    }
                 }
             }
             for (TaskDiscount taskDiscountListNewTaskDiscount : taskDiscountListNew) {
@@ -214,6 +226,13 @@ public class TaskJpaController implements Serializable {
                 throw new NonexistentEntityException("The task with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            List<ComponentTask> componentTaskListOrphanCheck = task.getComponentTaskList();
+            for (ComponentTask componentTaskListOrphanCheckComponentTask : componentTaskListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Task (" + task + ") cannot be destroyed since the ComponentTask " + componentTaskListOrphanCheckComponentTask + " in its componentTaskList field has a non-nullable task field.");
+            }
             List<TaskDiscount> taskDiscountListOrphanCheck = task.getTaskDiscountList();
             for (TaskDiscount taskDiscountListOrphanCheckTaskDiscount : taskDiscountListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -228,11 +247,6 @@ public class TaskJpaController implements Serializable {
             if (fkLocation != null) {
                 fkLocation.getTaskList().remove(task);
                 fkLocation = em.merge(fkLocation);
-            }
-            List<JobComponent> jobComponentList = task.getJobComponentList();
-            for (JobComponent jobComponentListJobComponent : jobComponentList) {
-                jobComponentListJobComponent.getTaskList().remove(task);
-                jobComponentListJobComponent = em.merge(jobComponentListJobComponent);
             }
             em.remove(task);
             em.getTransaction().commit();

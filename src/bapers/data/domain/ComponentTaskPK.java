@@ -35,21 +35,25 @@ import javax.persistence.Embeddable;
  * @author chris
  */
 @Embeddable
-public class JobComponentPK implements Serializable {
+public class ComponentTaskPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "fk_job_id")
     private int fkJobId;
     @Basic(optional = false)
-    @Column(name = "component_id")
-    private String componentId;
+    @Column(name = "fk_component_id")
+    private String fkComponentId;
+    @Basic(optional = false)
+    @Column(name = "fk_task_id")
+    private int fkTaskId;
 
-    public JobComponentPK() {
+    public ComponentTaskPK() {
     }
 
-    public JobComponentPK(int fkJobId, String componentId) {
+    public ComponentTaskPK(int fkJobId, String fkComponentId, int fkTaskId) {
         this.fkJobId = fkJobId;
-        this.componentId = componentId;
+        this.fkComponentId = fkComponentId;
+        this.fkTaskId = fkTaskId;
     }
 
     public int getFkJobId() {
@@ -60,33 +64,45 @@ public class JobComponentPK implements Serializable {
         this.fkJobId = fkJobId;
     }
 
-    public String getComponentId() {
-        return componentId;
+    public String getFkComponentId() {
+        return fkComponentId;
     }
 
-    public void setComponentId(String componentId) {
-        this.componentId = componentId;
+    public void setFkComponentId(String fkComponentId) {
+        this.fkComponentId = fkComponentId;
+    }
+
+    public int getFkTaskId() {
+        return fkTaskId;
+    }
+
+    public void setFkTaskId(int fkTaskId) {
+        this.fkTaskId = fkTaskId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) fkJobId;
-        hash += (componentId != null ? componentId.hashCode() : 0);
+        hash += (fkComponentId != null ? fkComponentId.hashCode() : 0);
+        hash += (int) fkTaskId;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof JobComponentPK)) {
+        if (!(object instanceof ComponentTaskPK)) {
             return false;
         }
-        JobComponentPK other = (JobComponentPK) object;
+        ComponentTaskPK other = (ComponentTaskPK) object;
         if (this.fkJobId != other.fkJobId) {
             return false;
         }
-        if ((this.componentId == null && other.componentId != null) || (this.componentId != null && !this.componentId.equals(other.componentId))) {
+        if ((this.fkComponentId == null && other.fkComponentId != null) || (this.fkComponentId != null && !this.fkComponentId.equals(other.fkComponentId))) {
+            return false;
+        }
+        if (this.fkTaskId != other.fkTaskId) {
             return false;
         }
         return true;
@@ -94,7 +110,7 @@ public class JobComponentPK implements Serializable {
 
     @Override
     public String toString() {
-        return "bapers.data.domain.JobComponentPK[ fkJobId=" + fkJobId + ", componentId=" + componentId + " ]";
+        return "bapers.data.domain.ComponentTaskPK[ fkJobId=" + fkJobId + ", fkComponentId=" + fkComponentId + ", fkTaskId=" + fkTaskId + " ]";
     }
     
 }

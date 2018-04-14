@@ -23,14 +23,12 @@ import javafx.collections.ObservableList;
 public class UserServiceImpl implements UserService {
 
     private final UserJpaController controller;
-    private final ObservableList<User> users;
 
     /**
      *
      */
     public UserServiceImpl() {
         controller = new UserJpaController(EMF);
-        users = FXCollections.observableArrayList(controller.findUserEntities());
     }
 
     /**
@@ -120,6 +118,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ObservableList<User> getUsers() {
-        return users;
+        return FXCollections.observableArrayList(controller.findUserEntities());
     }
 }
