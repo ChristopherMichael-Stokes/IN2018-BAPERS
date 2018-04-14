@@ -120,7 +120,7 @@
                   </VBox>
                </children>
             </HBox>
-            <Separator maxWidth="-Infinity" prefWidth="200.0">
+            <Separator maxWidth="-Infinity" prefHeight="13.0" prefWidth="270.0">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
@@ -135,7 +135,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="20.0" />
                      </HBox.margin>
                   </Label>
                   <Pane HBox.hgrow="ALWAYS" />

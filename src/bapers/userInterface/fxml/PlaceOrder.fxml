@@ -24,10 +24,10 @@
          <children>
             <Separator prefWidth="200.0">
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
             </Separator>
-            <Label prefHeight="44.0" prefWidth="146.0" text="Place Order">
+            <Label fx:id="lblPlaceOrder" prefHeight="44.0" prefWidth="146.0" text="Place Order">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -35,12 +35,15 @@
                   <Insets left="20.0" />
                </VBox.margin>
             </Label>
-            <Separator prefWidth="200.0" />
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </VBox.margin></Separator>
          </children>
       </VBox>
       <HBox layoutY="101.0" prefHeight="305.0" prefWidth="853.0">
          <children>
-            <VBox prefHeight="305.0" prefWidth="278.0">
+            <VBox prefHeight="319.0" prefWidth="284.0">
                <children>
                   <TextField fx:id="txtSearchCustomer" prefHeight="30.0" prefWidth="247.0" promptText="Search Customer...">
                      <VBox.margin>
@@ -55,7 +58,7 @@
                         <ListView prefHeight="193.0" prefWidth="225.0" />
                      </content>
                   </ScrollPane>
-                  <Button fx:id="btnCreateAccount" mnemonicParsing="false" prefHeight="36.0" prefWidth="227.0" text="Create Customer Account">
+                  <Button fx:id="btnCreateAccount" mnemonicParsing="false" prefHeight="38.0" prefWidth="227.0" text="Create Customer Account">
                      <VBox.margin>
                         <Insets left="30.0" top="30.0" />
                      </VBox.margin>
@@ -155,22 +158,22 @@
             </VBox>
          </children>
       </HBox>
-      <HBox layoutY="437.0" prefHeight="100.0" prefWidth="853.0">
+      <HBox layoutY="446.0" prefHeight="91.0" prefWidth="853.0">
          <children>
-            <Label prefHeight="45.0" prefWidth="304.0" text="Home &gt; Place Order">
+            <Label fx:id="lblHomePlaceOrder" prefHeight="41.0" prefWidth="372.0" text="Home &gt; Place Order">
                <HBox.margin>
-                  <Insets left="10.0" top="50.0" />
+                  <Insets left="10.0" top="40.0" />
                </HBox.margin>
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Pane prefHeight="100.0" prefWidth="709.0">
+            <Pane prefHeight="91.0" prefWidth="866.0">
                <HBox.margin>
                   <Insets left="50.0" />
                </HBox.margin>
                <children>
-                  <Button layoutX="542.0" layoutY="60.0" mnemonicParsing="false" text="Home" />
+                  <Button fx:id="btnHome" layoutX="542.0" layoutY="60.0" mnemonicParsing="false" text="Home" />
                </children>
             </Pane>
          </children>

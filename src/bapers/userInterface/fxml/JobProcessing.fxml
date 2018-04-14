@@ -44,7 +44,7 @@
             <HBox prefHeight="212.0" prefWidth="716.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" />
-                  <TableView prefHeight="212.0" prefWidth="559.0">
+                  <TableView prefHeight="212.0" prefWidth="497.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="Task" />
                       <TableColumn prefWidth="103.99992370605469" text="Task Description" />

@@ -4,4 +4,9 @@
 
 .mainFxmlClass {
     -fx-background-image: url("office.jpg");
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
+
