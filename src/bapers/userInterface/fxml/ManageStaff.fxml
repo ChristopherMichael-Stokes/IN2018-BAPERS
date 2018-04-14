@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -82,27 +86,37 @@
       </VBox>
       <VBox layoutX="14.0" layoutY="109.0" prefHeight="376.0" prefWidth="404.0">
          <children>
-            <TextField prefHeight="25.0" prefWidth="235.0">
+            <TextField fx:id="txtFirstName" prefHeight="25.0" prefWidth="235.0" promptText="Enter First Name">
                <VBox.margin>
                   <Insets right="100.0" />
                </VBox.margin>
             </TextField>
-            <TextField>
+            <TextField fx:id="txtSurname" promptText="Enter Surname">
                <VBox.margin>
                   <Insets bottom="10.0" right="100.0" top="10.0" />
                </VBox.margin>
             </TextField>
-            <TextField>
+            <TextField fx:id="txtUsername" promptText="Enter Username">
                <VBox.margin>
                   <Insets right="100.0" />
                </VBox.margin>
             </TextField>
-            <TextField>
+            <TextField fx:id="txtPassword" promptText="Enter password">
                <VBox.margin>
                   <Insets right="100.0" top="10.0" />
                </VBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="190.0" text="Create Staff">
+            <ComboBox fx:id="cmbUserType" prefWidth="150.0" promptText="Enter User Type">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="cmbUsersLocation" prefWidth="150.0" promptText="Users Location">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Button fx:id="btnCreateUser" mnemonicParsing="false" prefHeight="37.0" prefWidth="169.0" text="Create User">
                <VBox.margin>
                   <Insets top="50.0" />
                </VBox.margin>
