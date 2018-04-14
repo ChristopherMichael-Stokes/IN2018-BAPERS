@@ -57,6 +57,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "PaymentInfo.findAll", query = "SELECT p FROM PaymentInfo p")
     , @NamedQuery(name = "PaymentInfo.findByTransactionId", query = "SELECT p FROM PaymentInfo p WHERE p.transactionId = :transactionId")
     , @NamedQuery(name = "PaymentInfo.findByDatePaid", query = "SELECT p FROM PaymentInfo p WHERE p.datePaid = :datePaid")
+    , @NamedQuery(name = "PaymentInfo.findByAmount", query = "SELECT p FROM PaymentInfo p WHERE p.amount = :amount")
     , @NamedQuery(name = "PaymentInfo.findByPaymentType", query = "SELECT p FROM PaymentInfo p WHERE p.paymentType = :paymentType")})
 public class PaymentInfo implements Serializable {
 
@@ -70,6 +71,8 @@ public class PaymentInfo implements Serializable {
     @Column(name = "date_paid")
     @Temporal(TemporalType.DATE)
     private Date datePaid;
+    @Column(name = "amount")
+    private Integer amount;
     @Basic(optional = false)
     @Column(name = "payment_type")
     private boolean paymentType;
@@ -108,6 +111,14 @@ public class PaymentInfo implements Serializable {
 
     public void setDatePaid(Date datePaid) {
         this.datePaid = datePaid;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     public boolean getPaymentType() {
