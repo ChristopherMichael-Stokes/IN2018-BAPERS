@@ -88,37 +88,37 @@
          <children>
             <TextField fx:id="txtFirstName" prefHeight="25.0" prefWidth="235.0" promptText="Enter First Name">
                <VBox.margin>
-                  <Insets right="100.0" />
+                  <Insets left="30.0" right="100.0" />
                </VBox.margin>
             </TextField>
             <TextField fx:id="txtSurname" promptText="Enter Surname">
                <VBox.margin>
-                  <Insets bottom="10.0" right="100.0" top="10.0" />
+                  <Insets bottom="10.0" left="30.0" right="100.0" top="10.0" />
                </VBox.margin>
             </TextField>
             <TextField fx:id="txtUsername" promptText="Enter Username">
                <VBox.margin>
-                  <Insets right="100.0" />
+                  <Insets left="30.0" right="100.0" />
                </VBox.margin>
             </TextField>
             <TextField fx:id="txtPassword" promptText="Enter password">
                <VBox.margin>
-                  <Insets right="100.0" top="10.0" />
+                  <Insets left="30.0" right="100.0" top="10.0" />
                </VBox.margin>
             </TextField>
             <ComboBox fx:id="cmbUserType" prefWidth="150.0" promptText="Enter User Type">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets left="30.0" top="10.0" />
                </VBox.margin>
             </ComboBox>
             <ComboBox fx:id="cmbUsersLocation" prefWidth="150.0" promptText="Users Location">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets left="30.0" top="10.0" />
                </VBox.margin>
             </ComboBox>
             <Button fx:id="btnCreateUser" mnemonicParsing="false" prefHeight="37.0" prefWidth="169.0" text="Create User">
                <VBox.margin>
-                  <Insets top="50.0" />
+                  <Insets left="30.0" top="50.0" />
                </VBox.margin>
             </Button>
          </children>
