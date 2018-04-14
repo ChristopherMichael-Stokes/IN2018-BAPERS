@@ -26,7 +26,6 @@
 package bapers.data.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -74,7 +73,7 @@ public class CardDetails implements Serializable {
         this.cardType = cardType;
     }
 
-    public CardDetails(String lastDigits, Date expiryDate) {
+    public CardDetails(String lastDigits, String expiryDate) {
         this.cardDetailsPK = new CardDetailsPK(lastDigits, expiryDate);
     }
 

@@ -234,9 +234,11 @@ public class AddPaymentController implements Initializable {
             if (rbCash.isSelected()) {
                 try {//TODO
                     paymentDao.addPayment(Date.from(dteDatePaid.getValue()
-                                .atStartOfDay(ZoneId.systemDefault()).toInstant()), 
-                                (int)Double.parseDouble(txtPaymentAmount.getTextFormatter().valueProperty().asString().get())*100, 
-                            paidJobs);
+                        .atStartOfDay(ZoneId.systemDefault()).toInstant()), 
+                        (int)Double.parseDouble(txtPaymentAmount
+                                .getTextFormatter().valueProperty().asString()
+                                .get())*100, 
+                        paidJobs);
                 } catch (Exception ex) {
                     Logger.getLogger(AddPaymentController.class.getName()).log(Level.SEVERE, null, ex);
                 }

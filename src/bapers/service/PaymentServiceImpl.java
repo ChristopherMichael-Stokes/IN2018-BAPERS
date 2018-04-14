@@ -128,7 +128,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Override
     public void addPayment(Date datePaid, int amount, String cardDigits, 
-            Date expiryDate, String cardType, List<Job> jobs)
+            String expiryDate, String cardType, List<Job> jobs)
             throws PreexistingEntityException, IllegalOrphanException, Exception {
         PaymentInfo pi = new PaymentInfo(0, datePaid, true);
         pi.setAmount(amount);
