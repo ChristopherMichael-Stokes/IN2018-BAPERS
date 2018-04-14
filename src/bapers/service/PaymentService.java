@@ -70,7 +70,7 @@ public interface PaymentService {
      * @throws Exception
      */
     public void addPayment(Date datePaid, int amount, String cardDigits, 
-            Date expiryDate, String cardType, List<Job> jobs)
+            String expiryDate, String cardType, List<Job> jobs)
             throws PreexistingEntityException, IllegalOrphanException, Exception;
     
     //TODO - needs other function to work out all unpaid jobs
