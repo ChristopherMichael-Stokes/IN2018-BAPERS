@@ -70,28 +70,36 @@ public class PaymentServiceImpl implements PaymentService {
      * @return
      */
     @Override
-    public ObservableList<Job> getJobs(int accountNumber) {
-        return contactController.findContactEntities().stream()
-                .filter(c -> c.getContactPK().getFkAccountNumber() == accountNumber)
-                .map(Contact::getJobList)
-                .flatMap(j -> j.stream()
-                        .filter(jb -> jb.getFkTransactionId() == null))
+    public ObservableList<Job> getUnpaidJobs(int accountNumber) {
+        return jobController.findJobEntities().stream()
+                .filter(j -> j.getContact().getContactPK().getFkAccountNumber() == accountNumber
+                    && j.getFkTransactionId() == null)
                 .collect(Collectors
                         .toCollection(FXCollections::observableArrayList));
+                
+//        return contactController.findContactEntities().stream()
+//                .filter(c -> c.getContactPK().getFkAccountNumber() == accountNumber)
+//                .map(Contact::getJobList)
+//                .flatMap(j -> j.stream()
+//                        .filter(jb -> jb.getFkTransactionId() == null))
+//                .collect(Collectors
+//                        .toCollection(FXCollections::observableArrayList));
     }
         
 
     /**
      *
-     * @param payment
+     * @param datePaid
+     * @param card
      * @param jobs
      * @throws PreexistingEntityException
      * @throws Exception
      */
     @Override
-    public void addPayment(PaymentInfo payment, List<Job> jobs) 
+    public void addPayment(Date datePaid, int amount, List<Job> jobs) 
             throws PreexistingEntityException, Exception {
-        PaymentInfo pi = new PaymentInfo(0, new Date(), false);
+        PaymentInfo pi = new PaymentInfo(0, datePaid, false);
+        pi.setAmount(amount);
         pi.setJobList(jobs);
         
         int count = paymentController.getPaymentInfoCount(); //Will break if there are multiple clients adding payments concurrently
@@ -109,7 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      *
-     * @param payment
+     * @param datePaid
      * @param cardDigits
      * @param expiryDate
      * @param cardType
@@ -119,10 +127,11 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws Exception
      */
     @Override
-    public void addPayment(PaymentInfo payment, String cardDigits, 
+    public void addPayment(Date datePaid, int amount, String cardDigits, 
             Date expiryDate, String cardType, List<Job> jobs)
             throws PreexistingEntityException, IllegalOrphanException, Exception {
-        PaymentInfo pi = new PaymentInfo(0, new Date(), true);
+        PaymentInfo pi = new PaymentInfo(0, datePaid, true);
+        pi.setAmount(amount);
         CardDetailsPK cpk = new CardDetailsPK(cardDigits, expiryDate);
         CardDetails cd;
         if ((cd = cardController.findCardDetails(cpk)) == null) {
