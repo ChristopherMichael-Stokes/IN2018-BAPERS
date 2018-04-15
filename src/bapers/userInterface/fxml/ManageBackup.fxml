@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -24,7 +25,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </Separator>
-            <Label fx:id="lblBackup" prefHeight="37.0" prefWidth="87.0" text="Backup">
+            <Label prefHeight="37.0" prefWidth="87.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Backup">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
@@ -41,15 +42,15 @@
       </VBox>
       <VBox layoutX="14.0" layoutY="86.0" prefHeight="231.0" prefWidth="330.0">
          <children>
-            <Label fx:id="lblLastbackup" prefHeight="58.0" prefWidth="266.0" text="Last Backup">
+            <Label prefHeight="58.0" prefWidth="266.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Last Backup">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
             </Label>
-            <Label fx:id="lblTime" prefHeight="25.0" prefWidth="40.0" text="TIme:" />
-            <Label fx:id="lblLocation" prefHeight="26.0" prefWidth="68.0" text="Location:" />
-            <Label fx:id="lblSize" prefHeight="25.0" prefWidth="38.0" text="Size:" />
-            <Button fx:id="btnBackupNow" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Backup Now">
+            <Label prefHeight="25.0" prefWidth="40.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="TIme:" />
+            <Label prefHeight="26.0" prefWidth="68.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Location:" />
+            <Label prefHeight="25.0" prefWidth="38.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Size:" />
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2#4185f2;" text="Backup Now">
                <VBox.margin>
                   <Insets top="50.0" />
                </VBox.margin>
@@ -58,7 +59,7 @@
       </VBox>
       <VBox layoutX="214.0" layoutY="261.0" prefHeight="58.0" prefWidth="150.0">
          <children>
-            <Button fx:id="btnRestoreLastBackup" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Restore Last Backup">
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2#4185f2;" text="Restore Last Backup">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
@@ -69,7 +70,7 @@
          <children>
             <HBox prefHeight="27.0" prefWidth="1014.0">
                <children>
-                  <Label fx:id="lblHomeBackup" prefHeight="31.0" prefWidth="114.0" text="Home&gt;Backup">
+                  <Label prefHeight="31.0" prefWidth="114.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Home&gt;Backup">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
@@ -78,7 +79,7 @@
                      </font>
                   </Label>
                   <Pane prefHeight="4.0" prefWidth="799.0" />
-                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #4185f2#4185f2;" text="Home">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
@@ -98,7 +99,7 @@
       </HBox>
       <VBox layoutX="488.0" layoutY="86.0" prefHeight="402.0" prefWidth="469.0">
          <children>
-            <Label fx:id="lblPreviousBackupInstances" text="Previous Backup Instances">
+            <Label style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Previous Backup Instances">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
@@ -111,7 +112,7 @@
                   <Insets right="200.0" />
                </VBox.margin>
             </ScrollPane>
-            <Button fx:id="btnRestoreFromBackup" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Restore from Backup">
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2#4185f2;" text="Restore from Backup">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>

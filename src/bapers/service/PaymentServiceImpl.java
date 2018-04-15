@@ -34,11 +34,18 @@ import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.CardDetails;
 import bapers.data.domain.CardDetailsPK;
-import bapers.data.domain.Contact;
+import bapers.data.domain.ComponentTask;
+import bapers.data.domain.CustomerAccount;
+import bapers.data.domain.DiscountBand;
 import bapers.data.domain.Job;
+import bapers.data.domain.JobComponent;
 import bapers.data.domain.PaymentInfo;
+import bapers.data.domain.TaskDiscount;
+import static bapers.service.CustomerAccountService.DiscountPlan.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -149,6 +156,91 @@ public class PaymentServiceImpl implements PaymentService {
             j.setFkTransactionId(pi);
             jobController.edit(j);
         }      
+    }
+
+    private double getFlatCost(Job job) {
+        //TODO - fix
+        double cost = 0d;        
+        //find cost
+        //should work but doesnt
+//        cost = job.getJobComponentList().stream()
+//                .map(JobComponent::getComponentTaskList)
+//                .flatMap(jc -> jc.stream())
+//                .map(ct -> ct.getTask().getPrice() / 100d)
+//                .reduce(cost, (a, b) -> a + b);
+        
+        for (JobComponent j : job.getJobComponentList()) {
+            for (ComponentTask t : j.getComponentTaskList()) {
+                cost += t.getTask().getPrice();
+            }
+        }
+        //account for urgency
+        /*  for some reason, retrieving the deadline from the db gives the 
+            actual time minus 1 hr, so add 1  */
+//        double time = (job.getDeadline().getTime() + 3.6e6) / 3.6e6d;
+        if (job.getAddedPercentage() != null)
+            cost += (cost*(job.getAddedPercentage()/100f));
+        
+        return Math.round(cost) / 100d;
+    }
+    
+    @Override
+    public double getJobCost(int jobId) {
+        Job job = jobController.findJob(jobId);
+        double cost = getFlatCost(job);
+        System.out.println("flat cost "+cost);
+        //account for discount plan 
+        CustomerAccount account = job.getContact().getCustomerAccount();
+        switch(getPlan(account.getDiscountType())) {
+            case none: 
+                return cost;
+            case fixed:
+                //should only have one discount band
+                float rate = account.getDiscountBandList()
+                        .get(0).getPercentage()/100f;
+                return cost -= cost*rate;
+            case variable:
+                cost = 0d;
+                List<TaskDiscount> td = account.getTaskDiscountList();
+                for (JobComponent j : job.getJobComponentList()) {
+                    for (ComponentTask t : j.getComponentTaskList()) {
+                        Optional<TaskDiscount> otDiscount = td.stream()
+                                .filter(ct -> ct.getTask().equals(t.getTask()))
+                                .findAny();
+                        double taskCost = t.getTask().getPrice() / 100d;
+                        if (otDiscount.isPresent())
+                            cost += taskCost + (taskCost * (otDiscount.get().getPercentage()/100f));
+                        else 
+                            cost += t.getTask().getPrice();
+                    }
+                }
+                return cost;
+            case flexible:
+                //find all transactions in past month                
+                Calendar month = Calendar.getInstance();
+                month.setTime(new Date());
+                month.set(Calendar.DAY_OF_MONTH, month.getActualMinimum(Calendar.DAY_OF_MONTH));
+                Date monthStart = month.getTime();
+                
+                double moneySpent_ = paymentController.findPaymentInfoEntities()
+                        .stream()
+                        .filter(pi -> pi.getDatePaid().after(monthStart)) 
+                        .map(PaymentInfo::getJobList)
+                        .flatMap(x -> x.stream())
+                        .filter(j -> j.getContact().getCustomerAccount().equals(account))
+                        .map(this::getFlatCost)
+                        .reduce(cost, (accumulator, payment) -> accumulator + payment);
+                int moneySpent = (int) moneySpent_ * 100;
+                
+                //work out which band to apply
+                DiscountBand band = account.getDiscountBandList().get(0);
+                for (DiscountBand db : account.getDiscountBandList()) {
+                    if (moneySpent > db.getDiscountBandPK().getPrice())
+                        band = db;
+                }
+                return cost -= cost*(band.getPercentage()/100f);
+            default: return cost;
+        }
     }
 
 }

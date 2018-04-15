@@ -36,6 +36,19 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface CustomerAccountService {
+    
+    public enum DiscountPlan {
+        none, fixed, variable, flexible;
+        public static DiscountPlan getPlan(int plan) {
+            switch(plan){
+                case 0: return none;
+                case 1: return fixed;
+                case 2: return variable;
+                case 3: return flexible;
+                default: return null;
+            }                
+        }
+    };
 
     /**
      *
