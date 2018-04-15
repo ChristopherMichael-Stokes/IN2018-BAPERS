@@ -44,23 +44,21 @@ public interface PaymentService {
      * @param accountNumber
      * @return
      */
-    public ObservableList<Job> getUnpaidJobs(int accountNumber);
+    public ObservableList<Job> getJobs(int accountNumber);
 
     /**
      *
-     * @param datePaid
-     * @param amount
+     * @param payment
      * @param jobs
      * @throws PreexistingEntityException
      * @throws Exception
      */
-    public void addPayment(Date datePaid, int amount, List<Job> jobs) 
+    public void addPayment(PaymentInfo payment, List<Job> jobs) 
             throws PreexistingEntityException, Exception;
 
     /**
      *
-     * @param datePaid
-     * @param amount
+     * @param payment
      * @param cardDigits
      * @param expiryDate
      * @param cardType
@@ -69,7 +67,7 @@ public interface PaymentService {
      * @throws IllegalOrphanException
      * @throws Exception
      */
-    public void addPayment(Date datePaid, int amount, String cardDigits, 
+    public void addPayment(PaymentInfo payment, String cardDigits, 
             Date expiryDate, String cardType, List<Job> jobs)
             throws PreexistingEntityException, IllegalOrphanException, Exception;
     
