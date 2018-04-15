@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="483.0" prefWidth="716.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.152" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
+<AnchorPane id="AnchorPane" prefHeight="483.0" prefWidth="716.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/jobprocessing.css" />
     </stylesheets>
@@ -23,7 +23,7 @@
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin></Separator>
-            <Label text="Job Process">
+            <Label style="-fx-text-fill: #c6c9d1;" text="Job Process">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -34,7 +34,7 @@
             <Separator prefWidth="200.0" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField promptText="Job Number...">
+                  <TextField promptText="Job Number..." style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1; -fx-border-radius: 10; -fx-border-color: #c6c9d1;">
                      <HBox.margin>
                         <Insets left="10.0" top="20.0" />
                      </HBox.margin>
