@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -12,12 +18,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.CreateAccountController">
+<AnchorPane id="AnchorPane" prefHeight="472.0" prefWidth="535.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.CreateAccountController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/createaccount.css" />
     </stylesheets>
    <children>
-      <Label prefHeight="17.0" prefWidth="600.0" style="-fx-text-fill: #c6c9d1;" text="Create Account">
+      <Label fx:id="lblCreateAccount" prefHeight="17.0" prefWidth="600.0" text="Create Account">
          <padding>
             <Insets left="10.0" top="20.0" />
          </padding>
