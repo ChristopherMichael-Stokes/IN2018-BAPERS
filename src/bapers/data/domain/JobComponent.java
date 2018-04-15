@@ -31,6 +31,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -59,10 +60,10 @@ public class JobComponent implements Serializable {
     protected JobComponentPK jobComponentPK;
     @Column(name = "description")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobComponent")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobComponent", fetch = FetchType.EAGER)
     private List<ComponentTask> componentTaskList;
     @JoinColumn(name = "fk_job_id", referencedColumnName = "job_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Job job;
 
     public JobComponent() {

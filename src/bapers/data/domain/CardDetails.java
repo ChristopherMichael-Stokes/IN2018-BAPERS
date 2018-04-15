@@ -31,6 +31,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -58,7 +59,7 @@ public class CardDetails implements Serializable {
     @Basic(optional = false)
     @Column(name = "card_type")
     private String cardType;
-    @OneToMany(mappedBy = "cardDetails")
+    @OneToMany(mappedBy = "cardDetails", fetch = FetchType.EAGER)
     private List<PaymentInfo> paymentInfoList;
 
     public CardDetails() {

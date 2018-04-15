@@ -30,6 +30,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -58,10 +59,10 @@ public class TaskDiscount implements Serializable {
     @Column(name = "percentage")
     private float percentage;
     @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Task task;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private CustomerAccount customerAccount;
 
     public TaskDiscount() {
