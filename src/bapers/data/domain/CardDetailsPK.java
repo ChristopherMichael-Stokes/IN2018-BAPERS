@@ -26,12 +26,9 @@
 package bapers.data.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -45,13 +42,12 @@ public class CardDetailsPK implements Serializable {
     private String lastDigits;
     @Basic(optional = false)
     @Column(name = "expiry_date")
-    @Temporal(TemporalType.DATE)
-    private Date expiryDate;
+    private String expiryDate;
 
     public CardDetailsPK() {
     }
 
-    public CardDetailsPK(String lastDigits, Date expiryDate) {
+    public CardDetailsPK(String lastDigits, String expiryDate) {
         this.lastDigits = lastDigits;
         this.expiryDate = expiryDate;
     }
@@ -64,11 +60,11 @@ public class CardDetailsPK implements Serializable {
         this.lastDigits = lastDigits;
     }
 
-    public Date getExpiryDate() {
+    public String getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
 

@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -21,7 +25,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </Separator>
-            <Label prefHeight="37.0" prefWidth="87.0" text="Intervals">
+            <Label prefHeight="37.0" prefWidth="87.0" style="-fx-text-fill: #c6c9d1;" text="Intervals">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
@@ -38,28 +42,28 @@
       </VBox>
       <VBox layoutX="14.0" layoutY="86.0" prefHeight="369.0" prefWidth="330.0">
          <children>
-            <Label prefHeight="58.0" prefWidth="266.0" text="Reports">
+            <Label prefHeight="58.0" prefWidth="266.0" style="-fx-text-fill: #c6c9d1;" text="Reports">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
             </Label>
-            <RadioButton mnemonicParsing="false" text="1 Day">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="1 Day">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="2 Days">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="2 Days">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="5 Days" />
-            <RadioButton mnemonicParsing="false" text="7 Days">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="5 Days" />
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="7 Days">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="30 Days" />
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
             <HBox prefHeight="36.0" prefWidth="330.0">
                <children>
                   <RadioButton mnemonicParsing="false">
@@ -67,14 +71,14 @@
                         <Insets top="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <TextField>
+                  <TextField style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
                   </TextField>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Set Time">
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2;" text="Set Time">
                <VBox.margin>
                   <Insets top="50.0" />
                </VBox.margin>
@@ -86,7 +90,7 @@
          <children>
             <HBox prefHeight="27.0" prefWidth="1014.0">
                <children>
-                  <Label prefHeight="31.0" prefWidth="122.0" text="Home&gt;Intervals">
+                  <Label prefHeight="31.0" prefWidth="122.0" style="-fx-text-fill: #c6c9d1;" text="Home&gt;Intervals">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
@@ -107,7 +111,7 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #4185f2;" text="Home">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
@@ -127,28 +131,28 @@
       </VBox>
       <VBox layoutX="613.0" layoutY="86.0" prefHeight="369.0" prefWidth="330.0">
          <children>
-            <Label prefHeight="58.0" prefWidth="349.0" text="Database Backup">
+            <Label prefHeight="58.0" prefWidth="349.0" style="-fx-text-fill: #c6c9d1;" text="Database Backup">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
             </Label>
-            <RadioButton mnemonicParsing="false" text="1 Day">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="1 Day">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="2 Days">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="2 Days">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="5 Days" />
-            <RadioButton mnemonicParsing="false" text="7 Days">
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="5 Days" />
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="7 Days">
                <VBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </VBox.margin>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text="30 Days" />
+            <RadioButton mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
             <HBox prefHeight="36.0" prefWidth="330.0">
                <children>
                   <RadioButton mnemonicParsing="false">
@@ -156,14 +160,14 @@
                         <Insets top="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <TextField>
+                  <TextField style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
                   </TextField>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Set Time">
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2;" text="Set Time">
                <VBox.margin>
                   <Insets top="50.0" />
                </VBox.margin>
