@@ -30,7 +30,7 @@
             <Insets top="10.0" />
          </padding>
       </Separator>
-      <HBox prefHeight="100.0" prefWidth="600.0">
+      <HBox prefHeight="100.0" prefWidth="399.0">
          <children>
             <Separator prefHeight="11.0" prefWidth="769.0">
                <HBox.margin>
@@ -39,7 +39,7 @@
             </Separator>
          </children>
       </HBox>
-      <HBox layoutY="59.0" prefHeight="245.0" prefWidth="600.0">
+      <HBox layoutY="59.0" prefHeight="245.0" prefWidth="399.0">
          <children>
             <VBox prefHeight="237.0" prefWidth="198.0">
                <children>

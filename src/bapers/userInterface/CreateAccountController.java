@@ -27,7 +27,10 @@ package bapers.userInterface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -35,6 +38,27 @@ import javafx.fxml.Initializable;
  * @author chris
  */
 public class CreateAccountController implements Initializable {
+
+    @FXML
+    private TextField txtAccountHolder;
+    @FXML
+    private TextField txtEmail;
+    @FXML
+    private TextField txtPhone;
+    @FXML
+    private TextField txtAddress1;
+    @FXML
+    private TextField txtAddress2;
+    @FXML
+    private TextField txtPostcode;
+    @FXML
+    private TextField txtCity;
+    @FXML
+    private TextField txtCountry;
+    @FXML
+    private Button btnHome;
+    @FXML
+    private Button btnCreate;
 
     /**
      * Initializes the controller class.

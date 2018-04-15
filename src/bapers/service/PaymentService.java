@@ -45,6 +45,8 @@ public interface PaymentService {
      * @return
      */
     public ObservableList<Job> getUnpaidJobs(int accountNumber);
+    
+    public double getJobCost(int jobId);
 
     /**
      *
@@ -73,5 +75,4 @@ public interface PaymentService {
             String expiryDate, String cardType, List<Job> jobs)
             throws PreexistingEntityException, IllegalOrphanException, Exception;
     
-    //TODO - needs other function to work out all unpaid jobs
 }
