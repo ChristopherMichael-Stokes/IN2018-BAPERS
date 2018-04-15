@@ -25,6 +25,7 @@
  */
 package bapers.userInterface;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.Job;
 import bapers.service.CustomerAccountService;
@@ -36,8 +37,10 @@ import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -108,6 +111,9 @@ public class AddPaymentController implements Initializable {
     private final Map<String, CustomerAccount> custMap = new HashMap<>();
     private final Map<CheckBox, Job> jobMap = new HashMap<>();
     private static final DateFormat DF = new SimpleDateFormat("dd/MM/yyyy");
+    private final DecimalFormat strictZeroDecimalFormat  
+                = new DecimalFormat("\u00A3###,###.##");
+    private final TextFormatter<Double> tf = new CurrencyFormat();
 
 
     /**
@@ -117,6 +123,7 @@ public class AddPaymentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         //radio buttons 
         rbCard.setToggleGroup(paymentType);
         rbCard.setOnAction((event) -> {
@@ -138,71 +145,17 @@ public class AddPaymentController implements Initializable {
         txtExpiry.setEditable(false);
         
         //Text
-        DecimalFormat strictZeroDecimalFormat  
-                = new DecimalFormat("\u00A3###,###.##");
 //        txtPaymentAmount.setTextFormatter(new CurrencyFormatter());
-        txtPaymentAmount.setTextFormatter(new TextFormatter<Double>(         
-                // string converter converts between a string and a value property.
-                new StringConverter<Double>() {
-                    @Override
-                    public String toString(Double value) {
-                        return strictZeroDecimalFormat.format(value);
-                    }
-
-                    @Override
-                    public Double fromString(String string) {
-                        try {
-                            return strictZeroDecimalFormat.parse(string).doubleValue();
-                        } catch (ParseException e) {
-                            return Double.NaN;
-                        }
-                    }
-                }, 0d,
-                // change filter rejects text input if it cannot be parsed.
-                change -> {
-                    try {
-                        strictZeroDecimalFormat.parse(change.getControlNewText());
-                        return change;
-                    } catch (ParseException e) {
-                        return null;
-                    }
-                }        
-        ));
+        txtPaymentAmount.setTextFormatter(tf);
+        setTextLimit(txtCardNumber, 4);
+        setTextLimit(txtExpiry, 5);
         
         //Lists        
         cmbCardType.getItems().addAll("visa", "master card", "debit");   
         loadCustomers();
         
-        
-        
-//        cmbCustomer.setCellFactory((param) -> {
-//            ListCell<CustomerAccount> cell = new ListCell<CustomerAccount>() {
-//                @Override
-//                protected void updateItem(CustomerAccount t, boolean empty) {
-//                    super.updateItem(t, empty);
-//                    if (t != null)
-//                        setText(t.getAccountHolderName());
-//                    else
-//                        setText(null); 
-//                }
-//            };
-//            return cell;
-//        });
-        
-//        lsvJobs.setCellFactory((param) -> {
-//            ListCell<Job> cell = new ListCell<Job>() {
-//                @Override
-//                protected void updateItem(Job t, boolean empty) {
-//                    super.updateItem(t, empty);
-//                    if (t != null)
-//                        setText(df.format(t.getDateIssued()));
-//                    else
-//                        setText(null);
-//                }
-//            };
-//            return cell;
-//        });
         cmbCustomer.setOnAction((event) -> {
+            updatePayment();
             lsvJobs.autosize();
             jobMap.clear();
             lsvJobs.getItems().clear();            
@@ -225,6 +178,12 @@ public class AddPaymentController implements Initializable {
                 alert.showAndWait();                
             } 
             
+            Date datePaid = Date.from(dteDatePaid.getValue()
+                        .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            int paymentAmount = (int)Double.parseDouble(txtPaymentAmount
+                                .getTextFormatter().valueProperty().asString()
+                                .get())*100;
+            
             List<Job> paidJobs = new ArrayList<>();
             jobMap.forEach((k, v) -> {
                 if (k.isSelected())
@@ -233,20 +192,45 @@ public class AddPaymentController implements Initializable {
             });
             if (rbCash.isSelected()) {
                 try {//TODO
-                    paymentDao.addPayment(Date.from(dteDatePaid.getValue()
-                        .atStartOfDay(ZoneId.systemDefault()).toInstant()), 
+                    paymentDao.addPayment(datePaid, 
                         (int)Double.parseDouble(txtPaymentAmount
                                 .getTextFormatter().valueProperty().asString()
                                 .get())*100, 
                         paidJobs);
+                    txtPaymentAmount.setText("");
+                    dteDatePaid.setValue(null);
                 } catch (Exception ex) {
                     Logger.getLogger(AddPaymentController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else if (rbCard.isSelected()) {
                 if (txtCardNumber.getText().trim().equals("") 
-                        || txtCardNumber.getText().trim().equals("")){
+                        || txtCardNumber.getText().trim().equals("")
+                        || cmbCardType.getValue() == null){
                     alert.setContentText("Please supply card details");
                     alert.showAndWait();
+                } else {
+                    String cardNumber = txtCardNumber.getText().trim();
+                    String[] expiryDate = txtExpiry.getText().trim().split("/");
+                    
+                    try {
+                        short m = Short.parseShort(expiryDate[0]);
+                        short y = Short.parseShort(expiryDate[1]);
+                        if (m > 12)
+                            throw new NumberFormatException();
+                        paymentDao.addPayment(datePaid, paymentAmount, cardNumber, 
+                                expiryDate[0]+expiryDate[1], 
+                                cmbCardType.getValue(), paidJobs);
+                    } catch (NumberFormatException ex) {
+                        alert.setContentText("enter a valid date");
+                        alert.showAndWait();
+                        txtExpiry.setText("");
+                        return;
+                    } catch (IllegalOrphanException ex) {
+                        Logger.getLogger(AddPaymentController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(AddPaymentController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
                 }
             }
             int selection = cmbCustomer.getSelectionModel().getSelectedIndex();
@@ -281,8 +265,64 @@ public class AddPaymentController implements Initializable {
         jobMap.clear();
         for (Job job : unpaidJobs) {
             CheckBox cbox = new CheckBox(DF.format(job.getDateIssued()));
+            cbox.setOnAction((event) -> updatePayment());
             jobMap.put(cbox, job);
             lsvJobs.getItems().add(cbox);
         }
     }
+    
+    private void updatePayment() {
+        double cost = lsvJobs.getItems().stream().filter(cb -> cb.isSelected())
+                    .map(cb -> jobMap.get(cb))
+                    .mapToDouble(j -> paymentDao.getJobCost(j.getJobId()))
+                    .reduce(0, (a, b) -> a + b);
+        lblPaymentDue.setText("Payment Due: "+tf.getValueConverter().toString(cost));
+    }
+    
+    private void setTextLimit(TextField textField, int length) {
+        int ln = length - 1;
+        textField.setOnKeyTyped(event -> {
+            String string = textField.getText();
+
+            if (string.length() > ln) {
+                textField.setText(string.substring(0, ln));
+                textField.positionCaret(string.length());
+            }
+        });
+    }
+}
+
+class CurrencyFormat extends TextFormatter<Double> {
+    private static final DecimalFormat strictZeroDecimalFormat  
+                = new DecimalFormat("\u00A3###,###.##");
+
+    public CurrencyFormat() {
+        super(
+            new StringConverter<Double>() {
+                @Override
+                public String toString(Double value) {
+                    return strictZeroDecimalFormat.format(value);
+                }
+
+                @Override
+                public Double fromString(String string) {
+                    try {
+                        return strictZeroDecimalFormat.parse(string).doubleValue();
+                    } catch (ParseException e) {
+                        return Double.NaN;
+                    }
+                }
+            }, 0d,
+            // change filter rejects text input if it cannot be parsed.
+            change -> {
+                try {
+                    strictZeroDecimalFormat.parse(change.getControlNewText());
+                    return change;
+                } catch (ParseException e) {
+                    return null;
+                }
+            }
+        );      
+    }
+    
 }
