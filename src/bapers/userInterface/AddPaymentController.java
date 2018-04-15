@@ -170,7 +170,7 @@ public class AddPaymentController implements Initializable {
         ));
         
         //Lists        
-        cmbCardType.getItems().addAll("visa", "master card", "debit");   
+        cmbCardType.getItems().addAll("Visa", "MasterCard", "Debit");   
         loadCustomers();
         
         

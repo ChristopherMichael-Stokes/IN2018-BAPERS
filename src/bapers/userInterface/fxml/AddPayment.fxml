@@ -17,19 +17,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="704.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.AddPaymentController">
+<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="704.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.AddPaymentController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/addpayment.css" />
     </stylesheets>
    <children>
-      <VBox prefHeight="700.0" prefWidth="704.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="700.0" prefWidth="704.0" style="-fx-background-color: #364059;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator prefWidth="200.0">
                <VBox.margin>
                   <Insets left="30.0" right="20.0" top="15.0" />
                </VBox.margin>
             </Separator>
-            <Label prefHeight="26.0" prefWidth="152.0" text="Payment">
+            <Label prefHeight="26.0" prefWidth="152.0" style="-fx-text-fill: #c6c9d1;" text="Payment">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -42,12 +42,12 @@
                   <Insets left="30.0" right="30.0" />
                </VBox.margin>
             </Separator>
-            <ComboBox fx:id="cmbCustomer" prefWidth="150.0" promptText="Select Customer">
+            <ComboBox fx:id="cmbCustomer" prefWidth="150.0" promptText="Select Customer" style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1; -fx-border-color: #c6c9d1;">
                <VBox.margin>
                   <Insets bottom="20.0" left="20.0" top="20.0" />
                </VBox.margin>
             </ComboBox>
-            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" text="Payment Due: £XXXX">
+            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" style="-fx-text-fill: #c6c9d1;" text="Payment Due: £XXXX">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" />
                </VBox.margin>
@@ -61,7 +61,7 @@
                      <content>
                         <VBox>
                            <children>
-                              <ListView fx:id="lsvJobs" fixedCellSize="0.0" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="lsvJobs" fixedCellSize="0.0" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1;" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                      </content>
@@ -73,42 +73,42 @@
                   </Separator>
                   <VBox alignment="CENTER_LEFT" prefHeight="348.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date">
+                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date" style="-fx-control-inner-background: #364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-text-fill: #c6c9d1#c6c9d1;">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </DatePicker>
-                        <TextField fx:id="txtPaymentAmount" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="282.0" promptText="Enter Payment Amount">
+                        <TextField fx:id="txtPaymentAmount" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="282.0" promptText="Enter Payment Amount" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1#c6c9d1;">
                            <VBox.margin>
                               <Insets bottom="8.0" left="10.0" right="20.0" />
                            </VBox.margin>
                         </TextField>
-                        <RadioButton fx:id="rbCash" mnemonicParsing="false" text="Cash" VBox.vgrow="ALWAYS">
+                        <RadioButton fx:id="rbCash" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Cash" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
-                        <RadioButton fx:id="rbCard" mnemonicParsing="false" text="Card" VBox.vgrow="ALWAYS">
+                        <RadioButton fx:id="rbCard" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Card" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </RadioButton>
-                        <ComboBox fx:id="cmbCardType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="284.0" promptText="Card Type">
+                        <ComboBox fx:id="cmbCardType" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="284.0" promptText="Card Type" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <TextField fx:id="txtCardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="287.0" promptText="Enter Card Number">
+                        <TextField fx:id="txtCardNumber" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="287.0" promptText="Enter Card Number" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtExpiry" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="289.0" promptText="Enter Expiry Date MM/YY">
+                        <TextField fx:id="txtExpiry" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="289.0" promptText="Enter Expiry Date MM/YY" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>
                         </TextField>
-                        <Button fx:id="btnAddPayment" mnemonicParsing="false" text="Add Payment">
+                        <Button fx:id="btnAddPayment" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Add Payment">
                            <VBox.margin>
                               <Insets left="10.0" top="10.0" />
                            </VBox.margin>
@@ -130,7 +130,7 @@
             </Separator>
             <HBox prefHeight="38.0" prefWidth="704.0">
                <children>
-                  <Label text="Home&gt;Payment" HBox.hgrow="ALWAYS">
+                  <Label style="-fx-text-fill: #c6c9d1;" text="Home&gt;Payment" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -139,7 +139,7 @@
                      </HBox.margin>
                   </Label>
                   <Pane HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnHome" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                  <Button fx:id="btnHome" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #4185f2;" text="Home">
                      <HBox.margin>
                         <Insets bottom="10.0" right="10.0" />
                      </HBox.margin>
