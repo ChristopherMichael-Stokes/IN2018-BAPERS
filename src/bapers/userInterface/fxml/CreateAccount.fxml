@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.152" fx:controller="bapers.userInterface.CreateAccountController">
+<AnchorPane id="AnchorPane" prefHeight="472.0" prefWidth="535.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.CreateAccountController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/createaccount.css" />
     </stylesheets>
@@ -30,7 +30,7 @@
             <Insets top="10.0" />
          </padding>
       </Separator>
-      <HBox prefHeight="100.0" prefWidth="600.0">
+      <HBox prefHeight="100.0" prefWidth="399.0">
          <children>
             <Separator prefHeight="11.0" prefWidth="769.0">
                <HBox.margin>
@@ -39,41 +39,20 @@
             </Separator>
          </children>
       </HBox>
-      <HBox layoutY="59.0" prefHeight="245.0" prefWidth="600.0">
+      <HBox layoutY="59.0" prefHeight="245.0" prefWidth="399.0">
          <children>
             <VBox prefHeight="237.0" prefWidth="198.0">
                <children>
-                  <TextField fx:id="txtCustomerID" prefHeight="26.0" prefWidth="164.0" promptText="Customer ID..." />
-                  <TextField fx:id="txtEmail" promptText="Email...">
-                     <VBox.margin>
-                        <Insets top="30.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <TextField fx:id="txtCompanyName" promptText="Company Name...">
-                     <VBox.margin>
-                        <Insets top="30.0" />
-                     </VBox.margin>
-                  </TextField>
-               </children>
-            </VBox>
-            <VBox prefHeight="253.0" prefWidth="193.0">
-               <children>
-                  <TextField fx:id="txtFirstName" promptText="First Name...">
+                  <TextField fx:id="txtAccountHolder" prefHeight="26.0" prefWidth="164.0" promptText="Account holder name">
                      <VBox.margin>
                         <Insets left="10.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <TextField fx:id="txtSurname" promptText="Surname...">
+                     </VBox.margin></TextField>
+                  <TextField fx:id="txtEmail" promptText="Email...">
                      <VBox.margin>
                         <Insets left="10.0" top="30.0" />
                      </VBox.margin>
                   </TextField>
-                  <TextField fx:id="txtPhone" promptText="House Phone...">
-                     <VBox.margin>
-                        <Insets left="10.0" top="30.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <TextField fx:id="txtMobile" promptText="Mobile Number...">
+                  <TextField fx:id="txtPhone" promptText="Landline">
                      <VBox.margin>
                         <Insets left="10.0" top="30.0" />
                      </VBox.margin>
@@ -111,8 +90,10 @@
             </VBox>
          </children>
       </HBox>
-      <Pane layoutY="386.0" prefHeight="100.0" prefWidth="529.0" />
-      <Button fx:id="btnHome" layoutX="529.0" layoutY="436.0" mnemonicParsing="false" text="Home" />
-      <Button fx:id="btnCreate" layoutX="403.0" layoutY="333.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="183.0" text="Create Customer Account" />
+      <Pane layoutX="-3.0" layoutY="417.0" prefHeight="55.0" prefWidth="406.0">
+         <children>
+            <Button fx:id="btnHome" layoutX="335.0" layoutY="15.0" mnemonicParsing="false" text="Home" />
+         </children></Pane>
+      <Button fx:id="btnCreate" layoutX="209.0" layoutY="327.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="183.0" text="Create Customer Account" />
    </children>
 </AnchorPane>
