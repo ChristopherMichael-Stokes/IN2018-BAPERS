@@ -76,7 +76,7 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private TextField txtCity;
     @FXML
-    private VBox rbFlexible;
+    private RadioButton rbFlexible;
     @FXML
     private RadioButton rbVariable;
     @FXML
