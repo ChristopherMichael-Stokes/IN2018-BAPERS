@@ -31,6 +31,7 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -79,9 +80,9 @@ public class PaymentInfo implements Serializable {
     @JoinColumns({
         @JoinColumn(name = "fk_last_digits", referencedColumnName = "last_digits")
         , @JoinColumn(name = "fk_expiry_date", referencedColumnName = "expiry_date")})
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private CardDetails cardDetails;
-    @OneToMany(mappedBy = "fkTransactionId")
+    @OneToMany(mappedBy = "fkTransactionId", fetch = FetchType.EAGER)
     private List<Job> jobList;
 
     public PaymentInfo() {

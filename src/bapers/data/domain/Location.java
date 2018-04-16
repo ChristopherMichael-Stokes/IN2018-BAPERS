@@ -31,6 +31,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -56,9 +57,9 @@ public class Location implements Serializable {
     @Basic(optional = false)
     @Column(name = "location")
     private String location;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkLocation")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkLocation", fetch = FetchType.EAGER)
     private List<Task> taskList;
-    @OneToMany(mappedBy = "fkLocation")
+    @OneToMany(mappedBy = "fkLocation", fetch = FetchType.EAGER)
     private List<User> userList;
 
     public Location() {

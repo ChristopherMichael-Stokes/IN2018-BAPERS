@@ -32,6 +32,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -85,12 +86,12 @@ public class Task implements Serializable {
     @Column(name = "duration")
     @Temporal(TemporalType.TIME)
     private Date duration;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task", fetch = FetchType.EAGER)
     private List<ComponentTask> componentTaskList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task", fetch = FetchType.EAGER)
     private List<TaskDiscount> taskDiscountList;
     @JoinColumn(name = "fk_location", referencedColumnName = "location")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Location fkLocation;
 
     public Task() {

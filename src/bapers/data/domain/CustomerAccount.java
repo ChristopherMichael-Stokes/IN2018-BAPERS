@@ -31,6 +31,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,13 +73,13 @@ public class CustomerAccount implements Serializable {
     private String landline;
     @Column(name = "discount_type")
     private Short discountType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
     private List<Address> addressList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
     private List<TaskDiscount> taskDiscountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
     private List<Contact> contactList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
     private List<DiscountBand> discountBandList;
 
     public CustomerAccount() {

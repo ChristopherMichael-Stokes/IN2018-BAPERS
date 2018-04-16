@@ -30,6 +30,7 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -71,10 +72,10 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "type")
     private short type;
-    @OneToMany(mappedBy = "fkUsername")
+    @OneToMany(mappedBy = "fkUsername", fetch = FetchType.EAGER)
     private List<ComponentTask> componentTaskList;
     @JoinColumn(name = "fk_location", referencedColumnName = "location")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Location fkLocation;
 
     public User() {

@@ -32,6 +32,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -85,16 +86,16 @@ public class Job implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "added_percentage")
     private Float addedPercentage;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "job", fetch = FetchType.EAGER)
     private List<JobComponent> jobComponentList;
     @JoinColumns({
         @JoinColumn(name = "fk_forename", referencedColumnName = "forename")
         , @JoinColumn(name = "fk_surname", referencedColumnName = "surname")
         , @JoinColumn(name = "fk_account_number", referencedColumnName = "fk_account_number")})
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Contact contact;
     @JoinColumn(name = "fk_transaction_id", referencedColumnName = "transaction_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private PaymentInfo fkTransactionId;
 
     public Job() {
