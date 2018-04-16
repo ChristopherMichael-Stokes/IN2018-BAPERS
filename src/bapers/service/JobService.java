@@ -26,7 +26,8 @@
 package bapers.service;
 
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
-import bapers.data.domain.ComponentTask;
+import bapers.data.domain.CustomerAccount;
+import bapers.data.domain.Job;
 import bapers.data.domain.JobComponent;
 import java.util.Date;
 import javafx.collections.ObservableList;
@@ -36,6 +37,28 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface JobService {
+    
+    public static enum Jobs {
+        all() {{j = "All jobs";}}, complete() {{j = "Only complete jobs";}}, 
+        incomplete() {{j = "Only incomplete jobs";}};
+        protected String j;
+        
+        @Override
+        public String toString() {
+            return j;
+        }
+        
+        public Jobs getJobsType(String jobsType) {
+            switch(jobsType) {
+                case "All jobs": return all;
+                case "Only complete jobs": return complete;
+                case "Only incomplete jobs": return incomplete;
+                default: return all;
+            }
+        }
+    }
+    public boolean jobComplete(Job job);
+    public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType);
 
     /**
      * @param taskId

@@ -30,6 +30,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -66,15 +67,15 @@ public class ComponentTask implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
     @JoinColumn(name = "fk_username", referencedColumnName = "username")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User fkUsername;
     @JoinColumns({
         @JoinColumn(name = "fk_job_id", referencedColumnName = "fk_job_id", insertable = false, updatable = false)
         , @JoinColumn(name = "fk_component_id", referencedColumnName = "component_id", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private JobComponent jobComponent;
     @JoinColumn(name = "fk_task_id", referencedColumnName = "task_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Task task;
 
     public ComponentTask() {

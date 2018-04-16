@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="704.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.AddPaymentController">
+<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="704.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.AddPaymentController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/addpayment.css" />
     </stylesheets>
@@ -42,30 +42,34 @@
                   <Insets left="30.0" right="30.0" />
                </VBox.margin>
             </Separator>
-            <ComboBox fx:id="cmbCustomer" prefWidth="150.0" promptText="Select Customer" style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1; -fx-border-color: #c6c9d1;">
+            <ComboBox fx:id="cmbCustomer" prefWidth="150.0" promptText="Select Customer" style="-fx-background-color: #c6c9d1; -fx-border-color: #c6c9d1;">
                <VBox.margin>
                   <Insets bottom="20.0" left="20.0" top="20.0" />
                </VBox.margin>
             </ComboBox>
-            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" text="Payment Due: £">
+            <Label fx:id="lblPaymentDue" prefHeight="27.0" prefWidth="182.0" style="-fx-text-fill: #c6c9d1;" text="Payment Due: £">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" />
                </VBox.margin>
             </Label>
             <HBox prefHeight="329.0" prefWidth="1275.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ScrollPane fx:id="scpJobs" nodeOrientation="LEFT_TO_RIGHT" prefHeight="326.0" prefWidth="148.0" HBox.hgrow="ALWAYS">
+                  <VBox HBox.hgrow="SOMETIMES">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
-                     <content>
-                        <VBox>
-                           <children>
-                              <ListView fx:id="lsvJobs" fixedCellSize="0.0" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1;" VBox.vgrow="ALWAYS" />
-                           </children>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
+                     <children>
+                        <ScrollPane fx:id="scpJobs" nodeOrientation="LEFT_TO_RIGHT" prefHeight="325.0" prefWidth="263.0" VBox.vgrow="NEVER">
+                           <content>
+                              <VBox fillWidth="false">
+                                 <children>
+                                    <ListView fx:id="lsvJobs" fixedCellSize="0.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" style="-fx-background-color: #364059; -fx-text-fill: #c6c9d1;" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0">
                      <padding>
                         <Insets left="10.0" right="10.0" />
@@ -73,7 +77,7 @@
                   </Separator>
                   <VBox alignment="CENTER_LEFT" prefHeight="348.0" prefWidth="306.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date" style="-fx-control-inner-background: #364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-text-fill: #c6c9d1#c6c9d1;">
+                        <DatePicker fx:id="dteDatePaid" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="280.0" promptText="Select Date" style="-fx-control-inner-background: #c6c9d1;">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="20.0" top="8.0" />
                            </VBox.margin>

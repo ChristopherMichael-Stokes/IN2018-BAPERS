@@ -163,17 +163,12 @@ public class PaymentServiceImpl implements PaymentService {
         double cost = 0d;        
         //find cost
         //should work but doesnt
-//        cost = job.getJobComponentList().stream()
-//                .map(JobComponent::getComponentTaskList)
-//                .flatMap(jc -> jc.stream())
-//                .map(ct -> ct.getTask().getPrice() / 100d)
-//                .reduce(cost, (a, b) -> a + b);
+        cost = job.getJobComponentList().stream()
+                .map(JobComponent::getComponentTaskList)
+                .flatMap(jc -> jc.stream())
+                .map(ct -> (double)ct.getTask().getPrice())
+                .reduce(cost, (a, b) -> a + b);
         
-        for (JobComponent j : job.getJobComponentList()) {
-            for (ComponentTask t : j.getComponentTaskList()) {
-                cost += t.getTask().getPrice();
-            }
-        }
         //account for urgency
         /*  for some reason, retrieving the deadline from the db gives the 
             actual time minus 1 hr, so add 1  */

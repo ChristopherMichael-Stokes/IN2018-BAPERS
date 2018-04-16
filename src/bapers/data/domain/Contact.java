@@ -31,6 +31,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -61,9 +62,9 @@ public class Contact implements Serializable {
     @Column(name = "mobile")
     private String mobile;
     @JoinColumn(name = "fk_account_number", referencedColumnName = "account_number", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private CustomerAccount customerAccount;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contact")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contact", fetch = FetchType.EAGER)
     private List<Job> jobList;
 
     public Contact() {

@@ -35,6 +35,8 @@ import bapers.data.domain.CustomerAccount;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -68,6 +70,13 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
         account.setAddressList(addressList);
         return account;
     }
+    private CustomerAccount addCustomer_(CustomerAccount account) {        
+        int accounts = customerController.getCustomerAccountCount();
+        customerController.create(account);
+        account = customerController.findCustomerAccountEntities(1, accounts).get(0);
+        
+        return account;
+    }
     
     /**
      *
@@ -75,8 +84,22 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
      * @param address the address of the new customer
      */
     @Override
-    public void addCustomer(CustomerAccount account, Address address){
-        customerController.create(setAddress(account, address));
+    public CustomerAccount addCustomer(CustomerAccount account, String addressLine1, 
+            String postcode, String city) {
+        account = addCustomer_(account);
+        Address address = new Address(addressLine1, postcode, city, account.getAccountNumber());
+                
+        try {
+            customerController.edit(setAddress(account, address));
+            return account;
+        } catch (NonexistentEntityException | IllegalOrphanException ex) {
+            System.err.println("adding address to customer\n"+ex.getMessage());
+            System.exit(-1);
+        } catch (Exception ex) {
+            System.err.println("adding address to customer\n"+ex.getMessage());
+            System.exit(-1);
+        }      
+        return null;
     }
 
     /**
@@ -118,5 +141,18 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
     public void updateAccount(CustomerAccount account) 
             throws IllegalOrphanException, NonexistentEntityException, Exception {
         customerController.edit(account);     
+    }
+
+    @Override
+    public CustomerAccount addCustomer(CustomerAccount account) {
+        return addCustomer_(account);
+    }
+
+    @Override
+    public void modifyAddress(CustomerAccount account, String addressLine2, String region) {
+        Address address = account.getAddressList().get(0);
+        address.setAddressLine2(addressLine2);
+        address.setRegion(region);
+        setAddress(account, address);
     }
 }

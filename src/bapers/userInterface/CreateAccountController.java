@@ -25,11 +25,19 @@
  */
 package bapers.userInterface;
 
+import bapers.data.domain.Address;
+import bapers.data.domain.AddressPK;
+import bapers.data.domain.CustomerAccount;
+import bapers.service.CustomerAccountService;
+import bapers.service.CustomerAccountServiceImpl;
+import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
@@ -59,15 +67,55 @@ public class CreateAccountController implements Initializable {
     private Button btnHome;
     @FXML
     private Button btnCreate;
+    @FXML
+    private Label lblCreateAccount;
+    private CustomerAccountService customerDao = new CustomerAccountServiceImpl();
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        lblCreateAccount.setText("Create Account");
+        btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
+        btnCreate.setOnAction((event) -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setTitle(null);
+            if (isEmpty(txtAccountHolder)) {
+                alert.setContentText("Account Holder cannot be empty!");
+                alert.showAndWait();
+            } else {
+                CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText());
+                if (!isEmpty(txtEmail))
+                    account.setEmail(txtEmail.getText());
+                if (!isEmpty(txtPhone))
+                    account.setLandline(txtPhone.getText());
+                if (!isEmpty(txtAddress1) && !isEmpty(txtCity) && !isEmpty(txtCountry) && !isEmpty(txtPostcode)) {
+                    account = customerDao.addCustomer(account,
+                            txtAddress1.getText(), txtPostcode.getText(),
+                            txtCity.getText());
+
+                    if (!isEmpty(txtAddress2) && !isEmpty(txtCountry)) {
+                        customerDao.modifyAddress(account, txtAddress2.getText(), txtCountry.getText());
+                    }
+                } else {
+                    customerDao.addCustomer(account);
+                }
+                alert.setAlertType(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Customer Account has been created!");
+                alert.showAndWait();
+                switchScene(SceneController.Scenes.home);
+            }
+        });
+
+    }
+
+    private boolean isEmpty(TextField tf) {
+        return tf.getText().trim().equals("");
+    }
+
 }
