@@ -25,11 +25,17 @@
  */
 package bapers.userInterface;
 
+import bapers.service.CustomerAccountService;
+import bapers.service.CustomerAccountServiceImpl;
+import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -44,57 +50,84 @@ import javafx.scene.layout.VBox;
 public class ManageCustomerAccountController implements Initializable {
 
     @FXML
-    private Button btnSearch;
+    private TextField txtVariablePercentage;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private TextField txtRegion;
+    @FXML
+    private TextField txtPrice;
+    @FXML
+    private TextField txtPostCode;
+    @FXML
+    private TextField txtLandline;
+    @FXML
+    private TextField txtFlexiblePercentage;
+    @FXML
+    private TextField txtFixedPercentage;
+    @FXML
+    private TextField txtEmail;
+    @FXML
+    private TextField txtCity;
+    @FXML
+    private TextField AddressLine2;
+    @FXML
+    private TextField AddressLine1;
+    @FXML
+    private TextField txtAccountName;
+    @FXML
+    private ScrollPane scpFlexible;
     @FXML
     private ScrollPane scpAccounts;
     @FXML
-    private ListView<?> lsvAccounts;
+    private RadioButton rbVariable;
+    @FXML
+    private RadioButton rbFlexible;
+    @FXML
+    private RadioButton rbFixed;
+    @FXML
+    private ListView lsvTasks;
+    @FXML
+    private ListView lsvFlexible;
+    @FXML
+    private ListView lsvAccounts;
+    @FXML
+    private Label lblRegion;
+    @FXML
+    private Label lblPostcode;
+    @FXML
+    private Label lblLandline;
+    @FXML
+    private Label lblHomeCustomerAccounts;
+    @FXML
+    private Label lblEmail;
+    @FXML
+    private Label lblCustomerAccounts;
+    @FXML
+    private Label lblCity;
+    @FXML
+    private Label lblAddress2;
+    @FXML
+    private Label lblAddress1;
+    @FXML
+    private Label lblAccountNumber;
+    @FXML
+    private ComboBox cbbVariable;
     @FXML
     private Button btnUpgrade;
     @FXML
-    private Button btnDowngrade;
-    @FXML
-    private Button btnActivateAccount;
+    private Button btnSearch;
     @FXML
     private Button btnRemoveAccount;
     @FXML
     private Button btnHome;
     @FXML
-    private TextField txtAccountName;
-    @FXML
-    private TextField txtEmail;
-    @FXML
-    private TextField txtLandline;
-    @FXML
-    private TextField txtAddressLine1;
-    @FXML
-    private TextField txtAddressLine2;
-    @FXML
-    private TextField txtPostCode;
-    @FXML
-    private TextField txtRegion;
-    @FXML
-    private TextField txtCity;
-    @FXML
-    private RadioButton rbFlexible;
-    @FXML
-    private RadioButton rbVariable;
-    @FXML
-    private ListView<?> lsvTasks;
-    @FXML
-    private TextField txtPrice;
-    @FXML
-    private TextField txtFlexiblePercentage;
-    @FXML
-    private ScrollPane scpFlexible;
-    @FXML
-    private ListView<?> lsvFlexible;
-    @FXML
-    private RadioButton rbFixed;
-    @FXML
-    private TextField txtFixedPercentage;
+    private Button btnDowngrade;
     @FXML
     private Button btnApplyDiscount;
+    @FXML
+    private Button btnActivateAccount;
+    private CustomerAccountService customerAccountServiceDao = new CustomerAccountServiceImpl();
 
     /**
      * Initializes the controller class.
@@ -103,7 +136,31 @@ public class ManageCustomerAccountController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    lblRegion.setText("Region");
+    lblPostcode.setText("Post Code");
+    lblLandline.setText("Landline");
+    lblHomeCustomerAccounts.setText("Home>Customer Accounts");
+    lblEmail.setText("Email");
+    lblCustomerAccounts.setText("Customer Account");
+    lblCity.setText("City");
+    lblAddress2.setText("Address2");
+    lblAddress1.setText("Address1");
+    lblAccountNumber.setText("Account Number");
+    btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
+    btnSearch.setOnAction((event) ->{
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setHeaderText(null);
+    alert.setTitle(null);
+    if(txtSearch.getText().trim().equals(""))
+    {
+        alert.setContentText("Search bar cannot be empty!");
+        alert.showAndWait();
+    }
+    else
+    {
+        
+    }
+    });
     }    
     
 }
