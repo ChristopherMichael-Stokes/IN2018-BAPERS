@@ -60,8 +60,15 @@ public interface CustomerAccountService {
      *
      * @param account the new account to be added
      * @param address the address of the new customer
+     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
-    public void addCustomer(CustomerAccount account, Address address);
+    public CustomerAccount addCustomer(CustomerAccount account, String addressLine1, 
+            String postcode, String city);
+    
+    public CustomerAccount addCustomer(CustomerAccount account);
+    public void modifyAddress(CustomerAccount account, String addressLine2, String region);
+    
 
     /**
      *

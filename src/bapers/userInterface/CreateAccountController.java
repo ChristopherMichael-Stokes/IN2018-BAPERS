@@ -46,7 +46,7 @@ import javafx.scene.control.TextField;
  * @author chris
  */
 public class CreateAccountController implements Initializable {
-    
+
     @FXML
     private TextField txtAccountHolder;
     @FXML
@@ -70,8 +70,10 @@ public class CreateAccountController implements Initializable {
     @FXML
     private Label lblCreateAccount;
     private CustomerAccountService customerDao = new CustomerAccountServiceImpl();
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -80,35 +82,40 @@ public class CreateAccountController implements Initializable {
         lblCreateAccount.setText("Create Account");
         btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
         btnCreate.setOnAction((event) -> {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(null);
-        alert.setTitle(null);
-        if(txtAccountHolder.getText().trim().equals(""))
-        {
-         alert.setContentText("Account Holder cannot be empty!");
-         alert.showAndWait();
-        }
-        else
-        {
-            short s = 0;
-            AddressPK address = new AddressPK(txtAddress1.getText(),txtPostcode.getText(),txtCity.getText(),s);
-            if(!txtAddress2.getText().trim().equals(""))
-            {
-                Address newAddress = new Address(address,txtCountry.getText());
-                newAddress.setAddressLine2(txtAddress2.getText());
-                customerDao.addCustomer(new CustomerAccount(s,txtAccountHolder.getText()),newAddress);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setTitle(null);
+            if (isEmpty(txtAccountHolder)) {
+                alert.setContentText("Account Holder cannot be empty!");
+                alert.showAndWait();
+            } else {
+                CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText());
+                if (!isEmpty(txtEmail))
+                    account.setEmail(txtEmail.getText());
+                if (!isEmpty(txtPhone))
+                    account.setLandline(txtPhone.getText());
+                if (!isEmpty(txtAddress1) && !isEmpty(txtCity) && !isEmpty(txtCountry) && !isEmpty(txtPostcode)) {
+                    account = customerDao.addCustomer(account,
+                            txtAddress1.getText(), txtPostcode.getText(),
+                            txtCity.getText());
+
+                    if (!isEmpty(txtAddress2) && !isEmpty(txtCountry)) {
+                        customerDao.modifyAddress(account, txtAddress2.getText(), txtCountry.getText());
+                    }
+                } else {
+                    customerDao.addCustomer(account);
+                }
+                alert.setAlertType(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Customer Account has been created!");
+                alert.showAndWait();
+                switchScene(SceneController.Scenes.home);
             }
-            else
-            {
-            customerDao.addCustomer(new CustomerAccount(s,txtAccountHolder.getText()),new Address(address,txtCountry.getText()));
-            }
-            alert.setAlertType(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Customer Account has been created!");
-            alert.showAndWait();
-            switchScene(SceneController.Scenes.home);
-        }
         });
-        
-    }    
-    
+
+    }
+
+    private boolean isEmpty(TextField tf) {
+        return tf.getText().trim().equals("");
+    }
+
 }
