@@ -33,8 +33,14 @@ import bapers.data.dataAccess.TaskJpaController;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.ComponentTask;
 import bapers.data.domain.ComponentTaskPK;
+import bapers.data.domain.Contact;
+import bapers.data.domain.CustomerAccount;
+import bapers.data.domain.Job;
 import bapers.data.domain.JobComponent;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,7 +55,36 @@ public class JobServiceImpl implements JobService {
     private final JobComponentJpaController jobComponentController;
     private final ComponentTaskJpaController componentController;
     private final TaskJpaController taskController;
-
+    
+    public boolean jobComplete(Job job) {
+        return job.getJobComponentList().stream().flatMap(jc -> jc.getComponentTaskList().stream())
+            .anyMatch(ct -> ct.getEndTime() == null);        
+    }
+    
+    @Override
+    public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType) {
+        List<Job> jobs = account.getContactList().stream().flatMap(x -> x.getJobList().stream())
+                .collect(Collectors.toList());
+                
+        Predicate<ComponentTask> tempPred;
+        switch(jobType) {
+            default:
+            case all:
+                return FXCollections.observableArrayList(jobs);
+            case complete:
+                tempPred = ct -> ct.getEndTime() == null;
+                break;
+            case incomplete:
+                tempPred = ct -> ct.getEndTime() != null;  
+                break;
+        }
+        Predicate<ComponentTask> p = tempPred;
+        return FXCollections.observableArrayList(jobs.stream().filter(j -> j.getJobComponentList().stream()
+                            .flatMap(jc -> jc.getComponentTaskList().stream())
+                            .anyMatch(p)
+                        ).collect(Collectors.toList()));
+    }
+    
     /**
      *
      */
@@ -102,5 +137,6 @@ public class JobServiceImpl implements JobService {
 //            }
 //        }
     }
+
 
 }
