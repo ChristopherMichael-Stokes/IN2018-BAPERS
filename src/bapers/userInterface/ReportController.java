@@ -25,8 +25,11 @@
  */
 package bapers.userInterface;
 
+import bapers.utility.ReportService;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -76,6 +79,7 @@ public class ReportController implements Initializable {
     @FXML
     private DatePicker dpStartDateIR;
     private final ToggleGroup reportType = new ToggleGroup();
+    private ReportService report;
 
     /**
      * Initializes the controller class.
@@ -84,6 +88,7 @@ public class ReportController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        report = new ReportService();
         lblReports.setText("Reports");
         lblHomeReports.setText("Home>Reports");
         rbIPR.setToggleGroup(reportType);
@@ -138,14 +143,25 @@ public class ReportController implements Initializable {
         if(rbIR.isSelected()){
             if(dpStartDateIR.getValue() == null
                     ||dpEndDateIR.getValue() == null
-                    ||txtAccountNumber.getText().trim().equals(""))
+                    ||txtAccountNumber.getText().trim().equals("")
+              )
             {
                 alert.setContentText("Please fill in all the details!");
                 alert.showAndWait();
             }
-            else
+            else if(dpStartDateIR.getValue().isAfter(dpEndDateIR.getValue())){
+                alert.setContentText("EndDate must older or equals to StartDate!");
+                alert.showAndWait();
+            }
+            else 
             {
-                
+                    System.out.println(dpStartDateIR.getValue());
+                    System.out.println(dpEndDateIR.getValue().toString());
+                try {
+                    report.IndividualReport();
+                } catch (Exception ex) {
+                    Logger.getLogger(ReportController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         else if(rbIPR.isSelected()){
@@ -157,9 +173,14 @@ public class ReportController implements Initializable {
                 alert.setContentText("Please fill in all the details!");
                 alert.showAndWait();
             }
+            else if(dpStartDateIPR.getValue().isAfter(dpEndDateIPR.getValue())){
+                alert.setContentText("EndDate must older or equals to StartDate!");
+                alert.showAndWait();
+            }
             else
             {
-                
+                System.out.println(dpStartDateIPR.getValue());
+                System.out.println(dpEndDateIPR.getValue());
             }
         }
         else if(rbSPR.isSelected()){
@@ -169,9 +190,14 @@ public class ReportController implements Initializable {
                 alert.setContentText("Please fill in all the details!");
                 alert.showAndWait();
             }
+            else if(dpStartDateSPR.getValue().isAfter(dpEndDateSPR.getValue())){
+                alert.setContentText("EndDate must older or equals to StartDate!");
+                alert.showAndWait();
+            }
             else
             {
-                
+                System.out.println(dpStartDateSPR.getValue());
+                System.out.println(dpEndDateSPR.getValue());
             }
         }
         else
