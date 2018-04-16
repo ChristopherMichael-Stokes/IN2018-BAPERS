@@ -48,6 +48,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -107,6 +109,8 @@ public class AddPaymentController implements Initializable {
     
     private final Map<String, CustomerAccount> custMap = new HashMap<>();
     private final Map<CheckBox, Job> jobMap = new HashMap<>();
+    private final ObservableList<CheckBox> jobs = FXCollections.observableArrayList();
+    
     private static final DateFormat DF = new SimpleDateFormat("dd/MM/yyyy");
     private final DecimalFormat strictZeroDecimalFormat  
                 = new DecimalFormat("\u00A3###,###.##");
@@ -150,15 +154,21 @@ public class AddPaymentController implements Initializable {
         //Lists        
         cmbCardType.getItems().addAll("Visa", "MasterCard", "Debit");   
         loadCustomers();
-        
+        lsvJobs.setItems(jobs);
         cmbCustomer.setOnAction((event) -> {
             updatePayment();
-            lsvJobs.autosize();
             jobMap.clear();
-            lsvJobs.getItems().clear();            
-            loadJobs();           
+            jobs.clear();            
+            loadJobs();    
+            updatePayment();
         });
-        
+                
+        jobs.addListener(new ListChangeListener() { 
+            @Override
+            public void onChanged(ListChangeListener.Change c) {
+                lsvJobs.setPrefHeight(jobs.size() * 24 + 2);
+            }
+        });
         //buttons
         btnHome.setOnAction((event) -> switchScene(Scenes.home));
 
@@ -185,7 +195,7 @@ public class AddPaymentController implements Initializable {
             jobMap.forEach((k, v) -> {
                 if (k.isSelected())
                     paidJobs.add(v);
-                lsvJobs.getItems().clear();
+                jobs.clear();
             });
             if (rbCash.isSelected()) {
                 try {//TODO
@@ -258,18 +268,18 @@ public class AddPaymentController implements Initializable {
         ObservableList<Job> unpaidJobs =                
                 paymentDao.getUnpaidJobs(custMap.get(cmbCustomer.getValue()).getAccountNumber());
                
-        lsvJobs.getItems().clear();
+        jobs.clear();
         jobMap.clear();
         for (Job job : unpaidJobs) {
             CheckBox cbox = new CheckBox(DF.format(job.getDateIssued()));
             cbox.setOnAction((event) -> updatePayment());
             jobMap.put(cbox, job);
-            lsvJobs.getItems().add(cbox);
+            jobs.add(cbox);
         }
     }
     
     private void updatePayment() {
-        double cost = lsvJobs.getItems().stream().filter(cb -> cb.isSelected())
+        double cost = jobs.stream().filter(cb -> cb.isSelected())
                     .map(cb -> jobMap.get(cb))
                     .mapToDouble(j -> paymentDao.getJobCost(j.getJobId()))
                     .reduce(0, (a, b) -> a + b);

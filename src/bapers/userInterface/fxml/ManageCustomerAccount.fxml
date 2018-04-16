@@ -18,7 +18,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="723.0" prefWidth="1091.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageCustomerAccountController">
     <stylesheets>
-        <URL value="@/bapers/userInterface/styles/managebackup.css" />
+        <URL value="@/bapers/userInterface/styles/managecustomeraccount.css" />
     </stylesheets>
    <children>
       <BorderPane prefHeight="796.0" prefWidth="1273.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -109,7 +109,7 @@
                <children>
                   <VBox prefHeight="273.0" prefWidth="275.0">
                      <children>
-                        <VBox fx:id="rbFlexible" prefHeight="332.0" prefWidth="275.0">
+                        <VBox fx:id="" prefHeight="332.0" prefWidth="275.0">
                            <children>
                               <RadioButton fx:id="rbVariable" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Variable Discount">
                                  <VBox.margin>
@@ -142,11 +142,7 @@
                         </VBox>
                         <VBox prefHeight="263.0" prefWidth="275.0">
                            <children>
-                              <RadioButton fx:id="rbFlexible" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Flexible Discount">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </RadioButton>
+                              <RadioButton fx:id="rbFlexible" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Flexible Discount" />
                               <HBox>
                                  <children>
                                     <Label text="&gt;">
