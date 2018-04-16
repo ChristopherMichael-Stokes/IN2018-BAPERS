@@ -66,12 +66,12 @@
             <RadioButton fx:id="opt30days" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
             <HBox prefHeight="36.0" prefWidth="330.0">
                <children>
-                  <RadioButton mnemonicParsing="false">
+                  <RadioButton fx:id="optOther" mnemonicParsing="false">
                      <HBox.margin>
                         <Insets top="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <TextField style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
+                  <TextField fx:id="txtOther" promptText="Other" style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
@@ -155,12 +155,12 @@
             <RadioButton fx:id="optthirtydays" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
             <HBox prefHeight="36.0" prefWidth="330.0">
                <children>
-                  <RadioButton mnemonicParsing="false">
+                  <RadioButton fx:id="optOther" mnemonicParsing="false">
                      <HBox.margin>
                         <Insets top="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <TextField style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
+                  <TextField fx:id="txtOther" promptText="Other" style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
