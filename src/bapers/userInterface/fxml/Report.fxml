@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -20,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ReportController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ReportController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/report.css" />
     </stylesheets>
@@ -138,16 +132,11 @@
          </children>
       </VBox>
       <Pane layoutX="130.0" layoutY="431.0" prefHeight="54.0" prefWidth="340.0" />
-      <HBox layoutX="400.0" layoutY="277.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox layoutX="398.0" layoutY="258.0" prefHeight="54.0" prefWidth="102.0">
          <children>
             <Button fx:id="btnConfirm" mnemonicParsing="false" style="-fx-background-color: #4185f2#4185f2;" text="Confirm">
                <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="btnPrint" mnemonicParsing="false" prefHeight="25.0" prefWidth="51.0" style="-fx-background-color: #4185f2#4185f2;" text="Print">
-               <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets />
                </HBox.margin>
             </Button>
          </children>
