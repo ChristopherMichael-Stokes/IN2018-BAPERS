@@ -27,7 +27,14 @@ package bapers.userInterface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -35,6 +42,59 @@ import javafx.fxml.Initializable;
  * @author chris
  */
 public class ManageCustomerAccountController implements Initializable {
+
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private ScrollPane scpAccounts;
+    @FXML
+    private ListView<?> lsvAccounts;
+    @FXML
+    private Button btnUpgrade;
+    @FXML
+    private Button btnDowngrade;
+    @FXML
+    private Button btnActivateAccount;
+    @FXML
+    private Button btnRemoveAccount;
+    @FXML
+    private Button btnHome;
+    @FXML
+    private TextField txtAccountName;
+    @FXML
+    private TextField txtEmail;
+    @FXML
+    private TextField txtLandline;
+    @FXML
+    private TextField txtAddressLine1;
+    @FXML
+    private TextField txtAddressLine2;
+    @FXML
+    private TextField txtPostCode;
+    @FXML
+    private TextField txtRegion;
+    @FXML
+    private TextField txtCity;
+    @FXML
+    private VBox rbFlexible;
+    @FXML
+    private RadioButton rbVariable;
+    @FXML
+    private ListView<?> lsvTasks;
+    @FXML
+    private TextField txtPrice;
+    @FXML
+    private TextField txtFlexiblePercentage;
+    @FXML
+    private ScrollPane scpFlexible;
+    @FXML
+    private ListView<?> lsvFlexible;
+    @FXML
+    private RadioButton rbFixed;
+    @FXML
+    private TextField txtFixedPercentage;
+    @FXML
+    private Button btnApplyDiscount;
 
     /**
      * Initializes the controller class.
