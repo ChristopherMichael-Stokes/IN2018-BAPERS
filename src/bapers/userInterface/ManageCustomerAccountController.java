@@ -25,11 +25,16 @@
  */
 package bapers.userInterface;
 
+import bapers.data.domain.CustomerAccount;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
 import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -90,7 +95,7 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private ListView lsvFlexible;
     @FXML
-    private ListView lsvAccounts;
+    private ListView<CustomerAccount> lsvAccounts;
     @FXML
     private Label lblRegion;
     @FXML
@@ -158,7 +163,17 @@ public class ManageCustomerAccountController implements Initializable {
     }
     else
     {
-        
+        ObservableList<CustomerAccount> searchObserableList;
+        List<CustomerAccount> searchList = new ArrayList<CustomerAccount>();
+        customerAccountServiceDao.getCustomerAccounts().forEach((o) ->
+        {
+            if(o.getAccountHolderName().contains(txtSearch.getText()))
+            {
+                searchList.add(o);
+            }
+        });
+        searchObserableList =FXCollections.observableArrayList(searchList);
+        ListView<CustomerAccount> searchResult = new ListView<>(searchObserableList);
     }
     });
     }    
