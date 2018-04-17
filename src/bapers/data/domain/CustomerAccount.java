@@ -55,7 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "CustomerAccount.findByEmail", query = "SELECT c FROM CustomerAccount c WHERE c.email = :email")
     , @NamedQuery(name = "CustomerAccount.findByAccountHolderName", query = "SELECT c FROM CustomerAccount c WHERE c.accountHolderName = :accountHolderName")
     , @NamedQuery(name = "CustomerAccount.findByLandline", query = "SELECT c FROM CustomerAccount c WHERE c.landline = :landline")
-    , @NamedQuery(name = "CustomerAccount.findByDiscountType", query = "SELECT c FROM CustomerAccount c WHERE c.discountType = :discountType")})
+    , @NamedQuery(name = "CustomerAccount.findByDiscountType", query = "SELECT c FROM CustomerAccount c WHERE c.discountType = :discountType")
+    , @NamedQuery(name = "CustomerAccount.findByLocked", query = "SELECT c FROM CustomerAccount c WHERE c.locked = :locked")})
 public class CustomerAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,6 +74,9 @@ public class CustomerAccount implements Serializable {
     private String landline;
     @Column(name = "discount_type")
     private Short discountType;
+    @Basic(optional = false)
+    @Column(name = "locked")
+    private short locked;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
     private List<Address> addressList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerAccount", fetch = FetchType.EAGER)
@@ -89,9 +93,10 @@ public class CustomerAccount implements Serializable {
         this.accountNumber = accountNumber;
     }
 
-    public CustomerAccount(Short accountNumber, String accountHolderName) {
+    public CustomerAccount(Short accountNumber, String accountHolderName, short locked) {
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
+        this.locked = locked;
     }
 
     public Short getAccountNumber() {
@@ -132,6 +137,14 @@ public class CustomerAccount implements Serializable {
 
     public void setDiscountType(Short discountType) {
         this.discountType = discountType;
+    }
+
+    public short getLocked() {
+        return locked;
+    }
+
+    public void setLocked(short locked) {
+        this.locked = locked;
     }
 
     @XmlTransient
