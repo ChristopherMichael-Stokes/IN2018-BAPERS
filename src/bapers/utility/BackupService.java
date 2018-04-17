@@ -34,10 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.TextFormatter;
 
 /**
  *
@@ -45,12 +41,11 @@ import javafx.scene.control.TextFormatter;
  */
 public class BackupService {
     protected static final String CONNSTR = "--server=root:haddockexecellipsis@localhost";
-    protected static final DateFormat DATE = new SimpleDateFormat("yyyyMMddHHmmss");
+    public static final DateFormat BACKUPDATE = new SimpleDateFormat("yyyyMMddHHmmss");
     protected static final File BACKUP = new File("backups");    
     
     public static void restoreFromBackup(File file) throws IOException {
-        ProcessBuilder pb
-                = new ProcessBuilder("mysqldbimport",
+        ProcessBuilder pb = new ProcessBuilder("mysqldbimport", "-i", "both",
                 CONNSTR, file.getAbsolutePath());
         if (!file.exists())
             throw new IOException("cannot load file");
@@ -58,17 +53,16 @@ public class BackupService {
     }
     
     public static void backup() throws IOException { 
-        ProcessBuilder pb 
-                = new ProcessBuilder("mysqldbexport", 
-                        CONNSTR, "-e", 
-                        "both", "bapers");
+        ProcessBuilder pb = new ProcessBuilder("mysqldbexport", CONNSTR, "-e", 
+                "both", "bapers");
+        
         Process p = pb.start();
         InputStream is = p.getInputStream();
         if (!BACKUP.exists()) {
             BACKUP.mkdir();
         }
         File file = new File(BACKUP.getAbsoluteFile()+"/"
-                +DATE.format(new Date())+".sql");
+                +BACKUPDATE.format(new Date())+".sql");
 //        Date date = DATE.parse(filename here);        
         file.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
