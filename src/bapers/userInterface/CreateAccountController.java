@@ -105,7 +105,7 @@ public class CreateAccountController implements Initializable {
                 } else {
                     customerDao.addCustomer(account);
                 }
-                alert.setAlertType(Alert.AlertType.CONFIRMATION);
+                alert.setAlertType(Alert.AlertType.INFORMATION);
                 alert.setContentText("Customer Account has been created!");
                 alert.showAndWait();
                 switchScene(SceneController.Scenes.home);

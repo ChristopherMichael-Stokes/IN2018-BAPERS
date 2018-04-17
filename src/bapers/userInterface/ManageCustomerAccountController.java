@@ -25,6 +25,7 @@
  */
 package bapers.userInterface;
 
+import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
@@ -33,10 +34,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -75,9 +79,9 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private TextField txtCity;
     @FXML
-    private TextField AddressLine2;
+    private TextField txtAddressLine2;
     @FXML
-    private TextField AddressLine1;
+    private TextField txtAddressLine1;
     @FXML
     private TextField txtAccountName;
     @FXML
@@ -95,7 +99,7 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private ListView lsvFlexible;
     @FXML
-    private ListView<CustomerAccount> lsvAccounts;
+    private ListView lsvAccounts;
     @FXML
     private Label lblRegion;
     @FXML
@@ -115,7 +119,7 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private Label lblAddress1;
     @FXML
-    private Label lblAccountNumber;
+    private Label lblAccountName;
     @FXML
     private ComboBox cbbVariable;
     @FXML
@@ -136,46 +140,88 @@ public class ManageCustomerAccountController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    lblRegion.setText("Region");
-    lblPostcode.setText("Post Code");
-    lblLandline.setText("Landline");
-    lblHomeCustomerAccounts.setText("Home>Customer Accounts");
-    lblEmail.setText("Email");
-    lblCustomerAccounts.setText("Customer Account");
-    lblCity.setText("City");
-    lblAddress2.setText("Address2");
-    lblAddress1.setText("Address1");
-    lblAccountNumber.setText("Account Number");
-    btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
-    btnSearch.setOnAction((event) ->{
-    Alert alert = new Alert(Alert.AlertType.WARNING);
-    alert.setHeaderText(null);
-    alert.setTitle(null);
-    if(txtSearch.getText().trim().equals(""))
-    {
-        alert.setContentText("Search bar cannot be empty!");
-        alert.showAndWait();
-    }
-    else
-    {
-        ObservableList<CustomerAccount> searchObserableList;
-        List<CustomerAccount> searchList = new ArrayList<CustomerAccount>();
-        customerAccountServiceDao.getCustomerAccounts().forEach((o) ->
-        {
-            if(o.getAccountHolderName().contains(txtSearch.getText()))
-            {
-                searchList.add(o);
+        lblRegion.setText("Region");
+        lblPostcode.setText("Post Code");
+        lblLandline.setText("Landline");
+        lblHomeCustomerAccounts.setText("Home>Customer Accounts");
+        lblEmail.setText("Email");
+        lblCustomerAccounts.setText("Customer Account");
+        lblCity.setText("City");
+        lblAddress2.setText("Address2");
+        lblAddress1.setText("Address1");
+        lblAccountName.setText("Account Number");
+        btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
+        btnSearch.setOnAction((event) -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setTitle(null);
+            if (txtSearch.getText().trim().equals("")) {
+                alert.setContentText("Search bar cannot be empty!");
+                alert.showAndWait();
+            } else {
+                ObservableList<String> searchObservableList;
+                List<String> searchList = new ArrayList<String>();
+                customerAccountServiceDao.getCustomerAccounts().forEach((o)
+                        -> {
+                    if (o.getAccountHolderName().contains(txtSearch.getText().trim())) {
+                        searchList.add(o.getAccountHolderName());
+                    }
+                });
+                if (searchList.isEmpty()) {
+                    lsvAccounts.setItems(null);
+                    alert.setContentText("No entry for the word" + "(" + txtSearch.getText() + ")");
+                    alert.showAndWait();
+                } else {
+                    searchObservableList = FXCollections.observableArrayList(searchList);
+                    lsvAccounts.setItems(searchObservableList);
+                    lsvAccounts.setOrientation(Orientation.VERTICAL);
+                }
             }
         });
-        searchObserableList =FXCollections.observableArrayList(searchList);
-        ListView<CustomerAccount> searchResult = new ListView<>(searchObserableList);
+        lsvAccounts.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov, String oldvalue, String newvalue) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o)
+                        -> {
+                    if (o.getAccountHolderName() == ov.getValue()) {
+                        turnAllTextBlank();
+                        getAllText(o);
+                    }
+                });
+            }
+        });
+        
     }
-    });
-    }    
-    
+
+    private void turnAllTextBlank() {
+        txtRegion.clear();
+        txtPostCode.clear();
+        txtCity.clear();
+        txtAddressLine1.clear();
+        txtAddressLine2.clear();
+        txtLandline.clear();
+        txtEmail.clear();
+        txtAccountName.clear();
+
+    }
+
+    private void getAllText(CustomerAccount o) {
+        List<Address> al = o.getAddressList();
+        if (!al.isEmpty()) {
+            txtRegion.setText(al.get(0).getRegion());
+            txtPostCode.setText(al.get(0).getAddressPK().getPostcode());
+            txtCity.setText(al.get(0).getAddressPK().getCity());
+            txtAddressLine1.setText(al.get(0).getAddressPK().getAddressLine1());
+            txtAddressLine2.setText(al.get(0).getAddressLine2());
+        }
+        
+        txtLandline.setText(o.getLandline());
+        txtEmail.setText(o.getEmail());
+        txtAccountName.setText(o.getAccountHolderName());
+    }
 }
