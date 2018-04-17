@@ -31,13 +31,14 @@ import bapers.data.dataAccess.JobComponentJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.TaskJpaController;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.ComponentTask;
 import bapers.data.domain.ComponentTaskPK;
-import bapers.data.domain.Contact;
 import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.Job;
 import bapers.data.domain.JobComponent;
-import java.util.ArrayList;
+import bapers.data.domain.JobComponentPK;
+import bapers.data.domain.Task;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
@@ -56,8 +57,20 @@ public class JobServiceImpl implements JobService {
     private final ComponentTaskJpaController componentController;
     private final TaskJpaController taskController;
     
+    
+    /**
+     *
+     */
+    public JobServiceImpl() {
+        jobController = new JobJpaController(EMF);
+        jobComponentController = new JobComponentJpaController(EMF);
+        taskController = new TaskJpaController(EMF);
+        componentController = new ComponentTaskJpaController(EMF);
+    }
+    
+    @Override
     public boolean jobComplete(Job job) {
-        return job.getJobComponentList().stream().flatMap(jc -> jc.getComponentTaskList().stream())
+        return !job.getJobComponentList().stream().flatMap(jc -> jc.getComponentTaskList().stream())
             .anyMatch(ct -> ct.getEndTime() == null);        
     }
     
@@ -72,10 +85,10 @@ public class JobServiceImpl implements JobService {
             case all:
                 return FXCollections.observableArrayList(jobs);
             case complete:
-                tempPred = ct -> ct.getEndTime() == null;
+                tempPred = ct -> !(ct.getEndTime() == null);
                 break;
             case incomplete:
-                tempPred = ct -> ct.getEndTime() != null;  
+                tempPred = ct -> ct.getEndTime() == null;  
                 break;
         }
         Predicate<ComponentTask> p = tempPred;
@@ -85,16 +98,23 @@ public class JobServiceImpl implements JobService {
                         ).collect(Collectors.toList()));
     }
     
-    /**
-     *
-     */
-    public JobServiceImpl() {
-        jobController = new JobJpaController(EMF);
-        jobComponentController = new JobComponentJpaController(EMF);
-        taskController = new TaskJpaController(EMF);
-        componentController = new ComponentTaskJpaController(EMF);
+    @Override
+    public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception {
+        componentController.edit(ct);
     }
-
+    @Override
+    public boolean taskExists(int taskId) {
+        return taskController.findTask(taskId) != null;
+    }
+    @Override
+    public Task getTask(int taskId) {
+        return taskController.findTask(taskId);
+    }
+    @Override
+    public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException {
+        componentController.destroy(ct.getComponentTaskPK());
+    }
+    
     /**
      * @param taskId
      * @param jobId
@@ -107,6 +127,21 @@ public class JobServiceImpl implements JobService {
         ComponentTask task = componentController.findComponentTask(new ComponentTaskPK(jobId, compId, taskId));
         task.setEndTime(time);
         componentController.edit(task);
+    }
+    @Override
+    public JobComponent getComponent(String componentId, int jobId) {
+        return jobComponentController.findJobComponent(new JobComponentPK(jobId, componentId));
+    }
+    
+    @Override
+    public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) 
+            throws PreexistingEntityException, Exception {
+        t.getComponentTaskList().add(ct);
+        jc.getComponentTaskList().add(ct);
+        ct.setTask(t);
+        ct.setJobComponent(jc);
+        
+        componentController.create(ct);
     }
 
     /**

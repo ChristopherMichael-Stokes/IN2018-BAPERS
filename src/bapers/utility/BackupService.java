@@ -31,26 +31,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.TextFormatter;
 
 /**
  *
  * @author chris
  */
-public abstract class BackupService {
-    
+public class BackupService {
+    protected static final String CONNSTR = "--server=root:haddockexecellipsis@localhost";
     protected static final DateFormat DATE = new SimpleDateFormat("yyyyMMddHHmmss");
     protected static final File BACKUP = new File("backups");    
     
     public static void restoreFromBackup(File file) throws IOException {
-        
+        ProcessBuilder pb
+                = new ProcessBuilder("mysqldbimport",
+                CONNSTR, file.getAbsolutePath());
+        if (!file.exists())
+            throw new IOException("cannot load file");
+        pb.start();
     }
     
     public static void backup() throws IOException { 
         ProcessBuilder pb 
                 = new ProcessBuilder("mysqldbexport", 
-                        "--server=root:haddockexecellipsis@localhost", "-e", 
+                        CONNSTR, "-e", 
                         "both", "bapers");
         Process p = pb.start();
         InputStream is = p.getInputStream();
@@ -62,11 +72,13 @@ public abstract class BackupService {
 //        Date date = DATE.parse(filename here);        
         file.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            for (byte[] buffer = new byte[512]; is.read(buffer) != -1; ) {
-                fos.write(buffer);
+            for (int b; (b = is.read()) != -1; ) {
+                fos.write(b);
             }        
         }        
     }
     
-    public abstract List<File> getBackupList();
+    public static List<File> getBackupList() {
+        return Arrays.asList(BACKUP.listFiles(File::isFile));
+    }
 }

@@ -25,17 +25,47 @@
  */
 package bapers.utility;
 
-import java.io.File;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import javafx.scene.control.TextFormatter;
+import javafx.util.StringConverter;
 
 /**
  *
  * @author chris
  */
-public class BackupServiceImpl extends BackupService {
+public class CurrencyFormat extends TextFormatter<Double> {
+    private static final DecimalFormat strictZeroDecimalFormat  
+                = new DecimalFormat("\u00A3###,###.##");
 
-    @Override
-    public List<File> getBackupList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CurrencyFormat() {
+        super(
+            new StringConverter<Double>() {
+                @Override
+                public String toString(Double value) {
+                    return strictZeroDecimalFormat.format(value);
+                }
+
+                @Override
+                public Double fromString(String string) {
+                    try {
+                        return strictZeroDecimalFormat.parse(string).doubleValue();
+                    } catch (ParseException e) {
+                        return Double.NaN;
+                    }
+                }
+            }, 0d,
+            // change filter rejects text input if it cannot be parsed.
+            change -> {
+                try {
+                    strictZeroDecimalFormat.parse(change.getControlNewText());
+                    return change;
+                } catch (ParseException e) {
+                    return null;
+                }
+            }
+        );      
     }
+    
 }
+

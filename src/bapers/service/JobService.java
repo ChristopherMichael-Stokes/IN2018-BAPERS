@@ -26,9 +26,12 @@
 package bapers.service;
 
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
+import bapers.data.dataAccess.exceptions.PreexistingEntityException;
+import bapers.data.domain.ComponentTask;
 import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.Job;
 import bapers.data.domain.JobComponent;
+import bapers.data.domain.Task;
 import java.util.Date;
 import javafx.collections.ObservableList;
 
@@ -59,7 +62,12 @@ public interface JobService {
     }
     public boolean jobComplete(Job job);
     public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType);
-
+    public boolean taskExists(int taskId);
+    public Task getTask(int taskId);
+    public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException;
+    public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception;
+    public JobComponent getComponent(String componentId, int jobId);
+    public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) throws PreexistingEntityException, Exception;
     /**
      * @param taskId
      * @param jobId

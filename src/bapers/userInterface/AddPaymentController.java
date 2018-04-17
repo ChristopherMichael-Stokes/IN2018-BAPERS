@@ -34,10 +34,10 @@ import bapers.service.PaymentService;
 import bapers.service.PaymentServiceImpl;
 import bapers.userInterface.SceneController.Scenes;
 import static bapers.userInterface.SceneController.switchScene;
+import bapers.utility.CurrencyFormat;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -65,7 +65,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
-import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -74,8 +73,6 @@ import javafx.util.StringConverter;
  */
 public class AddPaymentController implements Initializable {
 
-    @FXML
-    private ScrollPane scpJobs;
     @FXML
     private Button btnHome;
     @FXML
@@ -162,13 +159,7 @@ public class AddPaymentController implements Initializable {
             loadJobs();    
             updatePayment();
         });
-                
-        jobs.addListener(new ListChangeListener() { 
-            @Override
-            public void onChanged(ListChangeListener.Change c) {
-                lsvJobs.setPrefHeight(jobs.size() * 24 + 2);
-            }
-        });
+        
         //buttons
         btnHome.setOnAction((event) -> switchScene(Scenes.home));
 
@@ -299,37 +290,3 @@ public class AddPaymentController implements Initializable {
     }
 }
 
-class CurrencyFormat extends TextFormatter<Double> {
-    private static final DecimalFormat strictZeroDecimalFormat  
-                = new DecimalFormat("\u00A3###,###.##");
-
-    public CurrencyFormat() {
-        super(
-            new StringConverter<Double>() {
-                @Override
-                public String toString(Double value) {
-                    return strictZeroDecimalFormat.format(value);
-                }
-
-                @Override
-                public Double fromString(String string) {
-                    try {
-                        return strictZeroDecimalFormat.parse(string).doubleValue();
-                    } catch (ParseException e) {
-                        return Double.NaN;
-                    }
-                }
-            }, 0d,
-            // change filter rejects text input if it cannot be parsed.
-            change -> {
-                try {
-                    strictZeroDecimalFormat.parse(change.getControlNewText());
-                    return change;
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-        );      
-    }
-    
-}
