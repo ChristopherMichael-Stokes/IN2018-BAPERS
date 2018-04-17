@@ -25,10 +25,67 @@
  */
 package bapers.utility.report;
 
+import javafx.beans.property.SimpleStringProperty;
+
 /**
  *
  * @author EdgarLaw
  */
 public class Shift {
+    private SimpleStringProperty date;
+    private SimpleStringProperty copyRoom;
+    private SimpleStringProperty development;
+    private SimpleStringProperty finishing;
+    private SimpleStringProperty packing;
     
+    public Shift(Object[] resultSet){
+    this.date = new SimpleStringProperty(resultSet[0].toString());
+    this.copyRoom = new SimpleStringProperty(resultSet[1].toString());
+    this.development = new SimpleStringProperty(resultSet[2].toString());
+    this.finishing = new SimpleStringProperty(resultSet[3].toString());
+    this.packing = new SimpleStringProperty(resultSet[4].toString());
+    }
+
+    public String getDate() {
+        return date.get();
+    }
+
+    public void setDate(SimpleStringProperty date) {
+        this.date = date;
+    }
+
+    public String getCopyRoom() {
+        return copyRoom.get();
+    }
+
+    public void setCopyRoom(SimpleStringProperty copyRoom) {
+        this.copyRoom = copyRoom;
+    }
+
+    public String getDevelopment() {
+        return development.get();
+    }
+
+    public void setDevelopment(SimpleStringProperty development) {
+        this.development = development;
+    }
+
+    public String getFinishing() {
+        return finishing.get();
+    }
+
+    public void setFinishing(SimpleStringProperty finishing) {
+        this.finishing = finishing;
+    }
+
+    public String getPacking() {
+        return packing.get();
+    }
+
+    public void setPacking(SimpleStringProperty packing) {
+        this.packing = packing;
+    }
+    
+    
+
 }

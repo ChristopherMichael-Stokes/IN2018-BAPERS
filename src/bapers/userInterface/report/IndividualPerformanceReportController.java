@@ -25,31 +25,59 @@
  */
 package bapers.userInterface.report;
 
+import bapers.utility.report.IndividualPerformanceReport;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * FXML Controller class
  *
  * @author EdgarLaw
  */
-public class IndividualPerformanceReportController implements Initializable {
+public class IndividualPerformanceReportController extends Report<IndividualPerformanceReport> implements Initializable {
 
     @FXML
-    private TableView<?> tblIPR;
+    private TableView<IndividualPerformanceReport> tblIPR;
     @FXML
     private Button btnPrint;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcName;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcTaskID;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcDepartment;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcDate;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcStartTime;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcTimeTaken;
+    @FXML
+    private TableColumn<IndividualPerformanceReport,String> tcTotal;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        tblIPR.setItems(reportList);
+        setTable();
+    }
     
+    private void setTable() {
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcTaskID.setCellValueFactory(new PropertyValueFactory<>("taskID"));
+        tcDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
+        tcDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        tcStartTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        tcTimeTaken.setCellValueFactory(new PropertyValueFactory<>("timeTaken"));
+        tcTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+    }
+
 }

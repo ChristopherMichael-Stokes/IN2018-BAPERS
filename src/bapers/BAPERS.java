@@ -7,6 +7,7 @@ package bapers;
 
 import bapers.data.domain.User;
 import bapers.service.UserServiceImpl;
+import bapers.utility.report.ReportService;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -65,7 +66,9 @@ public class BAPERS extends Application {
     public static void main(String[] args) throws IOException {
         if (!TESTING) {
             launch(args);
-        } else {   
+        } else {
+            new ReportService().getIndividualPerformanceReport("all","2017-12-20","2018-02-01");
+         
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");

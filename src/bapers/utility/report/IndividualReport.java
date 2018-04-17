@@ -25,6 +25,7 @@
  */
 package bapers.utility.report;
 
+import bapers.utility.CurrencyFormat;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TextFormatter;
@@ -34,13 +35,91 @@ import javafx.scene.control.TextFormatter;
  * @author EdgarLaw
  */
 public class IndividualReport {
+
     private final TextFormatter tf = new CurrencyFormat();
-    private Property<String> code;
-    private Property<String> price;
-    
+    private SimpleStringProperty code;
+    private SimpleStringProperty price;
+    private SimpleStringProperty task;
+    private SimpleStringProperty department;
+    private SimpleStringProperty startTime;
+    private SimpleStringProperty timeTaken;
+    private SimpleStringProperty completedBy;
+    private SimpleStringProperty shelfOnCompletion;
+
     public IndividualReport(Object[] resultSet) {
         this.code = new SimpleStringProperty(resultSet[0].toString());
-        int price_ = Integer.parseInt(resultSet[1].toString());
-        this.price = new SimpleStringProperty(tf.getValueConverter().toString(price_));
+        int price_ = Integer.parseInt(resultSet[1].toString()) / 100;
+        this.price = new SimpleStringProperty(tf.getValueConverter().toString((double) price_));
+        this.task = new SimpleStringProperty(resultSet[2].toString());
+        this.department = new SimpleStringProperty(resultSet[3].toString());
+        this.startTime = new SimpleStringProperty(resultSet[4].toString());
+        this.timeTaken = new SimpleStringProperty(resultSet[5].toString());
+        this.completedBy = new SimpleStringProperty(resultSet[6].toString());
+        this.shelfOnCompletion = new SimpleStringProperty(resultSet[7].toString());
     }
+
+    public String getCode() {
+        return code.get();
+    }
+
+    public void setCode(String code) {
+        this.code = new SimpleStringProperty(code);
+    }
+
+    public String getPrice() {
+        return price.get();
+    }
+
+    public void setPrice(double price) {
+        this.price = new SimpleStringProperty(tf.getValueConverter().toString(price / 100));
+    }
+
+    public String getTask() {
+        return task.get();
+    }
+
+    public void setTask(String task) {
+        this.task = new SimpleStringProperty(task);
+    }
+
+    public String getDepartment() {
+        return department.get();
+    }
+
+    public void setDepartment(String department) {
+        this.department = new SimpleStringProperty(department);
+    }
+
+    public String getStartTime() {
+        return startTime.get();
+    }
+
+    public void setStartTime(SimpleStringProperty startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getTimeTaken() {
+        return timeTaken.get();
+    }
+
+    public void setTimeTaken(SimpleStringProperty timeTaken) {
+        this.timeTaken = timeTaken;
+    }
+
+    public String getCompletedBy() {
+        return completedBy.get();
+    }
+
+    public void setCompletedBy(SimpleStringProperty completedBy) {
+        this.completedBy = completedBy;
+    }
+
+    public String getShelfOnCompletion() {
+        return shelfOnCompletion.get();
+    }
+
+    public void setShelfOnCompletion(SimpleStringProperty shelfOnCompletion) {
+        this.shelfOnCompletion = shelfOnCompletion;
+    }
+    
 }

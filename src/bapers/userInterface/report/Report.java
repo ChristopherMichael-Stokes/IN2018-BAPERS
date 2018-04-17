@@ -25,37 +25,38 @@
  */
 package bapers.userInterface.report;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
- * FXML Controller class
  *
  * @author EdgarLaw
  */
-public class SummaryPerformanceReportController implements Initializable {
+public abstract class Report<T> {
 
-    @FXML
-    private TableView<?> tblDayShift1;
-    @FXML
-    private TableView<?> tblDayShift2;
-    @FXML
-    private TableView<?> tblNightShift1;
-    @FXML
-    private TableView<?> tblPeriod;
-    @FXML
-    private Button btnPrint;
+    protected final ObservableList<T> reportList = FXCollections.observableArrayList();
+    protected final ObservableList<T> reportList2 = FXCollections.observableArrayList();
+    protected final ObservableList<T> reportList3 = FXCollections.observableArrayList();
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    public void setItems(List<T> items) {
+        reportList.clear();
+        reportList.addAll(items);
     }
-
+    
+    public void serItems2(List<T> items,List<T> items2) {
+        reportList.clear();
+        reportList.addAll(items);
+        reportList2.clear();
+        reportList2.addAll(items2);
+    }
+    
+    public void serItems2(List<T> items,List<T> items2,List<T> items3) {
+        reportList.clear();
+        reportList.addAll(items);
+        reportList2.clear();
+        reportList2.addAll(items2);
+        reportList3.clear();
+        reportList3.addAll(items3);
+    }
 }
