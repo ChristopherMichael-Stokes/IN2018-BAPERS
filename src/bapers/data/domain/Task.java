@@ -58,7 +58,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t")
     , @NamedQuery(name = "Task.findByTaskId", query = "SELECT t FROM Task t WHERE t.taskId = :taskId")
     , @NamedQuery(name = "Task.findByDescription", query = "SELECT t FROM Task t WHERE t.description = :description")
-    , @NamedQuery(name = "Task.findByLocation", query = "SELECT t FROM Task t WHERE t.location = :location")
     , @NamedQuery(name = "Task.findByShelfSlot", query = "SELECT t FROM Task t WHERE t.shelfSlot = :shelfSlot")
     , @NamedQuery(name = "Task.findByPrice", query = "SELECT t FROM Task t WHERE t.price = :price")
     , @NamedQuery(name = "Task.findByDuration", query = "SELECT t FROM Task t WHERE t.duration = :duration")})
@@ -73,9 +72,6 @@ public class Task implements Serializable {
     @Basic(optional = false)
     @Column(name = "description")
     private String description;
-    @Basic(optional = false)
-    @Column(name = "location")
-    private String location;
     @Basic(optional = false)
     @Column(name = "shelf_slot")
     private String shelfSlot;
@@ -101,10 +97,9 @@ public class Task implements Serializable {
         this.taskId = taskId;
     }
 
-    public Task(Integer taskId, String description, String location, String shelfSlot, int price, Date duration) {
+    public Task(Integer taskId, String description, String shelfSlot, int price, Date duration) {
         this.taskId = taskId;
         this.description = description;
-        this.location = location;
         this.shelfSlot = shelfSlot;
         this.price = price;
         this.duration = duration;
@@ -124,14 +119,6 @@ public class Task implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getShelfSlot() {

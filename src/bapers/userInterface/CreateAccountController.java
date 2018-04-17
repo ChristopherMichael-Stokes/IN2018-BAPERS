@@ -89,7 +89,7 @@ public class CreateAccountController implements Initializable {
                 alert.setContentText("Account Holder cannot be empty!");
                 alert.showAndWait();
             } else {
-                CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText());
+                CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText(), (short) 0);
                 if (!isEmpty(txtEmail))
                     account.setEmail(txtEmail.getText());
                 if (!isEmpty(txtPhone))
