@@ -60,9 +60,10 @@ public class ComponentTaskJpaController implements Serializable {
         if (componentTask.getComponentTaskPK() == null) {
             componentTask.setComponentTaskPK(new ComponentTaskPK());
         }
-        componentTask.getComponentTaskPK().setFkJobId(componentTask.getJobComponent().getJobComponentPK().getFkJobId());
-        componentTask.getComponentTaskPK().setFkComponentId(componentTask.getJobComponent().getJobComponentPK().getComponentId());
         componentTask.getComponentTaskPK().setFkTaskId(componentTask.getTask().getTaskId());
+        componentTask.getComponentTaskPK().setFkComponentId(componentTask.getJobComponent().getJobComponentPK().getComponentId());
+        componentTask.getComponentTaskPK().setFkJobId(componentTask.getJobComponent().getJobComponentPK().getFkJobId());
+        
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -109,9 +110,9 @@ public class ComponentTaskJpaController implements Serializable {
     }
 
     public void edit(ComponentTask componentTask) throws NonexistentEntityException, Exception {
-        componentTask.getComponentTaskPK().setFkJobId(componentTask.getJobComponent().getJobComponentPK().getFkJobId());
-        componentTask.getComponentTaskPK().setFkComponentId(componentTask.getJobComponent().getJobComponentPK().getComponentId());
         componentTask.getComponentTaskPK().setFkTaskId(componentTask.getTask().getTaskId());
+        componentTask.getComponentTaskPK().setFkComponentId(componentTask.getJobComponent().getJobComponentPK().getComponentId());
+        componentTask.getComponentTaskPK().setFkJobId(componentTask.getJobComponent().getJobComponentPK().getFkJobId());
         EntityManager em = null;
         try {
             em = getEntityManager();
