@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -18,8 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.swing.JOptionPane;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.Resource;
@@ -61,7 +65,7 @@ public class BAPERS extends Application {
     public static void main(String[] args) throws IOException {
         if (!TESTING) {
             launch(args);
-        } else {
+        } else {   
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");

@@ -159,7 +159,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private double getFlatCost(Job job) {
-        //TODO - fix
         double cost = 0d;        
         //find cost
         //should work but doesnt
@@ -183,7 +182,6 @@ public class PaymentServiceImpl implements PaymentService {
     public double getJobCost(int jobId) {
         Job job = jobController.findJob(jobId);
         double cost = getFlatCost(job);
-        System.out.println("flat cost "+cost);
         //account for discount plan 
         CustomerAccount account = job.getContact().getCustomerAccount();
         switch(getPlan(account.getDiscountType())) {
