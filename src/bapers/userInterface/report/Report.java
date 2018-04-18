@@ -37,11 +37,14 @@ import javafx.collections.ObservableList;
 public abstract class Report<T> {
 
     protected final ObservableList<T> reportList = FXCollections.observableArrayList();
+    protected T item;
     
     public void setItems(List<T> items) {
         reportList.clear();
         reportList.addAll(items);
     }
+    
+    protected abstract void setTable();
     
     public void setItems(T item) {}
 }

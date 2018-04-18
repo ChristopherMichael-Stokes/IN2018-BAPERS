@@ -32,25 +32,26 @@ import javafx.beans.property.SimpleStringProperty;
  *
  * @author chris
  */
-public class Shift extends TotalShift{
-    
-    private SimpleStringProperty date;
-    
-    public Shift(Object[] resultSet) {
+public class SummaryShift extends TotalShift{
+    private SimpleStringProperty title;
+            
+    public SummaryShift(Object[] resultSet) {
         super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
-        this.date = new SimpleStringProperty(stringResult(resultSet[0]));        
+        title = new SimpleStringProperty(stringResult(resultSet[0]));
     }
 
     private String stringResult(Object o) {
         return o == null ? "No data" : o.toString();
     }
     
-    public String getDate() {
-        return date.get();
+    public String getTitle() {
+        return title.get();
     }
 
-    public void setDate(SimpleStringProperty date) {
-        this.date = date;
+    public void setTitle(SimpleStringProperty title) {
+        this.title = title;
     }
+    
+    
     
 }

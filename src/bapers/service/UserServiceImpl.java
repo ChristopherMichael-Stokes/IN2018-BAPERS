@@ -23,6 +23,14 @@ import javafx.collections.ObservableList;
 public class UserServiceImpl implements UserService {
 
     private final UserJpaController controller;
+    
+    public boolean userExists(String firstName, String surname){
+        return controller.findUserEntities().stream()
+                .filter(u -> (u.getFirstName()+" "+u.getSurname()).equals(firstName+" "+surname))
+                .findAny().isPresent();
+    }
+
+    
 
     /**
      *

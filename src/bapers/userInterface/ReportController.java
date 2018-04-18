@@ -25,16 +25,19 @@
  */
 package bapers.userInterface;
 
-import bapers.userInterface.report.IndividualReportController;
+import bapers.service.UserService;
+import bapers.service.UserServiceImpl;
 import bapers.userInterface.report.Report;
+import bapers.utility.FormUtils;
 import bapers.utility.report.IndividualReport;
+import bapers.utility.report.IprResultSet;
+import bapers.utility.report.ReportService;
 import static bapers.utility.report.ReportService.*;
+import bapers.utility.report.ShiftResultSet;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,6 +50,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.springframework.util.StringUtils;
 
 /**
  * FXML Controller class
@@ -85,10 +90,17 @@ public class ReportController implements Initializable {
     private TextField txtFirstName;
     @FXML
     private DatePicker dpStartDateIR;
-    private final ToggleGroup reportType = new ToggleGroup();
-    private final String uri = "/bapers/userInterface/report/";
     @FXML
     private Button btnHome;
+    @FXML
+    private RadioButton rbAllUsers;
+    @FXML
+    private RadioButton rbUser;
+
+    private final ToggleGroup reportType = new ToggleGroup(),
+            userSelection = new ToggleGroup();
+    private final String uri = "/bapers/userInterface/report/";
+    private final UserService userDao = new UserServiceImpl();
 
     /**
      * Initializes the controller class.
@@ -100,9 +112,23 @@ public class ReportController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         lblReports.setText("Reports");
         lblHomeReports.setText("Home>Reports");
+
+        rbAllUsers.setToggleGroup(userSelection);
+        rbUser.setToggleGroup(userSelection);
         rbIPR.setToggleGroup(reportType);
         rbIR.setToggleGroup(reportType);
         rbSPR.setToggleGroup(reportType);
+        rbUser.setOnAction((event) -> {
+            txtFirstName.setEditable(true);
+            txtSurname.setEditable(true);
+        });
+        rbAllUsers.setOnAction((event) -> {
+            txtFirstName.setEditable(false);
+            txtSurname.setEditable(false);
+        });
+        
+        rbAllUsers.setSelected(true);
+
         txtSurname.setVisible(false);
         txtFirstName.setVisible(false);
         dpStartDateIPR.setVisible(false);
@@ -112,7 +138,11 @@ public class ReportController implements Initializable {
         dpEndDateSPR.setVisible(false);
         dpEndDateIR.setVisible(false);
         txtAccountNumber.setVisible(false);
+        rbAllUsers.setVisible(false);
+        rbUser.setVisible(false);
         rbIPR.setOnAction((event) -> {
+            rbAllUsers.setVisible(true);
+            rbUser.setVisible(true);
             txtSurname.setVisible(true);
             txtFirstName.setVisible(true);
             dpStartDateIPR.setVisible(true);
@@ -133,6 +163,8 @@ public class ReportController implements Initializable {
             dpEndDateSPR.setVisible(true);
             dpEndDateIR.setVisible(false);
             txtAccountNumber.setVisible(false);
+            rbAllUsers.setVisible(false);
+            rbUser.setVisible(false);
         });
         rbIR.setOnAction((event) -> {
             txtSurname.setVisible(false);
@@ -144,6 +176,8 @@ public class ReportController implements Initializable {
             dpEndDateSPR.setVisible(false);
             dpEndDateIR.setVisible(true);
             txtAccountNumber.setVisible(true);
+            rbAllUsers.setVisible(false);
+            rbUser.setVisible(false);
         });
         btnConfirm.setOnAction((event) -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -161,27 +195,46 @@ public class ReportController implements Initializable {
                             = getIndividualReport(txtAccountNumber.getText().trim(),
                                     dpStartDateIR.getValue().toString(),
                                     dpEndDateIR.getValue().toString());
-                    try {
-                        FXMLLoader loader = new FXMLLoader(this.getClass().getResource(uri + "IndividualReport.fxml"));
-                        Stage s = new Stage();
-                        Scene scene = new Scene(loader.load());
-                        s.setScene(scene);
-                        Report r = loader.<IndividualReportController>getController();
-                        r.setItems(irList);
-                        s.showAndWait();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ManageBackupController.class.getName()).log(Level.SEVERE, null, ex);
+
+                    Pair<Report, Stage> report = loadReport("IndividualReport.fxml");
+                    if (report == null) {
+                        FormUtils.haltAlert("Cannot display report");
+                        return;
                     }
+                    report.getKey().setItems(irList);
+                    report.getValue().showAndWait();
                 }
             } else if (rbIPR.isSelected()) {
                 if (dpStartDateIPR.getValue() == null
-                        || dpEndDateIPR.getValue() == null
-                        || txtSurname.getText().trim().equals("")
-                        || txtFirstName.getText().trim().equals("")) {
+                        || dpEndDateIPR.getValue() == null) {
                     alert.setContentText("Please fill in all the details!");
                     alert.showAndWait();
-                } else {
+//                } else if (){
 
+                } else {
+                    String firstName = StringUtils.capitalize(getText(txtFirstName)),
+                            surname = StringUtils.capitalize(getText(txtSurname)),
+                            name = firstName + " " + surname;
+                    if (rbAllUsers.isSelected()) {
+                        name = "all";
+                    } else if (rbUser.isSelected()) {
+                        if (!userDao.userExists(firstName, surname)) {
+                            FormUtils.haltAlert(name + " does not exist in the system");
+                            return;
+                        }
+                    }
+                    IprResultSet iprResult
+                            = ReportService.getIndividualPerformanceReport(
+                                    name, dpStartDateIPR.getValue().toString(),
+                                    dpEndDateIPR.getValue().toString());
+
+                    Pair<Report, Stage> report = loadReport("IndividualPerformanceReport.fxml");
+                    if (report == null) {
+                        FormUtils.haltAlert("Cannot show report");
+                        return;
+                    }
+                    report.getKey().setItems(iprResult);
+                    report.getValue().showAndWait();
                 }
             } else if (rbSPR.isSelected()) {
                 if (dpStartDateSPR.getValue() == null
@@ -189,7 +242,16 @@ public class ReportController implements Initializable {
                     alert.setContentText("Please fill in all the details!");
                     alert.showAndWait();
                 } else {
-
+                    String startDate = dpStartDateSPR.getValue().toString(),
+                            endDate = dpEndDateSPR.getValue().toString();
+                    ShiftResultSet srs = ReportService.getSummaryPerformanceReport(startDate, endDate);
+                    Pair<Report, Stage> report = loadReport("SummaryPerformanceReport.fxml");
+                    if (report == null) {
+                        FormUtils.haltAlert("Cannot show report");
+                        return;
+                    }
+                    report.getKey().setItems(srs);
+                    report.getValue().showAndWait();
                 }
             } else {
                 alert.setContentText("Please Select type for the report!");
@@ -197,5 +259,22 @@ public class ReportController implements Initializable {
             }
         });
 
+    }
+
+    private String getText(TextField tf) {
+        return tf.getText().trim();
+    }
+
+    private <T extends Report> Pair<T, Stage> loadReport(String name) {
+        try {
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource(uri + name));
+            Stage s = new Stage();
+            Scene scene = new Scene(loader.load());
+            s.setScene(scene);
+            T r = loader.<T>getController();
+            return new Pair<>(r, s);
+        } catch (IOException ex) {
+            return null;
+        }
     }
 }

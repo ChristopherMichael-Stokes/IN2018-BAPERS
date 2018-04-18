@@ -73,7 +73,8 @@ public class IndividualReportController extends Report<IndividualReport> impleme
     }
     
 
-    private void setTable() {
+    @Override
+    protected void setTable() {
         tcCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         tcPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         tcTask.setCellValueFactory(new PropertyValueFactory<>("task"));

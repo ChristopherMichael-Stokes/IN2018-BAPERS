@@ -87,6 +87,7 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setTable();
         tblIPR.setItems(tb1);
         tblTotal.setItems(tb2);
         txtTotal.setText(total.toString());
@@ -97,12 +98,14 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
     public void setItems(IprResultSet ir) {
         tb1.clear();
         tb1.addAll(ir.individualEffort);
+        System.out.println(tb1.size());
         tb2.clear();
         tb2.addAll(ir.totalIndividualEffort);
         txtTotal.setText(ir.totalOverallEffort);
     }
 
-    private void setTable() {
+    @Override
+    protected void setTable() {
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         tcTaskID.setCellValueFactory(new PropertyValueFactory<>("taskID"));

@@ -25,32 +25,42 @@
  */
 package bapers.utility.report;
 
-import java.util.Arrays;
-import javafx.beans.property.SimpleStringProperty;
-
+import java.util.List;
+import java.util.stream.Collectors;
 /**
  *
  * @author chris
  */
-public class Shift extends TotalShift{
+public class ShiftResultSet {
     
-    private SimpleStringProperty date;
+    public final List<Shift> dayShift1, dayShift2, nightShift;
+    public final TotalShift dayShift1Total, dayShift2Total, nightShiftTotal, 
+            summaryShiftTotal;
+    public final List<SummaryShift> summaryShift;
     
-    public Shift(Object[] resultSet) {
-        super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
-        this.date = new SimpleStringProperty(stringResult(resultSet[0]));        
-    }
+    public ShiftResultSet(List<Object[]> dayShift1, List<Object[]> dayShift2, 
+            List<Object[]> nightShift, Object[] dayShift1Total, 
+            Object[] dayShift2Total, Object[] nightShiftTotal,
+            List<Object[]> summaryShift, Object[] summaryShiftTotal) {
+        this.dayShift1 = shift(dayShift1);
+        this.dayShift2 = shift(dayShift1);
+        this.dayShift1Total = total(dayShift1Total);
+        this.dayShift2Total = total(dayShift2Total);
+        this.nightShift = shift(nightShift);
+        this.nightShiftTotal = total(nightShiftTotal);
+        this.summaryShiftTotal = total(summaryShiftTotal);
+        this.summaryShift = summaryShift.stream().map(SummaryShift::new).collect(Collectors.toList());
 
-    private String stringResult(Object o) {
-        return o == null ? "No data" : o.toString();
+    }
+    private List<Shift> shift(List<Object[]> list) {
+        return list.stream().map(Shift::new).collect(Collectors.toList());
     }
     
-    public String getDate() {
-        return date.get();
+    private TotalShift total(Object[] array) {
+        return new TotalShift(array);
     }
-
-    public void setDate(SimpleStringProperty date) {
-        this.date = date;
-    }
+    
+    
+    
     
 }

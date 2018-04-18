@@ -70,6 +70,7 @@ public class BAPERS extends Application {
     public static void main(String[] args) throws IOException {
         intervals = Intervals.readIntervals();
         
+        //figures out when to automatically backup
         backupTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -78,13 +79,12 @@ public class BAPERS extends Application {
                     long nextBackup = backupIntervals.getLastSet().getTime()
                             + backupIntervals.getMilliseconds();
                     if (new Date().getTime() > nextBackup) {
-                        System.out.println("next: "+new Date(nextBackup)+"\nnow: "+new Date());
                         BackupService.backup();
                         System.err.println("backup set");
                         intervals.setBackupGenerated();                        
                     }
                     try {
-                        Thread.sleep(60_000);
+                        Thread.sleep(1000);
                     } catch(InterruptedException ex) {
                         break;
                     }
