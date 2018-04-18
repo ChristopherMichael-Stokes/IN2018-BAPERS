@@ -30,6 +30,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
@@ -44,11 +46,49 @@ public class SummaryPerformanceReportController implements Initializable {
     @FXML
     private TableView<?> tblDayShift2;
     @FXML
-    private TableView<?> tblNightShift1;
-    @FXML
     private TableView<?> tblPeriod;
     @FXML
     private Button btnPrint;
+    @FXML
+    private Label lblSPR;
+    @FXML
+    private Label lblDayshift1;
+    @FXML
+    private TableColumn<?, ?> tcDate;
+    @FXML
+    private TableColumn<?, ?> tcCopyRoom;
+    @FXML
+    private TableColumn<?, ?> tcDevelopment;
+    @FXML
+    private TableColumn<?, ?> tcFinishing;
+    @FXML
+    private TableColumn<?, ?> tcPacking;
+    @FXML
+    private Label lblDayShift2;
+    @FXML
+    private Label lblNightShift;
+    @FXML
+    private TableView<?> tblNightShift;
+    @FXML
+    private TableColumn<?, ?> tcTitle;
+    @FXML
+    private Label lblDayShift1Total;
+    @FXML
+    private TableView<?> tblDayShift1Total;
+    @FXML
+    private Label lblDayShift2Total;
+    @FXML
+    private TableView<?> tblDayShift2Total;
+    @FXML
+    private Label lblNightShiftTotal;
+    @FXML
+    private TableView<?> tblNightShiftTotal;
+    @FXML
+    private Label lblSPRTotal;
+    @FXML
+    private TableView<?> tblPeriodTotal;
+    @FXML
+    private TableColumn<?, ?> tcFinshing;
 
     /**
      * Initializes the controller class.

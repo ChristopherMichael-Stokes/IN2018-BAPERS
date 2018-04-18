@@ -26,13 +26,22 @@
 package bapers.userInterface.report;
 
 import bapers.utility.report.IndividualPerformanceReport;
+import bapers.utility.report.IprResultSet;
+import bapers.utility.report.IprTotalIndividual;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -40,44 +49,70 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author EdgarLaw
  */
-public class IndividualPerformanceReportController extends Report<IndividualPerformanceReport> implements Initializable {
+public class IndividualPerformanceReportController extends Report<IprResultSet> implements Initializable {
 
     @FXML
     private TableView<IndividualPerformanceReport> tblIPR;
     @FXML
     private Button btnPrint;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcName;
+    private TableColumn<IndividualPerformanceReport, String> tcName;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcTaskID;
+    private TableColumn<IndividualPerformanceReport, String> tcCode;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcDepartment;
+    private TableColumn<IndividualPerformanceReport, String> tcTaskID;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcDate;
+    private TableColumn<IndividualPerformanceReport, String> tcDepartment;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcStartTime;
+    private TableColumn<IndividualPerformanceReport, String> tcDate;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcTimeTaken;
+    private TableColumn<IndividualPerformanceReport, String> tcStartTime;
     @FXML
-    private TableColumn<IndividualPerformanceReport,String> tcTotal;
+    private TableColumn<IndividualPerformanceReport, String> tcTimeTaken;
+    @FXML
+    private TableColumn<IprTotalIndividual, String> tcTotalName;
+    @FXML
+    private TableColumn<IprTotalIndividual, String> tcTotalIndiviudalEffort;
+    @FXML
+    private TextField txtTotal;
+    @FXML
+    private TableView<IprTotalIndividual> tblTotal;
+
+    private ObservableList<IndividualPerformanceReport> tb1 = FXCollections.observableArrayList();
+    private ObservableList<IprTotalIndividual> tb2 = FXCollections.observableArrayList();
+    private ObservableIntegerValue total = new SimpleIntegerProperty(0);
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tblIPR.setItems(reportList);
-        setTable();
+        tblIPR.setItems(tb1);
+        tblTotal.setItems(tb2);
+        txtTotal.setText(total.toString());
+        txtTotal.setEditable(false);
     }
-    
+
+    @Override
+    public void setItems(IprResultSet ir) {
+        tb1.clear();
+        tb1.addAll(ir.individualEffort);
+        tb2.clear();
+        tb2.addAll(ir.totalIndividualEffort);
+        txtTotal.setText(ir.totalOverallEffort);
+    }
+
     private void setTable() {
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcCode.setCellValueFactory(new PropertyValueFactory<>("code"));
         tcTaskID.setCellValueFactory(new PropertyValueFactory<>("taskID"));
         tcDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
         tcDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tcStartTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         tcTimeTaken.setCellValueFactory(new PropertyValueFactory<>("timeTaken"));
-        tcTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        
+        tcTotalIndiviudalEffort.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getTime()));
+        tcTotalName.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
     }
 
 }

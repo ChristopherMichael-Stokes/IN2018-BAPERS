@@ -32,18 +32,19 @@ import javafx.beans.property.SimpleStringProperty;
  * @author EdgarLaw
  */
 public class Shift {
+
     private SimpleStringProperty date;
     private SimpleStringProperty copyRoom;
     private SimpleStringProperty development;
     private SimpleStringProperty finishing;
     private SimpleStringProperty packing;
-    
-    public Shift(Object[] resultSet){
-    this.date = new SimpleStringProperty(resultSet[0].toString());
-    this.copyRoom = new SimpleStringProperty(resultSet[1].toString());
-    this.development = new SimpleStringProperty(resultSet[2].toString());
-    this.finishing = new SimpleStringProperty(resultSet[3].toString());
-    this.packing = new SimpleStringProperty(resultSet[4].toString());
+
+    public Shift(Object[] resultSet) {
+        this.date = new SimpleStringProperty(resultSet[0].toString());
+        this.copyRoom = new SimpleStringProperty(resultSet[1].toString());
+        this.development = new SimpleStringProperty(resultSet[2].toString());
+        this.finishing = new SimpleStringProperty(resultSet[3].toString());
+        this.packing = new SimpleStringProperty(resultSet[4].toString());
     }
 
     public String getDate() {
@@ -85,7 +86,5 @@ public class Shift {
     public void setPacking(SimpleStringProperty packing) {
         this.packing = packing;
     }
-    
-    
 
 }

@@ -54,11 +54,11 @@ public class ReportService {
         query.execute();
 
         List<Object[]> rs = query.getResultList();
-        return rs.stream().map(o -> new IndividualReport(o))
+        return rs.stream().map(IndividualReport::new)
                 .collect(Collectors.toList());
     }
 
-    public static List<IndividualPerformanceReport> getIndividualPerformanceReport(String name, String date_start, String date_end) {
+    public static IprResultSet getIndividualPerformanceReport(String name, String date_start, String date_end) {
         StoredProcedureQuery query = EM.createStoredProcedureQuery("ipr")
                 .registerStoredProcedureParameter("ID", char[].class, ParameterMode.IN)
                 .registerStoredProcedureParameter("date_start", char[].class, ParameterMode.IN)
@@ -69,24 +69,8 @@ public class ReportService {
         boolean isResultSet = query.execute(); // returns true when we have a result set from the proc
         List<Object[]> results1 = query.getResultList(); // get the first result set
         List<Object[]> results2 = query.getResultList(); // get the second result set
-        List<Object[]> results3 = query.getResultList();
+        Object results3 = query.getSingleResult();      
         
-
-        //List<Object[]> rs = query.getResultList();
-        //rs.forEach((o) -> {
-          //  System.out.println(Arrays.asList(o).toString());
-        //});
-        results1.forEach((o) -> {
-            System.out.println(Arrays.asList(o).toString());
-        });
-        results2.forEach((o) -> {
-            System.out.println(Arrays.asList(o).toString());
-        });
-        results3.forEach((o) -> {
-            System.out.println(Arrays.asList(o).toString());
-        });
-        return results1.stream().map(o -> new IndividualPerformanceReport(o))
-                .collect(Collectors.toList());
-
+        return new IprResultSet(results1, results2, results3);
     }
 }

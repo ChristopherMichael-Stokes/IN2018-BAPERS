@@ -26,13 +26,8 @@
 package bapers.userInterface.report;
 
 import bapers.utility.report.IndividualReport;
-import bapers.utility.report.ReportService;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -76,6 +71,7 @@ public class IndividualReportController extends Report<IndividualReport> impleme
         tblIR.setItems(reportList);
         setTable();
     }
+    
 
     private void setTable() {
         tcCode.setCellValueFactory(new PropertyValueFactory<>("code"));
