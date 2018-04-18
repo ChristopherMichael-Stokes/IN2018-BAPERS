@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -73,6 +74,7 @@ public class BackupService {
     }
     
     public static List<File> getBackupList() {
-        return Arrays.asList(BACKUP.listFiles(File::isFile));
+        File[] files = BACKUP.listFiles(File::isFile);
+        return files == null ? new ArrayList() : Arrays.asList(files);
     }
 }
