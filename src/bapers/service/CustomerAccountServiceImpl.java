@@ -155,4 +155,15 @@ public class CustomerAccountServiceImpl implements CustomerAccountService{
         address.setRegion(region);
         setAddress(account, address);
     }
+    
+    @Override
+    public CustomerAccount setAccountActive(CustomerAccount ca ,boolean active){
+        if(active){
+        ca.setLocked((short)0);
+        }
+        if(!active){
+            ca.setLocked((short)1);
+        }
+        return ca;
+    }
 }
