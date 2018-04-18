@@ -66,7 +66,6 @@ public class ReportService {
         query.setParameter("ID", name.toCharArray());
         query.setParameter("date_start", date_start.toCharArray());
         query.setParameter("date_end", date_end.toCharArray());
-
         boolean isResultSet = query.execute(); // returns true when we have a result set from the proc
         List<Object[]> results1 = query.getResultList(); // get the first result set
         List<Object[]> results2 = query.getResultList(); // get the second result set
