@@ -25,6 +25,8 @@
  */
 package bapers.userInterface;
 
+import static bapers.BAPERS.EMF;
+import bapers.data.dataAccess.AddressJpaController;
 import bapers.data.domain.Address;
 import bapers.data.domain.AddressPK;
 import bapers.data.domain.CustomerAccount;
@@ -33,6 +35,8 @@ import bapers.service.CustomerAccountServiceImpl;
 import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -70,6 +74,7 @@ public class CreateAccountController implements Initializable {
     @FXML
     private Label lblCreateAccount;
     private CustomerAccountService customerDao = new CustomerAccountServiceImpl();
+    private AddressJpaController addressJpa = new AddressJpaController(EMF);
 
     /**
      * Initializes the controller class.
@@ -90,19 +95,35 @@ public class CreateAccountController implements Initializable {
                 alert.showAndWait();
             } else {
                 CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText(), (short) 0);
+                Address address = new Address();
+                AddressPK addressPK = new AddressPK();
                 if (!isEmpty(txtEmail))
                     account.setEmail(txtEmail.getText());
                 if (!isEmpty(txtPhone))
                     account.setLandline(txtPhone.getText());
                 if (!isEmpty(txtAddress1) && !isEmpty(txtCity) && !isEmpty(txtCountry) && !isEmpty(txtPostcode)) {
-                    account = customerDao.addCustomer(account,
-                            txtAddress1.getText(), txtPostcode.getText(),
-                            txtCity.getText());
+                    addressPK.setAddressLine1(txtAddress1.getText());
+                    addressPK.setCity(txtCity.getText());
+                    addressPK.setPostcode(txtPostcode.getText());
+                    address.setAddressPK(addressPK);
 
                     if (!isEmpty(txtAddress2) && !isEmpty(txtCountry)) {
-                        customerDao.modifyAddress(account, txtAddress2.getText(), txtCountry.getText());
+                       address.setAddressLine2(txtAddress2.getText());
+                       address.setRegion(txtCountry.getText()); 
+                    }
+                    customerDao.addCustomer(account);
+                    address.setCustomerAccount(account);
+                    try {
+                        addressJpa.create(address);
+                    } catch (Exception ex) {
+                        Logger.getLogger(CreateAccountController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
+                    try {
+                        addressJpa.create(address);
+                    } catch (Exception ex) {
+                        Logger.getLogger(CreateAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     customerDao.addCustomer(account);
                 }
                 alert.setAlertType(Alert.AlertType.INFORMATION);

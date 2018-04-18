@@ -187,6 +187,9 @@ public class ManageCustomerAccountController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
         rbFixed.setToggleGroup(discountType);
         rbVariable.setToggleGroup(discountType);
         rbFlexible.setToggleGroup(discountType);
@@ -205,9 +208,6 @@ public class ManageCustomerAccountController implements Initializable {
         lblAccountName.setText("Account Number");
         btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
         btnSearch.setOnAction((event) -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setTitle(null);
             if (txtSearch.getText().trim().equals("")) {
                 alert.setContentText("Search bar cannot be empty!");
                 alert.showAndWait();
@@ -230,8 +230,7 @@ public class ManageCustomerAccountController implements Initializable {
                     turnAllTextBlank();
                     editAccount = -1;
                     surname = null;
-                    
-                    
+
                 } else {
                     searchObservableList = FXCollections.observableArrayList(searchList);
                     lsvAccounts.setItems(searchObservableList);
@@ -256,53 +255,87 @@ public class ManageCustomerAccountController implements Initializable {
             public void changed(ObservableValue<? extends String> ov, String oldvalue, String newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o)
                         -> {
-                    o.getContactList().forEach((oC)->{
+                    o.getContactList().forEach((oC) -> {
                         System.out.println(ov.getValue());
                         System.out.println(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue()));
-                        if(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue())){
+                        if (oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue())) {
                             getContact(oC);
                             surname = oC.getContactPK().getSurname();
                         }
-                        });
-                    
+                    });
+
                 });
             }
         });
         ObservableList<Integer> taskIDOList;
         List<Integer> taskIDList = new ArrayList<Integer>();
-        taskServiceDao.getTasks().forEach((o)->{taskIDList.add(o.getTaskId());});
+        taskServiceDao.getTasks().forEach((o) -> {
+            taskIDList.add(o.getTaskId());
+        });
         taskIDOList = FXCollections.observableArrayList(taskIDList);
         cbbVariable.setItems(taskIDOList);
-        btnUpdateDetails.setOnAction((event)->{
-        if(lsvAccounts.getItems() == null || editAccount == -1)
-        {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setTitle(null);
-            alert.setContentText("You need to select a customer account!");
-            alert.showAndWait();
-        }
-        else
-        {
-            customerAccountServiceDao.getCustomerAccounts().forEach((o)->{
-            if(o.getAccountNumber() == editAccount && !txtAddressLine1.getText().isEmpty()){
-                AddressPK addressPK = new AddressPK();
-                addressPK.setAddressLine1(txtAddressLine1.getText());
-                addressPK.setCity(txtCity.getText());
-                addressPK.setPostcode(txtPostCode.getText());
-                Address address = new Address(addressPK);
-                address.setRegion(txtRegion.getText());
-                address.setCustomerAccount(o);
-                try {
-                    addressController.create(address);
-                } catch (Exception ex) {
-                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+        btnUpdateDetails.setOnAction((event) -> {
+            if (lsvAccounts.getItems() == null || editAccount == -1) {
+               
+                alert.setContentText("You need to select a customer account!");
+                alert.showAndWait();
+            } else {
+
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount && !haveAddress(o)) {
+                        if (finishAddress()) {
+                            AddressPK addressPK = new AddressPK();
+                            addressPK.setAddressLine1(txtAddressLine1.getText());
+                            addressPK.setCity(txtCity.getText());
+                            addressPK.setPostcode(txtPostCode.getText());
+                            Address address = new Address(addressPK);
+                            address.setRegion(txtRegion.getText());
+                            address.setAddressLine2(txtAddressLine2.getText());
+                            address.setCustomerAccount(o);
+                            try {
+                                addressController.create(address);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } else {
+
+                            if (!finishAddress()) {
+
+                                alert.setContentText("Please fill in every details for address!");
+                                alert.showAndWait();
+                            }
+
+                        }
+                    } else if (haveAddress(o) && o.getAccountNumber() == editAccount) {
+                        if (!finishAddress()) {
+                            alert.setContentText("Please fill in every details for address!");
+                            alert.showAndWait();
+                        } else {
+                            AddressPK addressPK = new AddressPK();
+                            addressPK.setAddressLine1(txtAddressLine1.getText());
+                            addressPK.setCity(txtCity.getText());
+                            addressPK.setPostcode(txtPostCode.getText());
+                            Address address = new Address();
+                            address.setAddressPK(addressPK);
+                            address.setRegion(txtRegion.getText());
+                            address.setAddressLine2(txtAddressLine2.getText());
+                            address.setCustomerAccount(o);
+                            try {
+                                addressController.destroy(o.getAddressList().get(0).getAddressPK());
+                                addressController.create(address);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                });
+
             }
-            });
-            
-        }
+
         });
+
     }
 
     private void turnAllTextBlank() {
@@ -335,18 +368,47 @@ public class ManageCustomerAccountController implements Initializable {
         txtAccountName.setText(o.getAccountHolderName());
         ObservableList<String> contactObservableList;
         List<String> contactList = new ArrayList<String>();
-        o.getContactList().forEach((oC)->{
+        o.getContactList().forEach((oC) -> {
             contactList.add(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()));
         });
         contactObservableList = FXCollections.observableArrayList(contactList);
         lvContact.setItems(contactObservableList);
     }
-    
+
     private void getContact(Contact o) {
         txtFirstName.setText(o.getContactPK().getForename());
         txtSurname.setText(o.getContactPK().getSurname());
         txtMobile.setText(o.getMobile());
+
+    }
+
+    private boolean isEmpty(TextField tf) {
+        return tf.getText().trim().equals("");
+    }
+
+    private boolean haveAddress(CustomerAccount o) {
+        return !o.getAddressList().isEmpty();
+    }
+    
+    private boolean finishAddress(){
+        if(isEmpty(txtAddressLine1)){
+            return false;
+        }
+        if(isEmpty(txtCity)){
+            return false;
+        }
+        if(isEmpty(txtPostCode)){
+            return false;
+        }
+        if(isEmpty(txtRegion)){
+            return false;
+        }
+        else{
+            return true;
+        }
+           
+            
         
     }
-        
+
 }
