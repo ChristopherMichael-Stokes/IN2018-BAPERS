@@ -105,7 +105,11 @@ public class ManageIntervalsController implements Initializable {
             } else if (rbDatabase.isSelected()) {
                 Intervals.setMainBackupIntervals(new Times(days_, hours_, minutes_));
             }
-            
+            haltAlert("Intervals set");
+            cmbDays.getSelectionModel().clearSelection();
+            cmbHours.getSelectionModel().clearSelection();
+            cmbMinutes.getSelectionModel().clearSelection();
+
         });
     }    
     

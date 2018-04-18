@@ -32,31 +32,16 @@ import javafx.collections.ObservableList;
 /**
  *
  * @author EdgarLaw
+ * @param <T> type of report
  */
 public abstract class Report<T> {
 
     protected final ObservableList<T> reportList = FXCollections.observableArrayList();
-    protected final ObservableList<T> reportList2 = FXCollections.observableArrayList();
-    protected final ObservableList<T> reportList3 = FXCollections.observableArrayList();
-
+    
     public void setItems(List<T> items) {
         reportList.clear();
         reportList.addAll(items);
     }
     
-    public void serItems2(List<T> items,List<T> items2) {
-        reportList.clear();
-        reportList.addAll(items);
-        reportList2.clear();
-        reportList2.addAll(items2);
-    }
-    
-    public void serItems2(List<T> items,List<T> items2,List<T> items3) {
-        reportList.clear();
-        reportList.addAll(items);
-        reportList2.clear();
-        reportList2.addAll(items2);
-        reportList3.clear();
-        reportList3.addAll(items3);
-    }
+    public void setItems(T item) {}
 }

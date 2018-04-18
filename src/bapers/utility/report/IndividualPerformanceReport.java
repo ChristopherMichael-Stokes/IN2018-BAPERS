@@ -32,6 +32,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author EdgarLaw
  */
 public class IndividualPerformanceReport {
+
     private SimpleStringProperty name;
     private SimpleStringProperty code;
     private SimpleStringProperty taskID;
@@ -39,33 +40,20 @@ public class IndividualPerformanceReport {
     private SimpleStringProperty date;
     private SimpleStringProperty startTime;
     private SimpleStringProperty timeTaken;
-    private SimpleStringProperty total;
-    private SimpleStringProperty individualEffort;
-    
-    public IndividualPerformanceReport(Object[] resultSet){
-        if(resultSet.length >7){
-        this.name = new SimpleStringProperty(resultSet[0].toString());
-        this.code = new SimpleStringProperty(resultSet[1].toString());
-        this.taskID = new SimpleStringProperty(resultSet[2].toString());
-        this.department = new SimpleStringProperty(resultSet[3].toString());
-        this.date = new SimpleStringProperty(resultSet[4].toString());
-        this.startTime = new SimpleStringProperty(resultSet[5].toString());
-        this.timeTaken = new SimpleStringProperty(resultSet[6].toString());
-        this.total = new SimpleStringProperty(resultSet[7].toString());
-        }
-        else{
+
+    public IndividualPerformanceReport(Object[] resultSet) {
+        if (!(resultSet.length < 7)) {
             this.name = new SimpleStringProperty(resultSet[0].toString());
-            this.individualEffort = new SimpleStringProperty(resultSet[1].toString());
+            this.code = new SimpleStringProperty(resultSet[1].toString());
+            this.taskID = new SimpleStringProperty(resultSet[2].toString());
+            this.department = new SimpleStringProperty(resultSet[3].toString());
+            this.date = new SimpleStringProperty(resultSet[4].toString());
+            this.startTime = new SimpleStringProperty(resultSet[5].toString());
+            this.timeTaken = new SimpleStringProperty(resultSet[6].toString());
         }
     }
 
-    public String getIndividualEffort() {
-        return individualEffort.get();
-    }
-
-    public void setIndividualEffort(SimpleStringProperty individualEffort) {
-        this.individualEffort = individualEffort;
-    }
+    
 
     public String getName() {
         return name.get();
@@ -122,15 +110,5 @@ public class IndividualPerformanceReport {
     public void setTimeTaken(SimpleStringProperty timeTaken) {
         this.timeTaken = timeTaken;
     }
-
-    public String getTotal() {
-        return total.get();
-    }
-
-    public void setTotal(SimpleStringProperty total) {
-        this.total = total;
-    }
-    
-    
 
 }

@@ -26,7 +26,6 @@
 package bapers.utility.report;
 
 import bapers.utility.CurrencyFormat;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TextFormatter;
 
