@@ -10,16 +10,18 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="844.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.PlaceOrderController">
+<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="844.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.PlaceOrderController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/placeorder.css" />
     </stylesheets>
    <children>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" />
       <VBox layoutX="-3.0" layoutY="-3.0" prefHeight="91.0" prefWidth="853.0">
          <children>
             <Separator prefWidth="200.0">

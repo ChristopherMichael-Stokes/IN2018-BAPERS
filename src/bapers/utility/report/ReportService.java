@@ -69,8 +69,39 @@ public class ReportService {
         boolean isResultSet = query.execute(); // returns true when we have a result set from the proc
         List<Object[]> results1 = query.getResultList(); // get the first result set
         List<Object[]> results2 = query.getResultList(); // get the second result set
-        Object results3 = query.getSingleResult();      
+        Object results3 = ((Object[]) query.getSingleResult())[0];
         
         return new IprResultSet(results1, results2, results3);
+    }
+    
+    public static ShiftResultSet getSummaryPerformanceReport(String startDate, String endDate) {
+        StoredProcedureQuery dayShift1_ = getShiftQuery("day_shift1", startDate, endDate);
+        StoredProcedureQuery dayShift2_ = getShiftQuery("day_shift2", startDate, endDate);
+        StoredProcedureQuery nightShift_ = getShiftQuery("night_shift", startDate, endDate);
+        StoredProcedureQuery summaryShift_ = getShiftQuery("summary", startDate, endDate);
+        
+        List<Object[]> dayShift1 = dayShift1_.getResultList(),
+                dayShift2 = dayShift2_.getResultList(),
+                nightShift = nightShift_.getResultList(),
+                summaryShift = summaryShift_.getResultList();
+        
+        Object[] dayShift1Total = (Object[])dayShift1_.getSingleResult(),
+                dayShift2Total = (Object[])dayShift2_.getSingleResult(),
+                nightShiftTotal = (Object[])nightShift_.getSingleResult(),
+                summaryShiftTotal = (Object[])summaryShift_.getSingleResult();
+        
+        return new ShiftResultSet(dayShift1, dayShift2, nightShift, dayShift1Total,
+                dayShift2Total, nightShiftTotal, summaryShift, summaryShiftTotal);
+        
+    }
+    
+    
+    private static StoredProcedureQuery getShiftQuery(String type, String startDate, String endDate) {
+        StoredProcedureQuery query = EM.createStoredProcedureQuery(type)
+                .registerStoredProcedureParameter("date_start", char[].class, ParameterMode.IN)
+                .registerStoredProcedureParameter("date_end", char[].class, ParameterMode.IN);
+        query.setParameter("date_start", startDate.toCharArray());
+        query.setParameter("date_end", endDate.toCharArray());
+        return query;
     }
 }
