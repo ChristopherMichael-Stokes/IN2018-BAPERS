@@ -96,12 +96,10 @@ public class BAPERS extends Application {
         dbBackupThread.setDaemon(true);
         dbBackupThread.start();
         
-        if (!TESTING) {
-            
-            
+        if (!TESTING) {           
             launch(args);
         } else {   
-            
+
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
