@@ -7,9 +7,13 @@ package bapers;
 
 import bapers.data.domain.User;
 import bapers.service.UserServiceImpl;
+import bapers.utility.BackupService;
+import bapers.utility.Intervals;
+import bapers.utility.Times;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.application.Application;
@@ -23,6 +27,7 @@ import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.Resource;
+import javafx.concurrent.*;
 
 /**
  *
@@ -51,17 +56,52 @@ public class BAPERS extends Application {
      * the main window for the application
      */
     public static Stage primaryStage;
+    
+    public static Intervals intervals;
+
     private static URL url
             = BAPERS.class.getResource("/bapers/userInterface/fxml/Login.fxml");
+    private static Task<Void> backupTask;
 
     /**
      * @param args the command line arguments
      * @throws java.io.IOException if the specified fxml form cannot be opened
      */
     public static void main(String[] args) throws IOException {
+        intervals = Intervals.readIntervals();
+        
+        backupTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (true) {
+                    Times backupIntervals = intervals.getBackupIntervals();
+                    long nextBackup = backupIntervals.getLastSet().getTime()
+                            + backupIntervals.getMilliseconds();
+                    if (new Date().getTime() > nextBackup) {
+                        System.out.println("next: "+new Date(nextBackup)+"\nnow: "+new Date());
+                        BackupService.backup();
+                        System.err.println("backup set");
+                        intervals.setBackupGenerated();                        
+                    }
+                    try {
+                        Thread.sleep(60_000);
+                    } catch(InterruptedException ex) {
+                        break;
+                    }
+                }
+                return null;
+            }
+        };
+        Thread dbBackupThread = new Thread(backupTask);
+        dbBackupThread.setDaemon(true);
+        dbBackupThread.start();
+        
         if (!TESTING) {
+            
+            
             launch(args);
-        } else {               
+        } else {   
+            
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
@@ -82,6 +122,7 @@ public class BAPERS extends Application {
                 launch(args);
             }
         }
+        
         Platform.exit();
     }
 
@@ -92,6 +133,23 @@ public class BAPERS extends Application {
         Scene scene = new Scene(root, 800, 450);
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest((event) -> {
+            backupTask.cancel();
+            try {
+                Intervals.writeIntervals(intervals);
+            } catch (IOException ex) {
+                System.err.println("Cannot write intervals to file");
+            }
+            primaryStage.close();
+        });        
 
+    }
+    
+    public static Intervals getIntervals() {
+        return intervals;
+    }
+
+    public static void setIntervals(Intervals intervals) {
+        BAPERS.intervals = intervals;
     }
 }
