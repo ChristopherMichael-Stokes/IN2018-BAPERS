@@ -25,7 +25,14 @@
  */
 package bapers.userInterface;
 
+import static bapers.BAPERS.EMF;
+import bapers.data.dataAccess.AddressJpaController;
+import bapers.data.dataAccess.ContactJpaController;
+import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.Address;
+import bapers.data.domain.AddressPK;
+import bapers.data.domain.Contact;
+import bapers.data.domain.ContactPK;
 import bapers.data.domain.CustomerAccount;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
@@ -36,6 +43,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -50,8 +59,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 /**
@@ -87,8 +99,6 @@ public class ManageCustomerAccountController implements Initializable {
     private TextField txtAddressLine1;
     @FXML
     private TextField txtAccountName;
-    @FXML
-    private ScrollPane scpFlexible;
     @FXML
     private ScrollPane scpAccounts;
     @FXML
@@ -126,8 +136,6 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private ComboBox cbbVariable;
     @FXML
-    private Button btnUpgrade;
-    @FXML
     private Button btnSearch;
     @FXML
     private Button btnRemoveAccount;
@@ -136,12 +144,40 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private Button btnDowngrade;
     @FXML
-    private Button btnApplyDiscount;
-    @FXML
     private Button btnActivateAccount;
     private CustomerAccountService customerAccountServiceDao = new CustomerAccountServiceImpl();
     private TaskService taskServiceDao = new TaskServiceImpl();
     private final ToggleGroup discountType = new ToggleGroup();
+    @FXML
+    private Label lblFirstName;
+    @FXML
+    private Label lblSurname;
+    @FXML
+    private Label lblMobile;
+    @FXML
+    private TextField txtFirstName;
+    @FXML
+    private TextField txtSurname;
+    @FXML
+    private TextField txtMobile;
+    @FXML
+    private Button btnUpdateDetails;
+    @FXML
+    private Button btnUpdateVar;
+    @FXML
+    private Button btnDeleteVar;
+    @FXML
+    private Button btnUpdateFlex;
+    @FXML
+    private Button btnDeleteFlex;
+    @FXML
+    private Button btnSetFixedDiscount;
+    @FXML
+    private ListView lvContact;
+    private short editAccount;
+    private String surname;
+    private AddressJpaController addressController = new AddressJpaController(EMF);
+    private ContactJpaController contactController = new ContactJpaController(EMF);
 
     /**
      * Initializes the controller class.
@@ -154,6 +190,9 @@ public class ManageCustomerAccountController implements Initializable {
         rbFixed.setToggleGroup(discountType);
         rbVariable.setToggleGroup(discountType);
         rbFlexible.setToggleGroup(discountType);
+        lblFirstName.setText("First Name");
+        lblSurname.setText("Surname");
+        lblMobile.setText("Mobile");
         lblRegion.setText("Region");
         lblPostcode.setText("Post Code");
         lblLandline.setText("Landline");
@@ -172,6 +211,9 @@ public class ManageCustomerAccountController implements Initializable {
             if (txtSearch.getText().trim().equals("")) {
                 alert.setContentText("Search bar cannot be empty!");
                 alert.showAndWait();
+                turnAllTextBlank();
+                editAccount = -1;
+                surname = null;
             } else {
                 ObservableList<String> searchObservableList;
                 List<String> searchList = new ArrayList<String>();
@@ -185,6 +227,11 @@ public class ManageCustomerAccountController implements Initializable {
                     lsvAccounts.setItems(null);
                     alert.setContentText("No entry for the word" + "(" + txtSearch.getText() + ")");
                     alert.showAndWait();
+                    turnAllTextBlank();
+                    editAccount = -1;
+                    surname = null;
+                    
+                    
                 } else {
                     searchObservableList = FXCollections.observableArrayList(searchList);
                     lsvAccounts.setItems(searchObservableList);
@@ -199,7 +246,25 @@ public class ManageCustomerAccountController implements Initializable {
                     if (o.getAccountHolderName() == ov.getValue()) {
                         turnAllTextBlank();
                         getAllText(o);
+                        editAccount = o.getAccountNumber();
+                        surname = null;
                     }
+                });
+            }
+        });
+        lvContact.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> ov, String oldvalue, String newvalue) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o)
+                        -> {
+                    o.getContactList().forEach((oC)->{
+                        System.out.println(ov.getValue());
+                        System.out.println(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue()));
+                        if(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue())){
+                            getContact(oC);
+                            surname = oC.getContactPK().getSurname();
+                        }
+                        });
+                    
                 });
             }
         });
@@ -208,6 +273,36 @@ public class ManageCustomerAccountController implements Initializable {
         taskServiceDao.getTasks().forEach((o)->{taskIDList.add(o.getTaskId());});
         taskIDOList = FXCollections.observableArrayList(taskIDList);
         cbbVariable.setItems(taskIDOList);
+        btnUpdateDetails.setOnAction((event)->{
+        if(lsvAccounts.getItems() == null || editAccount == -1)
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setTitle(null);
+            alert.setContentText("You need to select a customer account!");
+            alert.showAndWait();
+        }
+        else
+        {
+            customerAccountServiceDao.getCustomerAccounts().forEach((o)->{
+            if(o.getAccountNumber() == editAccount && !txtAddressLine1.getText().isEmpty()){
+                AddressPK addressPK = new AddressPK();
+                addressPK.setAddressLine1(txtAddressLine1.getText());
+                addressPK.setCity(txtCity.getText());
+                addressPK.setPostcode(txtPostCode.getText());
+                Address address = new Address(addressPK);
+                address.setRegion(txtRegion.getText());
+                address.setCustomerAccount(o);
+                try {
+                    addressController.create(address);
+                } catch (Exception ex) {
+                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            });
+            
+        }
+        });
     }
 
     private void turnAllTextBlank() {
@@ -219,6 +314,10 @@ public class ManageCustomerAccountController implements Initializable {
         txtLandline.clear();
         txtEmail.clear();
         txtAccountName.clear();
+        lvContact.setItems(null);
+        txtFirstName.clear();
+        txtSurname.clear();
+        txtMobile.clear();
 
     }
 
@@ -231,9 +330,23 @@ public class ManageCustomerAccountController implements Initializable {
             txtAddressLine1.setText(al.get(0).getAddressPK().getAddressLine1());
             txtAddressLine2.setText(al.get(0).getAddressLine2());
         }
-        
         txtLandline.setText(o.getLandline());
         txtEmail.setText(o.getEmail());
         txtAccountName.setText(o.getAccountHolderName());
+        ObservableList<String> contactObservableList;
+        List<String> contactList = new ArrayList<String>();
+        o.getContactList().forEach((oC)->{
+            contactList.add(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()));
+        });
+        contactObservableList = FXCollections.observableArrayList(contactList);
+        lvContact.setItems(contactObservableList);
     }
+    
+    private void getContact(Contact o) {
+        txtFirstName.setText(o.getContactPK().getForename());
+        txtSurname.setText(o.getContactPK().getSurname());
+        txtMobile.setText(o.getMobile());
+        
+    }
+        
 }
