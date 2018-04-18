@@ -29,6 +29,8 @@ import bapers.data.domain.Address;
 import bapers.data.domain.CustomerAccount;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
+import bapers.service.TaskService;
+import bapers.service.TaskServiceImpl;
 import static bapers.userInterface.SceneController.switchScene;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 /**
@@ -137,6 +140,8 @@ public class ManageCustomerAccountController implements Initializable {
     @FXML
     private Button btnActivateAccount;
     private CustomerAccountService customerAccountServiceDao = new CustomerAccountServiceImpl();
+    private TaskService taskServiceDao = new TaskServiceImpl();
+    private final ToggleGroup discountType = new ToggleGroup();
 
     /**
      * Initializes the controller class.
@@ -146,6 +151,9 @@ public class ManageCustomerAccountController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        rbFixed.setToggleGroup(discountType);
+        rbVariable.setToggleGroup(discountType);
+        rbFlexible.setToggleGroup(discountType);
         lblRegion.setText("Region");
         lblPostcode.setText("Post Code");
         lblLandline.setText("Landline");
@@ -195,7 +203,11 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
-        
+        ObservableList<Integer> taskIDOList;
+        List<Integer> taskIDList = new ArrayList<Integer>();
+        taskServiceDao.getTasks().forEach((o)->{taskIDList.add(o.getTaskId());});
+        taskIDOList = FXCollections.observableArrayList(taskIDList);
+        cbbVariable.setItems(taskIDOList);
     }
 
     private void turnAllTextBlank() {
