@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
@@ -21,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -35,7 +28,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Separator>
-                  <Label style="-fx-text-fill: #c6c9d1;" text="Job Process">
+                  <Label fx:id="lblManageTasks" style="-fx-text-fill: #c6c9d1;" text="Manage Tasks">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -67,21 +60,22 @@
 
                   <TableView fx:id="tblTask" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="tcJobTask" minWidth="-Infinity" prefWidth="88.0" text="Job Task" />
-                      <TableColumn fx:id="tcTask" minWidth="-Infinity" prefWidth="86.0" text="Task" />
-                      <TableColumn fx:id="tcDescription" prefWidth="192.0" text="Task Description" />
-                        <TableColumn fx:id="tcStartTime" prefWidth="148.0" text="Start Time" />
-                        <TableColumn fx:id="tcEndTime" prefWidth="113.0" text="End Time" />
-                        <TableColumn fx:id="tcUser" prefWidth="154.0" text="User" />
+                        <TableColumn fx:id="tcTaskID" minWidth="-Infinity" prefWidth="88.0" text="Task ID" />
+                      <TableColumn fx:id="tcTaskDescription" minWidth="-Infinity" prefWidth="110.66665649414062" text="Task Description" />
+                      <TableColumn fx:id="tcLocation" prefWidth="94.6666259765625" text="Location" />
+                        <TableColumn fx:id="tcShelfSlot" prefWidth="116.0" text="Shelf Slot" />
+                        <TableColumn fx:id="tcPrice" prefWidth="104.0" text="Price" />
+                        <TableColumn fx:id="tcDuration" prefWidth="185.3333740234375" text="Duration" />
                     </columns>
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="txtJobTask" promptText="Enter Job Task ID" />
-                        <TextField fx:id="txtTask" promptText="Enter Task ID" />
-                        <TextField fx:id="txtTaskStart" promptText="Enter start time" />
-                        <TextField fx:id="txtTaskEnd" promptText="Enter end time" />
-                        <TextField fx:id="txtUser" promptText="Enter username" />
+                        <TextField fx:id="txtTaskID" promptText="Enter Task ID" />
+                        <TextField fx:id="txtTaskDescription" promptText="Enter Task Description" />
+                        <TextField fx:id="txtLocation" promptText="Enter Location" />
+                        <TextField fx:id="txtShelfSlot" promptText="Enter Shelf Slot" />
+                        <TextField fx:id="txtPrice" promptText="Enter Price" />
+                        <TextField fx:id="txtDuration" promptText="Enter Duration" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
