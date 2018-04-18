@@ -11,58 +11,80 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.report.IndividualPerformanceReportController">
-    <children>
-        <VBox prefHeight="48.0" prefWidth="600.0">
-            <children>
-                <Separator prefWidth="200.0">
-                    <VBox.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                    </VBox.margin>
-                </Separator>
-                <Label text="Individual Performance Report">
-                    <font>
-                        <Font name="System Bold" size="15.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets left="10.0" />
-                    </VBox.margin>
-                </Label>
-                <Separator prefWidth="200.0">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                </Separator>
-            </children>
-        </VBox>
-        <VBox layoutY="47.0" prefHeight="228.0" prefWidth="600.0">
-            <children>
-                <TableView fx:id="tblIPR" prefHeight="195.0" prefWidth="600.0">
-                    <columns>
-                        <TableColumn fx:id="tcName" prefWidth="75.0" text="Name" />
-                        <TableColumn fx:id="tcName" prefWidth="75.0" text="Code" />
-                        <TableColumn fx:id="tcTaskID" prefWidth="75.0" text="Task IDs" />
-                        <TableColumn fx:id="tcDepartment" prefWidth="75.0" text="Department" />
-                        <TableColumn fx:id="tcDate" prefWidth="75.0" text="Date" />
-                        <TableColumn fx:id="tcStartTime" prefWidth="75.0" text="Start Time" />
-                        <TableColumn fx:id="tcTimeTaken" prefWidth="75.0" text="Time Taken" />
-                        <TableColumn fx:id="tcTotal" prefWidth="75.0" text="Total" />
-                    </columns>
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
-                </TableView>
-            </children>
-        </VBox>
-        <HBox layoutX="520.0" layoutY="355.0" prefHeight="37.0" prefWidth="71.0">
-            <children>
-                <Button fx:id="btnPrint" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Print" />
-            </children>
-        </HBox>
-    </children>
+<AnchorPane id="AnchorPane" prefHeight="461.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="48.0" prefWidth="600.0">
+         <children>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin></Separator>
+            <Label text="Individual Performance Report">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Separator>
+         </children>
+      </VBox>
+      <VBox layoutY="47.0" prefHeight="296.0" prefWidth="600.0">
+         <children>
+            <TableView fx:id="tblIPR" prefHeight="135.0" prefWidth="583.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Name" />
+                <TableColumn prefWidth="75.0" text="Code" />
+                  <TableColumn prefWidth="75.0" text="Task IDs" />
+                  <TableColumn prefWidth="75.0" text="Department" />
+                  <TableColumn prefWidth="75.0" text="Date" />
+                  <TableColumn prefWidth="75.0" text="Start Time" />
+                  <TableColumn prefWidth="75.0" text="Time Taken" />
+                  <TableColumn prefWidth="75.0" text="Total" />
+              </columns>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </TableView>
+            <TableView prefHeight="161.0" prefWidth="495.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Name" />
+                <TableColumn prefWidth="102.00000762939453" text="Individual Effort" />
+              </columns>
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </TableView>
+         </children>
+      </VBox>
+      <HBox layoutX="520.0" layoutY="355.0" prefHeight="37.0" prefWidth="71.0">
+         <children>
+            <Button fx:id="btnPrint" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Print" />
+         </children>
+      </HBox>
+      <HBox layoutY="342.0" prefHeight="37.0" prefWidth="309.0">
+         <children>
+            <Label text="Total Effort">
+               <HBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </HBox.margin>
+            </Label>
+            <TextField prefHeight="33.0" prefWidth="149.0">
+               <HBox.margin>
+                  <Insets left="10.0" top="15.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+   </children>
 </AnchorPane>

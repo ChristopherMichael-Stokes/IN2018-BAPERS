@@ -44,6 +44,7 @@ import bapers.service.UserService;
 import bapers.service.UserServiceImpl;
 import bapers.userInterface.SceneController.Scenes;
 import static bapers.userInterface.SceneController.switchScene;
+import static bapers.utility.FormUtils.*;
 import bapers.utility.CurrencyFormat;
 import java.net.URL;
 import java.text.DateFormat;
@@ -54,7 +55,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -413,10 +413,6 @@ public class JobProcessingController implements Initializable {
             
         });
                         
-    }    
-    
-    private SimpleStringProperty getProperty(String s) {
-        return new SimpleStringProperty(s);
     }
     
     private void loadCustomers() {
@@ -467,13 +463,6 @@ public class JobProcessingController implements Initializable {
     
     private boolean empty(TextField tf) {
         return getText(tf).equals("");
-    }
-    
-    private void haltAlert(String text) {
-        alert.setContentText(text);
-        alert.showAndWait();
-    }
-    
-    
+    }    
 }
 

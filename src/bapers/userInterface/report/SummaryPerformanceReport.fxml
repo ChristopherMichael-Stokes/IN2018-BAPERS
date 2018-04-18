@@ -7,19 +7,20 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="513.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="546.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="-2.0" prefHeight="48.0" prefWidth="641.0">
+      <VBox layoutX="-2.0" prefHeight="41.0" prefWidth="812.0">
          <children>
             <Separator prefWidth="200.0">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Separator>
-            <Label text="Summary Performance Report">
+            <Label fx:id="lblSPR" text="Summary Performance Report">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -36,65 +37,64 @@
       </VBox>
       <VBox layoutX="10.0" layoutY="49.0" prefHeight="469.0" prefWidth="393.0">
          <children>
-            <Label prefHeight="17.0" prefWidth="67.0" text="Day Shift 1">
+            <Label fx:id="lblDayshift1" prefHeight="17.0" prefWidth="67.0" text="Day Shift 1">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin></Label>
-            <TableView fx:id="tblDayShift1" prefHeight="71.0" prefWidth="393.0">
+            <TableView fx:id="tblDayShift1" prefHeight="67.0" prefWidth="383.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Date" />
-                <TableColumn prefWidth="75.0" text="Copy Room" />
-                  <TableColumn prefWidth="89.33331298828125" text="Development" />
-                  <TableColumn prefWidth="75.0" text="Finishing" />
-                  <TableColumn prefWidth="75.0" text="Packing" />
+                <TableColumn fx:id="tcDate" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="89.33331298828125" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="75.0" text="Packing" />
               </columns>
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
             </TableView>
-            <Label text="Day Shift 2" />
+            <Label fx:id="lblDayShift2" text="Day Shift 2" />
             <TableView fx:id="tblDayShift2" prefHeight="76.0" prefWidth="393.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Date" />
-                <TableColumn prefWidth="75.0" text="Copy Room" />
-                  <TableColumn prefWidth="86.6666259765625" text="Development" />
-                  <TableColumn prefWidth="75.0" text="Finishing" />
-                  <TableColumn prefWidth="79.33333333333331" text="Packing" />
+                <TableColumn fx:id="tcDate" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.6666259765625" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="79.33333333333331" text="Packing" />
               </columns>
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
             </TableView>
-            <Label text="Night Shift ">
+            <Label fx:id="lblNightShift" text="Night Shift ">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </Label>
             <TableView fx:id="tblNightShift" prefHeight="79.0" prefWidth="393.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Date" />
-                <TableColumn prefWidth="75.0" text="Copy Room" />
-                  <TableColumn prefWidth="86.0" text="Development" />
-                  <TableColumn prefWidth="75.0" text="Finishing" />
-                  <TableColumn prefWidth="80.00002034505206" text="Packing" />
+                <TableColumn fx:id="tcDate" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.0" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="80.00002034505206" text="Packing" />
               </columns>
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
             </TableView>
-            <Label />
-            <Label text="Summary Performance Report">
+            <Label fx:id="lblSPR" text="Summary Performance Report">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </Label>
             <TableView fx:id="tblPeriod" prefHeight="93.0" prefWidth="393.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Date" />
-                <TableColumn prefWidth="75.0" text="Copy Room" />
-                  <TableColumn prefWidth="86.6666259765625" text="Developement" />
-                  <TableColumn prefWidth="75.0" text="Finishing" />
-                  <TableColumn prefWidth="79.33333333333331" text="Packing" />
+                <TableColumn fx:id="tcTitle" prefWidth="75.0" text="Title" />
+                <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.6666259765625" text="Developement" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="79.33333333333331" text="Packing" />
               </columns>
                <VBox.margin>
                   <Insets bottom="10.0" />
@@ -102,14 +102,74 @@
             </TableView>
          </children>
       </VBox>
-      <VBox layoutX="487.0" layoutY="421.0" prefHeight="75.0" prefWidth="122.0">
+      <VBox layoutX="412.0" layoutY="49.0" prefHeight="469.0" prefWidth="393.0">
          <children>
-            <Button fx:id="btnPrint" mnemonicParsing="false" prefHeight="22.0" prefWidth="64.0" text="Print">
+            <Label fx:id="lblDayShift1Total" prefHeight="17.0" prefWidth="93.0" text="Day Shift 1 Total">
                <VBox.margin>
-                  <Insets left="50.0" top="50.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
-            </Button>
+            </Label>
+            <TableView fx:id="tblDayShift1Total" prefHeight="67.0" prefWidth="383.0">
+               <columns>
+                  <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="89.33331298828125" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="75.0" text="Packing" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </TableView>
+            <Label fx:id="lblDayShift2Total" text="Day Shift 2 Total" />
+            <TableView fx:id="tblDayShift2Total" prefHeight="76.0" prefWidth="393.0">
+               <columns>
+                  <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.6666259765625" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="79.33333333333331" text="Packing" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </TableView>
+            <Label fx:id="lblNightShiftTotal" text="Night Shift Total">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <TableView fx:id="tblNightShiftTotal" prefHeight="79.0" prefWidth="393.0">
+               <columns>
+                  <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.0" text="Development" />
+                  <TableColumn fx:id="tcFinishing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="80.00002034505206" text="Packing" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </TableView>
+            <Label fx:id="lblSPRTotal" text="Summary Performance Report Total">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <TableView fx:id="tblPeriodTotal" prefHeight="93.0" prefWidth="393.0">
+               <columns>
+                  <TableColumn fx:id="tcCopyRoom" prefWidth="75.0" text="Copy Room" />
+                  <TableColumn fx:id="tcDevelopment" prefWidth="86.6666259765625" text="Developement" />
+                  <TableColumn fx:id="tcFinshing" prefWidth="75.0" text="Finishing" />
+                  <TableColumn fx:id="tcPacking" prefWidth="79.33333333333331" text="Packing" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </TableView>
          </children>
       </VBox>
+      <HBox layoutX="678.0" layoutY="520.0" prefHeight="76.0" prefWidth="131.0">
+         <children>
+            <Button fx:id="btnPrint" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Print" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

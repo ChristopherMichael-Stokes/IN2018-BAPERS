@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="451.0" prefWidth="814.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -49,7 +44,7 @@
             </VBox>
          </top>
          <bottom>
-            <HBox prefHeight="47.0" prefWidth="1020.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="46.0" prefWidth="1020.0" BorderPane.alignment="CENTER">
                <children>
                   <HBox prefHeight="39.0" prefWidth="1014.0" HBox.hgrow="ALWAYS">
                      <children>
@@ -91,12 +86,17 @@
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="lsvBackup" prefHeight="240.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="tblBackup" maxHeight="1.7976931348623157E308" prefHeight="212.0" prefWidth="980.0">
+                    <columns>
+                      <TableColumn fx:id="tcDate" prefWidth="169.0" text="Date" />
+                      <TableColumn fx:id="tcTime" prefWidth="178.0" text="Time" />
+                        <TableColumn fx:id="tcSize" prefWidth="222.0" text="Size (KB)" />
+                    </columns>
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </VBox.margin>
-                  </ListView>
-                  <HBox alignment="TOP_CENTER" prefHeight="99.0" prefWidth="1020.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                  </TableView>
+                  <HBox alignment="TOP_CENTER" prefHeight="34.0" prefWidth="1020.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Button fx:id="btnBackupNow" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2#4185f2;" text="Backup Now">
                            <VBox.margin>
@@ -104,7 +104,7 @@
                            </VBox.margin>
                         </Button>
                         <Button fx:id="btnRestoreFromBackup" mnemonicParsing="false" prefHeight="40.0" prefWidth="168.0" style="-fx-background-color: #4185f2#4185f2;" text="Restore from Backup" />
-                        <Label fx:id="lblSize" prefHeight="25.0" prefWidth="198.0" style="-fx-text-fill: #c6c9d1#c6c9d1;" text="Size:" />
+                        <Button fx:id="btnRemoveBackup" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2#4185f2;" text="Remove Backup" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />

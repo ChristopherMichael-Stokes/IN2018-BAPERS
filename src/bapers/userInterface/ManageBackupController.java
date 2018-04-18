@@ -27,6 +27,7 @@ package bapers.userInterface;
 
 import bapers.userInterface.SceneController.Scenes;
 import static bapers.utility.BackupService.*;
+import static bapers.utility.FormUtils.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -34,8 +35,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -43,9 +42,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 /**
  * FXML Controller class
  *
@@ -58,19 +59,23 @@ public class ManageBackupController implements Initializable {
     @FXML
     private Button btnBackupNow;
     @FXML
-    private Button btnRestoreLastBackup;
-    @FXML
-    private ListView<File> lsvBackup;
-    @FXML
     private Button btnRestoreFromBackup;
     @FXML
-    private Label lblTime;
+    private TableView<File> tblBackup;
     @FXML
-    private Label lblSize;
+    private TableColumn<File, String> tcDate;
+    @FXML
+    private TableColumn<File, String> tcTime;
+    @FXML
+    private TableColumn<File, String> tcSize;
+    @FXML
+    private Button btnRemoveBackup;
         
     private  ObservableList<File> files = FXCollections.observableArrayList();    
-    private final DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    private final DateFormat date = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateFormat time = new SimpleDateFormat("HH:mm:ss");
     private final Alert alert = new Alert(Alert.AlertType.NONE);
+    
     
     /**
      * Initializes the controller class.
@@ -79,34 +84,29 @@ public class ManageBackupController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //List
+        //Table
         loadBackups();
-        lsvBackup.setItems(files);
+        tblBackup.setItems(files);
         
-        lsvBackup.setCellFactory((ListView<File> param) -> {
-            return new ListCell<File>() {
-                @Override
-                protected void updateItem(File item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null) 
-                        try {
-                            setText(df.format(BACKUPDATE.parse(item.getName())));
-                    } catch (ParseException ex) {
-                        Logger.getLogger(ManageBackupController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            };
-        });
-        
-        lsvBackup.getSelectionModel().selectedItemProperty().addListener(c -> {
-            File f = lsvBackup.getSelectionModel().getSelectedItem();
-            if (f == null) {
-                loadBackups();
-                return;
+        tblBackup.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tcDate.setCellValueFactory((param) -> {
+            try {
+                String d = date.format(BACKUPDATE.parse(param.getValue().getName()));
+                return getProperty(d);
+            } catch (ParseException ex) {               
+                return getProperty("Invalid date");
             }
-            lblSize.setText("Size: "+(f.length()/1e3)+" KB");
-        });
-        
+        });       
+        tcTime.setCellValueFactory((param) -> {
+            try {
+                String d = time.format(BACKUPDATE.parse(param.getValue().getName()));
+                return getProperty(d);
+            } catch (ParseException ex) {                
+                return getProperty("Invalid time");
+            }
+        }); 
+        tcSize.setCellValueFactory((param) -> getProperty(param.getValue().length()/1e3 +" KB"));
+                
         //button
         alert.getButtonTypes().add(ButtonType.OK);
 
@@ -121,7 +121,7 @@ public class ManageBackupController implements Initializable {
         });
         
         btnRestoreFromBackup.setOnAction((event) -> {
-            File f = lsvBackup.getSelectionModel().getSelectedItem();
+            File f = tblBackup.getSelectionModel().getSelectedItem();
             if (f == null) {
                 haltAlert("Please select a backup to load");
                 loadBackups();
@@ -135,19 +135,23 @@ public class ManageBackupController implements Initializable {
             }
         });
         
-        btnHome.setOnAction((event) -> SceneController.switchScene(Scenes.home));
+        btnRemoveBackup.setOnAction((event) -> {
+            ObservableList<File> f = tblBackup.getSelectionModel().getSelectedItems();
+            if (f == null) {
+                haltAlert("Please select one or more backups to remove");
+                loadBackups();
+                return;
+            }
+            f.stream().forEach(d -> d.delete());
+            loadBackups();
+        });
         
+        btnHome.setOnAction((event) -> SceneController.switchScene(Scenes.home));        
     }    
-    
-    private void haltAlert(String message) {
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
     
     private void loadBackups() {
         files.clear();
         files.addAll(getBackupList());
-        files.sort((File o1, File o2) -> -o1.getName().compareTo(o2.getName()));   
-        lblSize.setText("Size: ");
+        files.sort((File o1, File o2) -> -o1.getName().compareTo(o2.getName())); 
     }
 }

@@ -3,176 +3,122 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="395.0" prefWidth="655.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageIntervalsController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
    <children>
-      <VBox layoutX="6.0" prefHeight="76.0" prefWidth="1014.0">
-         <children>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
-            </Separator>
-            <Label prefHeight="37.0" prefWidth="87.0" style="-fx-text-fill: #c6c9d1;" text="Intervals">
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" />
-               </VBox.margin>
-            </Separator>
-         </children>
-      </VBox>
-      <VBox layoutX="14.0" layoutY="86.0" prefHeight="369.0" prefWidth="330.0">
-         <children>
-            <Label prefHeight="58.0" prefWidth="266.0" style="-fx-text-fill: #c6c9d1;" text="Reports">
-               <font>
-                  <Font name="System Bold" size="35.0" />
-               </font>
-            </Label>
-            <RadioButton fx:id="opt1day" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="1 Day">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="opt2days" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="2 Days">
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="opt5days" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="5 Days" />
-            <RadioButton fx:id="opt7days" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="7 Days">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="opt30days" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
-            <HBox prefHeight="36.0" prefWidth="330.0">
+      <BorderPane prefHeight="587.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox prefHeight="76.0" prefWidth="1014.0" BorderPane.alignment="CENTER">
                <children>
-                  <RadioButton fx:id="optOther" mnemonicParsing="false">
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </RadioButton>
-                  <TextField fx:id="txtOther" promptText="Other" style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
-                     <HBox.margin>
-                        <Insets top="5.0" />
-                     </HBox.margin>
-                  </TextField>
-               </children>
-            </HBox>
-            <Button fx:id="btnSetTime" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2;" text="Set Time">
-               <VBox.margin>
-                  <Insets top="50.0" />
-               </VBox.margin>
-            </Button>
-         </children>
-      </VBox>
-      <VBox layoutX="301.0" layoutY="459.0" prefHeight="58.0" prefWidth="150.0" />
-      <HBox layoutX="3.0" layoutY="580.0" prefHeight="58.0" prefWidth="1014.0">
-         <children>
-            <HBox prefHeight="27.0" prefWidth="1014.0">
-               <children>
-                  <Label prefHeight="31.0" prefWidth="122.0" style="-fx-text-fill: #c6c9d1;" text="Home&gt;Intervals">
-                     <HBox.margin>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <Label prefHeight="37.0" prefWidth="87.0" style="-fx-text-fill: #c6c9d1;" text="Intervals">
+                     <VBox.margin>
                         <Insets left="20.0" />
-                     </HBox.margin>
+                     </VBox.margin>
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Pane prefHeight="4.0" prefWidth="799.0">
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </VBox.margin>
+                  </Separator>
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <HBox prefHeight="40.0" prefWidth="1020.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="27.0" prefWidth="1014.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox layoutX="-62.0" layoutY="-2.0" prefHeight="3.0" prefWidth="559.0">
+                        <VBox prefHeight="40.0" prefWidth="215.0" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
                            <children>
-                              <Separator prefHeight="3.0" prefWidth="270.0">
+                              <Separator prefHeight="3.0" prefWidth="270.0" />
+                              <Label prefHeight="31.0" prefWidth="122.0" style="-fx-text-fill: #c6c9d1;" text="Home&gt;Intervals">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="391.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="64.0" style="-fx-background-color: #4185f2;" text="Home">
                                  <HBox.margin>
-                                    <Insets left="20.0" />
+                                    <Insets left="20.0" right="20.0" />
                                  </HBox.margin>
-                              </Separator>
+                              </Button>
                            </children>
                         </HBox>
                      </children>
-                  </Pane>
-                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #4185f2;" text="Home">
-                     <HBox.margin>
-                        <Insets right="20.0" />
-                     </HBox.margin>
-                  </Button>
+                  </HBox>
                </children>
             </HBox>
-         </children>
-      </HBox>
-      <VBox layoutX="405.0" layoutY="76.0" prefHeight="511.0" prefWidth="185.0">
-         <children>
-            <Separator orientation="VERTICAL" prefHeight="462.0" prefWidth="25.0">
-               <VBox.margin>
-                  <Insets left="20.0" top="20.0" />
-               </VBox.margin>
-            </Separator>
-         </children>
-      </VBox>
-      <VBox layoutX="613.0" layoutY="86.0" prefHeight="369.0" prefWidth="330.0">
-         <children>
-            <Label prefHeight="58.0" prefWidth="349.0" style="-fx-text-fill: #c6c9d1;" text="Database Backup">
-               <font>
-                  <Font name="System Bold" size="35.0" />
-               </font>
-            </Label>
-            <RadioButton fx:id="optoneday" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="1 Day">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="optwodays" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="2 Days">
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="optfivedays" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="5 Days" />
-            <RadioButton fx:id="optsevendays" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="7 Days">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="optthirtydays" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="30 Days" />
-            <HBox prefHeight="36.0" prefWidth="330.0">
+         </bottom>
+         <center>
+            <HBox prefHeight="238.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="20.0" />
+               </BorderPane.margin>
                <children>
-                  <RadioButton fx:id="optOther" mnemonicParsing="false">
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </RadioButton>
-                  <TextField fx:id="txtOther" promptText="Other" style="-fx-background-color: #364059#364059; -fx-border-color: #c6c9d1#c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
-                     <HBox.margin>
-                        <Insets top="5.0" />
-                     </HBox.margin>
-                  </TextField>
+                  <VBox prefHeight="251.0" prefWidth="635.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox prefHeight="47.0" prefWidth="1000.0" spacing="40.0">
+                           <children>
+                              <RadioButton fx:id="rbReport" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Reports">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="rbDatabase" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Database Backup">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </RadioButton>
+                           </children>
+                        </HBox>
+                        <Label style="-fx-text-fill: #c6c9d1;" text="Generate every:">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </Label>
+                        <HBox prefHeight="36.0" prefWidth="330.0" spacing="20.0">
+                           <children>
+                              <ComboBox fx:id="cmbDays" prefWidth="150.0" promptText="Days" />
+                              <ComboBox fx:id="cmbHours" prefWidth="150.0" promptText="Hours" />
+                              <ComboBox fx:id="cmbMinutes" prefWidth="150.0" promptText="Minutes" />
+                           </children>
+                        </HBox>
+                        <Button fx:id="btnSetTime" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2;" text="Set Time">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
-            <Button fx:id="btnSetTimer" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4185f2;" text="Set Time">
-               <VBox.margin>
-                  <Insets top="50.0" />
-               </VBox.margin>
-            </Button>
-         </children>
-      </VBox>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>
