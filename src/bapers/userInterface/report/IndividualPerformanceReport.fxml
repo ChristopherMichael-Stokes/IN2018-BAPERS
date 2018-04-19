@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="459.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.report.IndividualPerformanceReportController">
+<AnchorPane id="AnchorPane" prefHeight="459.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.report.IndividualPerformanceReportController">
    <children>
       <BorderPane prefHeight="461.0" prefWidth="679.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -44,23 +44,23 @@
             </VBox>
          </top>
          <center>
-            <HBox spacing="10.0">
+            <HBox fx:id="hbRoot" spacing="10.0">
                <children>
                   <TableView fx:id="tblTotal" prefHeight="351.0" prefWidth="190.0" HBox.hgrow="SOMETIMES">
                     <columns>
-                      <TableColumn fx:id="tcTotalName" prefWidth="75.0" text="Name" />
-                      <TableColumn fx:id="tcTotalIndiviudalEffort" prefWidth="102.00000762939453" text="Individual Effort" />
+                      <TableColumn fx:id="tcTotalName" minWidth="-Infinity" prefWidth="75.0" text="Name" />
+                      <TableColumn fx:id="tcTotalIndiviudalEffort" minWidth="-Infinity" prefWidth="102.00000762939453" text="Individual Effort" />
                     </columns>
                   </TableView>
                   <TableView fx:id="tblIPR" prefHeight="351.0" prefWidth="529.0" HBox.hgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="tcName" prefWidth="90.0" text="Name" />
-                      <TableColumn fx:id="tcCode" prefWidth="60.0" text="Code" />
-                        <TableColumn fx:id="tcTaskID" prefWidth="53.0" text="Task IDs" />
-                        <TableColumn fx:id="tcDepartment" prefWidth="97.0" text="Department" />
-                        <TableColumn fx:id="tcDate" prefWidth="64.0" text="Date" />
-                        <TableColumn fx:id="tcStartTime" prefWidth="86.0" text="Start Time" />
-                        <TableColumn fx:id="tcTimeTaken" prefWidth="75.0" text="Time Taken" />
+                      <TableColumn fx:id="tcName" minWidth="-Infinity" prefWidth="90.0" text="Name" />
+                      <TableColumn fx:id="tcCode" minWidth="-Infinity" prefWidth="60.0" text="Code" />
+                        <TableColumn fx:id="tcTaskID" minWidth="-Infinity" prefWidth="53.0" text="Task IDs" />
+                        <TableColumn fx:id="tcDepartment" minWidth="-Infinity" prefWidth="139.0" text="Department" />
+                        <TableColumn fx:id="tcDate" minWidth="-Infinity" prefWidth="90.0" text="Date" />
+                        <TableColumn fx:id="tcStartTime" minWidth="-Infinity" prefWidth="83.0" text="Start Time" />
+                        <TableColumn fx:id="tcTimeTaken" minWidth="-Infinity" prefWidth="83.0" text="Time Taken" />
                     </columns>
                   </TableView>
                </children>

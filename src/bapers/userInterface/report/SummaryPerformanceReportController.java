@@ -40,6 +40,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -56,29 +58,15 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
     @FXML
     private Button btnPrint;
     @FXML
-    private Label lblSPR;
-    @FXML
     private Label lblDayshift1;
-    @FXML
-    private Label lblDayShift2;
-    @FXML
-    private Label lblNightShift;
     @FXML
     private TableView<Shift> tblNightShift;
     @FXML
-    private Label lblDayShift1Total;
-    @FXML
     private TableView<TotalShift> tblDayShift1Total;
-    @FXML
-    private Label lblDayShift2Total;
     @FXML
     private TableView<TotalShift> tblDayShift2Total;
     @FXML
-    private Label lblNightShiftTotal;
-    @FXML
     private TableView<TotalShift> tblNightShiftTotal;
-    @FXML
-    private Label lblSPRTotal;
     @FXML
     private TableView<SummaryShift> tblSummary;
     @FXML
@@ -96,6 +84,10 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
             dayShift2Total = FXCollections.observableArrayList(),
             nightShiftTotal = FXCollections.observableArrayList(),
             summaryShiftTotal = FXCollections.observableArrayList();
+    @FXML
+    private VBox vbRoot;
+    @FXML
+    private BorderPane bpRoot;
 
     /**
      * Initializes the controller class.
@@ -111,11 +103,13 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
         initTable(tblDayShift2Total, TotalShift.class);
         initTable(tblNightShiftTotal, TotalShift.class);
         initTable(tblSummaryTotal, TotalShift.class);
-        
-        Class<SummaryShift> ss = SummaryShift.class;
-        System.err.println("shift: "+Shift.class.getClass().getName());
-        System.err.println("summary shift: "+ss.getClass().getName());
-        className(Shift.class);
+        btnPrint.setOnAction((event) -> {
+            stage.setMaximized(true);
+            stage.setFullScreen(true);
+            print(bpRoot);
+            stage.setMaximized(false);
+            stage.setFullScreen(false);
+        });
     }
     
     private <S> String className(Class<S> objectClass) {
@@ -178,6 +172,7 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
         tblNightShiftTotal.setItems(nightShiftTotal);
         tblSummaryTotal.setItems(summaryShiftTotal);
     }
+
 
     
 

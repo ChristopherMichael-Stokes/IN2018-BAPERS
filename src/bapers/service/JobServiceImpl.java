@@ -30,6 +30,7 @@ import bapers.data.dataAccess.ComponentTaskJpaController;
 import bapers.data.dataAccess.JobComponentJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.TaskJpaController;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.ComponentTask;
@@ -114,6 +115,22 @@ public class JobServiceImpl implements JobService {
     public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException {
         componentController.destroy(ct.getComponentTaskPK());
     }
+    @Override
+    public Job addJob(Job j) {
+        int pos = jobController.getJobCount();
+        jobController.create(j);
+        return jobController.findJobEntities(1, pos).get(0);
+    }
+    @Override
+    public void addJobComponent(JobComponent jc) throws PreexistingEntityException, Exception{
+        jobComponentController.create(jc);
+    }
+
+    @Override
+    public void updateJob(Job j) 
+            throws IllegalOrphanException, NonexistentEntityException, Exception {
+        jobController.edit(j);
+    }
     
     /**
      * @param taskId
@@ -134,13 +151,16 @@ public class JobServiceImpl implements JobService {
     }
     
     @Override
+    public void addComponentTask(ComponentTask ct) throws PreexistingEntityException, Exception{
+        componentController.create(ct);
+    }
+    @Override
     public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) 
             throws PreexistingEntityException, Exception {
         t.getComponentTaskList().add(ct);
         jc.getComponentTaskList().add(ct);
         ct.setTask(t);
-        ct.setJobComponent(jc);
-        
+        ct.setJobComponent(jc);        
         componentController.create(ct);
     }
 

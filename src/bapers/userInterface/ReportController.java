@@ -27,6 +27,8 @@ package bapers.userInterface;
 
 import bapers.service.UserService;
 import bapers.service.UserServiceImpl;
+import bapers.userInterface.SceneController.Scenes;
+import static bapers.userInterface.SceneController.switchScene;
 import bapers.userInterface.report.Report;
 import bapers.utility.FormUtils;
 import bapers.utility.report.IndividualReport;
@@ -110,6 +112,7 @@ public class ReportController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnHome.setOnAction((event) -> switchScene(Scenes.home));
         lblReports.setText("Reports");
         lblHomeReports.setText("Home>Reports");
 
@@ -202,6 +205,7 @@ public class ReportController implements Initializable {
                         return;
                     }
                     report.getKey().setItems(irList);
+                    report.getKey().stage = report.getValue();
                     report.getValue().showAndWait();
                 }
             } else if (rbIPR.isSelected()) {
@@ -234,6 +238,7 @@ public class ReportController implements Initializable {
                         return;
                     }
                     report.getKey().setItems(iprResult);
+                    report.getKey().stage = report.getValue();
                     report.getValue().showAndWait();
                 }
             } else if (rbSPR.isSelected()) {
@@ -251,6 +256,7 @@ public class ReportController implements Initializable {
                         return;
                     }
                     report.getKey().setItems(srs);
+                    report.getKey().stage = report.getValue();
                     report.getValue().showAndWait();
                 }
             } else {

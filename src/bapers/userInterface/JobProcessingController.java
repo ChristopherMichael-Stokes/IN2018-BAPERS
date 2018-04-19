@@ -312,14 +312,6 @@ public class JobProcessingController implements Initializable {
                 ct.setFkUsername(u);
             
             try {
-//                Optional<ComponentTask> ct_ = t.getComponentTaskList().stream()
-//                        .filter(ct__ -> ct__.getComponentTaskPK() == ct.getComponentTaskPK())
-//                        .findAny();
-//                if (ct_.isPresent()) 
-//                    t.getComponentTaskList().remove(ct_.get());
-//                
-//                t.getComponentTaskList().add(ct);
-//                ct.setTask(t);
                 jobDao.updateTask(ct);
                 haltAlert("Task successfully updated");               
             } catch (NonexistentEntityException ex) {

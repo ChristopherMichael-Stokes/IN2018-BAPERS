@@ -6,8 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="499.0" prefWidth="840.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.HomePageController">
+<AnchorPane id="AnchorPane" prefHeight="499.0" prefWidth="840.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.HomePageController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/homepage.css" />
     </stylesheets>
@@ -27,6 +25,7 @@
                   <ToolBar fx:id="tbNavigation" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #364059;">
                     <items>
                       <Button fx:id="btnCustomerAccount" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Customer Accounts" />
+                        <Button fx:id="btnAddCustomer" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Add Customer" />
                         <Button fx:id="btnIntervals" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Intervals" />
                         <Button fx:id="btnBackup" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Backup" />
                         <Button fx:id="btnUsers" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Users" />
@@ -112,16 +111,6 @@
                </children>
             </VBox>
          </left>
-         <center>
-            <ImageView fitHeight="306.0" fitWidth="306.0">
-               <image>
-                  <Image url="@../../../../../../../Desktop/logos/Lens_photo_photography_photos_pictures_shutter-512.png" />
-               </image>
-               <BorderPane.margin>
-                  <Insets left="40.0" />
-               </BorderPane.margin>
-            </ImageView>
-         </center>
       </BorderPane>
    </children>
 </AnchorPane>

@@ -28,12 +28,15 @@ package bapers.userInterface.report;
 import bapers.utility.report.IndividualReport;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -62,6 +65,10 @@ public class IndividualReportController extends Report<IndividualReport> impleme
     private TableColumn<IndividualReport, String> tcCompletedBy;
     @FXML
     private TableColumn<IndividualReport, String> tcShelfOnCompletion;
+    @FXML
+    private AnchorPane apRoot;
+    @FXML
+    private VBox vbRoot;
 
     /**
      * Initializes the controller class.
@@ -70,8 +77,14 @@ public class IndividualReportController extends Report<IndividualReport> impleme
     public void initialize(URL url, ResourceBundle rb) {
         tblIR.setItems(reportList);
         setTable();
+        btnPrint.setOnAction((event) -> {
+            stage.setMaximized(true);
+            stage.setFullScreen(true);
+            print(vbRoot);
+            stage.setMaximized(false);
+            stage.setFullScreen(false);
+        });
     }
-    
 
     @Override
     protected void setTable() {

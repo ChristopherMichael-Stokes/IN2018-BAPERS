@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -12,25 +7,26 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="420.0" prefWidth="649.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.report.IndividualReportController">
+<AnchorPane id="AnchorPane" fx:id="apRoot" prefHeight="551.0" prefWidth="822.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.report.IndividualReportController">
     <children>
       <BorderPane prefHeight="420.0" prefWidth="649.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-              <VBox prefHeight="262.0" prefWidth="649.0" BorderPane.alignment="CENTER">
+              <VBox fx:id="vbRoot" prefHeight="262.0" prefWidth="649.0" BorderPane.alignment="CENTER">
                   <children>
                       <TableView fx:id="tblIR" prefHeight="262.0" prefWidth="649.0" VBox.vgrow="ALWAYS">
                           <columns>
-                              <TableColumn fx:id="tcCode" prefWidth="41.33331298828125" text="Code" />
-                              <TableColumn fx:id="tcPrice" prefWidth="38.666656494140625" text="Price" />
-                              <TableColumn fx:id="tcTask" prefWidth="43.33331298828125" text="Task" />
-                              <TableColumn fx:id="tcDepartment" prefWidth="96.0" text="Department" />
-                              <TableColumn fx:id="tcStartTime" prefWidth="81.33331298828125" text="Start Time" />
-                              <TableColumn fx:id="tcTimeTaken" prefWidth="87.33331298828125" text="Time Taken" />
-                              <TableColumn fx:id="tcCompletedBy" prefWidth="108.0" text="Completed By" />
-                              <TableColumn fx:id="tcShelfOnCompletion" prefWidth="149.333251953125" text="Shelf on Completion" />
+                              <TableColumn fx:id="tcCode" minWidth="-Infinity" prefWidth="76.0" text="Code" />
+                              <TableColumn fx:id="tcPrice" minWidth="-Infinity" prefWidth="68.0" text="Price" />
+                              <TableColumn fx:id="tcTask" minWidth="-Infinity" prefWidth="37.0" text="Task" />
+                              <TableColumn fx:id="tcDepartment" minWidth="-Infinity" prefWidth="117.0" text="Department" />
+                              <TableColumn fx:id="tcStartTime" minWidth="-Infinity" prefWidth="92.0" text="Start Time" />
+                              <TableColumn fx:id="tcTimeTaken" minWidth="-Infinity" prefWidth="86.0" text="Time Taken" />
+                              <TableColumn fx:id="tcCompletedBy" minWidth="-Infinity" prefWidth="133.0" text="Completed By" />
+                              <TableColumn fx:id="tcShelfOnCompletion" minWidth="-Infinity" prefWidth="128.0" text="Shelf on Completion" />
                           </columns>
                           <VBox.margin>
                               <Insets top="10.0" />

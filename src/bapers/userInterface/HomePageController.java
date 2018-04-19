@@ -77,13 +77,15 @@ public class HomePageController implements Initializable {
     @FXML
     private Label lblTime;
     @FXML
-    private Button btnLogout;
-    
-    private final HomeService dao = new HomeServiceImpl();
+    private Button btnLogout;    
     @FXML
     private Label lblBriefing;
     @FXML
     private ToolBar tbNavigation;
+    @FXML
+    private Button btnAddCustomer;
+    
+    private final HomeService dao = new HomeServiceImpl();
 
     /**
      * Initializes the controller class.
@@ -107,7 +109,7 @@ public class HomePageController implements Initializable {
         btnReports.setOnAction((event) -> switchScene(Scenes.report));
         btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
         btnLogout.setOnAction((event) -> logout());
-                      
+        btnCustomerAccount.setOnAction((event) -> switchScene(Scenes.createAccount));
         lblBriefing.setText(dao.getBriefing());
         
         ObservableList<Node> buttons = tbNavigation.getItems();

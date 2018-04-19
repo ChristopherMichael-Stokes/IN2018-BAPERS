@@ -25,6 +25,7 @@
  */
 package bapers.service;
 
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.dataAccess.exceptions.PreexistingEntityException;
 import bapers.data.domain.ComponentTask;
@@ -68,6 +69,10 @@ public interface JobService {
     public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception;
     public JobComponent getComponent(String componentId, int jobId);
     public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) throws PreexistingEntityException, Exception;
+    public Job addJob(Job j);
+    public void updateJob(Job j) throws IllegalOrphanException, NonexistentEntityException, Exception;
+    public void addComponentTask(ComponentTask ct) throws PreexistingEntityException, Exception;
+    public void addJobComponent(JobComponent jc) throws PreexistingEntityException, Exception;
     /**
      * @param taskId
      * @param jobId
