@@ -102,13 +102,64 @@ public class ManageStaffController implements Initializable {
                 
                 User newUser = new User();
                 newUser.setUsername(txtUsername.getText());
-                //newUser.setType(cmbUserType.getValue());
+                if(!isEmpty(txtFirstName)){
+                newUser.setFirstName(txtFirstName.getText());
+                }
+                if(!isEmpty(txtSurname)){
+                newUser.setSurname(txtSurname.getText());
+            }
+                if(cmbUserType.getValue().equals("office manager")){
+                    newUser.setType((short)0);
+                }
+                if(cmbUserType.getValue().equals("shift manager")){
+                    newUser.setType((short)1);
+                }
+                if(cmbUserType.getValue().equals("receptionist")){
+                    newUser.setType((short)2);
+                }
+                if(cmbUserType.getValue().equals("technician")){
+                    newUser.setType((short)3);
+                    if(cmbUsersLocation.getSelectionModel().isEmpty()){
+                        alert("Location need to be select for technician!");
+                      
+                    }
+                    else if(cmbUsersLocation.getValue().equals("copy room")){
+                        newUser.setFkLocation(lJpa.findLocation(cmbUsersLocation.getValue()));
+                    }
+                    else if(cmbUsersLocation.getValue().equals("development area")){
+                        newUser.setFkLocation(lJpa.findLocation(cmbUsersLocation.getValue()));
+                    }
+                    else if(cmbUsersLocation.getValue().equals("packing department")){
+                        newUser.setFkLocation(lJpa.findLocation(cmbUsersLocation.getValue()));
+                    }
+                    else if(cmbUsersLocation.getValue().equals("finishing room")){
+                        newUser.setFkLocation(lJpa.findLocation(cmbUsersLocation.getValue()));
+                    }
+                    
+                }
+                
                 try {
                     newUser.setPassphrase(SimpleHash.getStringHash(txtPassword.getText()));
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(ManageStaffController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //newUser.setFkLocation(fkLocation);
+                us.getUsers().forEach((o)->{
+                    if(o.getUsername().equals(newUser.getUsername()))
+                    {
+                        alert("User "+newUser.getUsername()+" alredy exist!");
+                    }
+                    else{
+                        try {
+                            uJpa.create(newUser);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManageStaffController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        information("User Account is created!");
+                    }
+                
+                });
+ 
+                
             }
         });
         List<String> userList = new ArrayList<String>();
@@ -124,8 +175,9 @@ public class ManageStaffController implements Initializable {
         locationList.add("development area");
         locationList.add("packing department");
         locationList.add("finishing room");
+        oLocationList = FXCollections.observableArrayList(locationList);
         cmbUserType.setItems(oUserList);
-        cmbUsersLocation.setItems(oUserList);
+        cmbUsersLocation.setItems(oLocationList);
     }
 
     private boolean isEmpty(TextField tf) {
@@ -133,6 +185,14 @@ public class ManageStaffController implements Initializable {
     }
     private void alert(String message){
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void information(String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText(message);
