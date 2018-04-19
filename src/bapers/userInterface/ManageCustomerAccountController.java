@@ -27,13 +27,24 @@ package bapers.userInterface;
 
 import static bapers.BAPERS.EMF;
 import bapers.data.dataAccess.AddressJpaController;
+import bapers.data.dataAccess.CardDetailsJpaController;
+import bapers.data.dataAccess.ComponentTaskJpaController;
 import bapers.data.dataAccess.ContactJpaController;
+import bapers.data.dataAccess.CustomerAccountJpaController;
+import bapers.data.dataAccess.DiscountBandJpaController;
+import bapers.data.dataAccess.JobComponentJpaController;
+import bapers.data.dataAccess.JobJpaController;
+import bapers.data.dataAccess.PaymentInfoJpaController;
+import bapers.data.dataAccess.TaskDiscountJpaController;
+import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.Address;
 import bapers.data.domain.AddressPK;
 import bapers.data.domain.Contact;
 import bapers.data.domain.ContactPK;
 import bapers.data.domain.CustomerAccount;
+import bapers.data.domain.DiscountBand;
+import bapers.data.domain.DiscountBandPK;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
 import bapers.service.TaskService;
@@ -174,10 +185,20 @@ public class ManageCustomerAccountController implements Initializable {
     private Button btnSetFixedDiscount;
     @FXML
     private ListView lvContact;
-    private short editAccount;
+    private short editAccount = -1;
     private String surname;
     private AddressJpaController addressController = new AddressJpaController(EMF);
     private ContactJpaController contactController = new ContactJpaController(EMF);
+    private Contact editContact = null;
+    private CustomerAccountJpaController customerJpa = new CustomerAccountJpaController(EMF);
+    private DiscountBandJpaController dbJpa = new DiscountBandJpaController(EMF);
+    private TaskDiscountJpaController tdJpa = new TaskDiscountJpaController(EMF);
+    private ComponentTaskJpaController ctJpa = new ComponentTaskJpaController(EMF);
+    private JobComponentJpaController jcJpa = new JobComponentJpaController(EMF);
+    private CardDetailsJpaController cdJpa = new CardDetailsJpaController(EMF);
+    private PaymentInfoJpaController piJpa = new PaymentInfoJpaController(EMF);
+    private JobJpaController jJpa = new JobJpaController(EMF);
+    private short discountAccount = -1;
 
     /**
      * Initializes the controller class.
@@ -212,8 +233,11 @@ public class ManageCustomerAccountController implements Initializable {
                 alert.setContentText("Search bar cannot be empty!");
                 alert.showAndWait();
                 turnAllTextBlank();
+                setAllDiscountClear();
                 editAccount = -1;
                 surname = null;
+                editContact = null;
+                discountAccount = -1;
             } else {
                 ObservableList<String> searchObservableList;
                 List<String> searchList = new ArrayList<String>();
@@ -225,11 +249,15 @@ public class ManageCustomerAccountController implements Initializable {
                 });
                 if (searchList.isEmpty()) {
                     lsvAccounts.setItems(null);
+                    alert.setAlertType(Alert.AlertType.WARNING);
                     alert.setContentText("No entry for the word" + "(" + txtSearch.getText() + ")");
                     alert.showAndWait();
                     turnAllTextBlank();
+                    setAllDiscountClear();
                     editAccount = -1;
                     surname = null;
+                    editContact = null;
+                    discountAccount = -1;
 
                 } else {
                     searchObservableList = FXCollections.observableArrayList(searchList);
@@ -246,7 +274,9 @@ public class ManageCustomerAccountController implements Initializable {
                         turnAllTextBlank();
                         getAllText(o);
                         editAccount = o.getAccountNumber();
+                        discountAccount = o.getDiscountType();
                         surname = null;
+                        editContact = null;
                     }
                 });
             }
@@ -256,10 +286,9 @@ public class ManageCustomerAccountController implements Initializable {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o)
                         -> {
                     o.getContactList().forEach((oC) -> {
-                        System.out.println(ov.getValue());
-                        System.out.println(oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue()));
                         if (oC.getContactPK().getForename().concat(" ").concat(oC.getContactPK().getSurname()).equals(ov.getValue())) {
                             getContact(oC);
+                            editContact = oC;
                             surname = oC.getContactPK().getSurname();
                         }
                     });
@@ -277,12 +306,56 @@ public class ManageCustomerAccountController implements Initializable {
 
         btnUpdateDetails.setOnAction((event) -> {
             if (lsvAccounts.getItems() == null || editAccount == -1) {
-               
+                alert.setAlertType(Alert.AlertType.WARNING);
+
                 alert.setContentText("You need to select a customer account!");
                 alert.showAndWait();
             } else {
 
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount && !isEmpty(txtAccountName)) {
+                        CustomerAccount ca = o;
+                        ca.setAccountHolderName(txtAccountName.getText());
+                        ca.setEmail(txtEmail.getText());
+                        ca.setLandline(txtLandline.getText());
+                        try {
+                            customerAccountServiceDao.updateAccount(ca);
+                        } catch (NonexistentEntityException ex) {
+                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (o.getAccountNumber() == editAccount && !isEmpty(txtFirstName) && !isEmpty(txtMobile) && !isEmpty(txtSurname)) {
+                        try {
+                            if (editContact != null) {
+                                ContactPK newPK = new ContactPK();
+                                contactController.destroy(editContact.getContactPK());
+                                newPK.setForename(txtFirstName.getText());
+                                newPK.setSurname(txtSurname.getText());
+                                editContact.setContactPK(newPK);
+                                editContact.setMobile(txtMobile.getText());
+                            } else {
+                                ContactPK newPK = new ContactPK();
+                                editContact = new Contact();
+                                newPK.setForename(txtFirstName.getText());
+                                newPK.setSurname(txtSurname.getText());
+                                editContact.setContactPK(newPK);
+                                editContact.setMobile(txtMobile.getText());
+                                editContact.setCustomerAccount(o);
+                            }
+                            try {
+                                contactController.create(editContact);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } catch (IllegalOrphanException ex) {
+                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (NonexistentEntityException ex) {
+                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                     if (o.getAccountNumber() == editAccount && !haveAddress(o)) {
                         if (finishAddress()) {
                             AddressPK addressPK = new AddressPK();
@@ -302,6 +375,7 @@ public class ManageCustomerAccountController implements Initializable {
                         } else {
 
                             if (!finishAddress()) {
+                                alert.setAlertType(Alert.AlertType.WARNING);
 
                                 alert.setContentText("Please fill in every details for address!");
                                 alert.showAndWait();
@@ -310,6 +384,7 @@ public class ManageCustomerAccountController implements Initializable {
                         }
                     } else if (haveAddress(o) && o.getAccountNumber() == editAccount) {
                         if (!finishAddress()) {
+                            alert.setAlertType(Alert.AlertType.WARNING);
                             alert.setContentText("Please fill in every details for address!");
                             alert.showAndWait();
                         } else {
@@ -334,6 +409,237 @@ public class ManageCustomerAccountController implements Initializable {
 
             }
 
+        });
+
+        btnRemoveAccount.setOnAction((event) -> {
+            if (editAccount == -1) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("No customer account is selected!");
+                alert.showAndWait();
+            } else {
+                try {
+                    customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                        if (o.getAccountNumber() == editAccount) {
+                            o.getAddressList().forEach((oA) -> {
+                                try {
+                                    addressController.destroy(oA.getAddressPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+
+                            o.getContactList().forEach((oC) -> {
+                                try {
+                                    oC.getJobList().forEach((oJ) -> {
+                                        oJ.getJobComponentList().forEach((oJC) -> {
+                                            oJC.getComponentTaskList().forEach((oCT) -> {
+                                                try {
+                                                    ctJpa.destroy(oCT.getComponentTaskPK());
+                                                } catch (NonexistentEntityException ex) {
+                                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+                                            });
+                                            try {
+                                                jcJpa.destroy(oJC.getJobComponentPK());
+                                            } catch (IllegalOrphanException ex) {
+                                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                            } catch (NonexistentEntityException ex) {
+                                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        });
+                                        try {
+                                            jJpa.destroy(oJ.getJobId());
+                                        } catch (IllegalOrphanException ex) {
+                                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                        } catch (NonexistentEntityException ex) {
+                                            Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    });
+                                    contactController.destroy(oC.getContactPK());
+                                } catch (IllegalOrphanException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                            });
+
+                            o.getDiscountBandList().forEach((oDB) -> {
+                                try {
+                                    dbJpa.destroy(oDB.getDiscountBandPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+
+                            o.getTaskDiscountList().forEach((oTD) -> {
+                                try {
+                                    tdJpa.destroy(oTD.getTaskDiscountPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+                        }
+                    });
+                    customerJpa.destroy(editAccount);
+                    turnAllTextBlank();
+                    editAccount = -1;
+                    lsvAccounts.setItems(null);
+                    lvContact.setItems(null);
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Selected customer account has been deleted!");
+                    alert.showAndWait();
+                } catch (IllegalOrphanException ex) {
+                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        });
+
+        btnDowngrade.setOnAction((event) -> {
+            if (editAccount != -1) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount && o.getDiscountType() != (short) 0) {
+                        o.getDiscountBandList().forEach((oDB) -> {
+                            try {
+                                dbJpa.destroy(oDB.getDiscountBandPK());
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                        o.getTaskDiscountList().forEach((oTD) -> {
+                            try {
+                                tdJpa.destroy(oTD.getTaskDiscountPK());
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
+                        o.setDiscountType((short) 0);
+                        alert.setAlertType(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Customer " + o.getAccountHolderName() + " has been downgrade!");
+                        alert.showAndWait();
+                    }
+                });
+            }
+        });
+
+        btnActivateAccount.setOnAction(((event) -> {
+            customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                if (o.getAccountNumber() == editAccount && o.getLocked() != (short) 0) {
+                    customerAccountServiceDao.setAccountActive(o, true);
+                    try {
+                        customerAccountServiceDao.updateAccount(o);
+                    } catch (NonexistentEntityException ex) {
+                        Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Customer " + o.getAccountHolderName() + " account is no longer disable!");
+                    alert.showAndWait();
+                } else if (o.getAccountNumber() == editAccount && o.getLocked() == (short) 0) {
+                    alert.setAlertType(Alert.AlertType.WARNING);
+                    alert.setContentText("Customer " + o.getAccountHolderName() + " already activated!");
+                    alert.showAndWait();
+                }
+            });
+
+        }));
+
+        lsvTasks.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
+            public void changed(ObservableValue<? extends Integer> ov, Integer oldvalue, Integer newvalue) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        o.getTaskDiscountList().forEach((oTD) -> {
+                            if (oTD.getTask().getTaskId().equals(ov.getValue())) {
+                                txtVariablePercentage.setText(String.valueOf(oTD.getPercentage()));
+                            }
+                        });
+                    }
+
+                });
+            }
+
+        });
+        
+        lsvFlexible.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
+            public void changed(ObservableValue<? extends Integer> ov, Integer oldvalue, Integer newvalue) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        o.getDiscountBandList().forEach((oDB) -> {
+                            if(oDB.getDiscountBandPK().getPrice() == (ov.getValue())){
+                            txtPrice.setText(String.valueOf(oDB.getDiscountBandPK().getPrice()));
+                            txtFlexiblePercentage.setText(String.valueOf(oDB.getPercentage()));
+                            }
+                        });
+                    }
+
+                });
+            }
+
+        });
+        
+        rbVariable.setOnAction((event)->{
+        setDiscountClear();
+        });
+        
+        rbFlexible.setOnAction((event)->{
+        setDiscountClear();
+        });
+        
+        rbFixed.setOnAction((event)->{
+        setDiscountClear();
+        });
+        
+        btnSetFixedDiscount.setOnAction((event)->{
+        if(!rbFixed.isSelected()){
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Fixed discount is not selected!");
+            alert.showAndWait();
+        }
+        else if(isEmpty(txtFixedPercentage)){
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please fill in the percentage for fixed discount!");
+            alert.showAndWait();
+        }
+        else if (Float.parseFloat(txtFixedPercentage.getText()) <=100 && Float.parseFloat(txtFixedPercentage.getText()) >=0){
+            
+            customerAccountServiceDao.getCustomerAccounts().forEach((o)->{
+            if(o.getAccountNumber()==editAccount &&!o.getDiscountBandList().isEmpty()){
+                o.getDiscountBandList().get(0).setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                try {
+                    dbJpa.edit(o.getDiscountBandList().get(0));
+                    customerJpa.edit(o);
+                } catch (Exception ex) {
+                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else if(o.getAccountNumber()==editAccount && o.getDiscountBandList().isEmpty()){
+                        DiscountBand discountBand = new DiscountBand();
+                        DiscountBandPK discountBandPK = new DiscountBandPK();
+                        
+                        discountBandPK.setPrice(0);
+                        discountBand.setCustomerAccount(o);
+                        discountBand.setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                        discountBand.setDiscountBandPK(discountBandPK);
+                try {
+                    dbJpa.create(discountBand);
+                    o.getDiscountBandList().add(discountBand);
+                    customerJpa.edit(o);
+                } catch (Exception ex) {
+                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                        }
+            });
+            
+        }
+        else{
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("Please fill in percentage between 0-100!");
+            alert.showAndWait();
+        }
         });
 
     }
@@ -373,6 +679,39 @@ public class ManageCustomerAccountController implements Initializable {
         });
         contactObservableList = FXCollections.observableArrayList(contactList);
         lvContact.setItems(contactObservableList);
+        if (o.getDiscountType() == (short) 0) {
+            setAllDiscountClear();
+        }
+        if (o.getDiscountType() != (short) 0) {
+            if (o.getDiscountType() == (short) 1) {
+                setAllDiscountClear();
+                rbFixed.setSelected(true);
+                txtFixedPercentage.setText(String.valueOf(o.getDiscountBandList().get(0).getPercentage()));
+            } else if (o.getDiscountType() == (short) 2) {
+                setAllDiscountClear();
+                List<Integer> discountTaskIDList = new ArrayList<Integer>();
+                ObservableList<Integer> taskIDObservableList;
+                rbVariable.setSelected(true);
+                o.getTaskDiscountList().forEach((oTD) -> {
+                    discountTaskIDList.add(oTD.getTask().getTaskId());
+                });
+                taskIDObservableList = FXCollections.observableArrayList(discountTaskIDList);
+                lsvTasks.setItems(taskIDObservableList);
+
+            } else if (o.getDiscountType() == (short) 3) {
+                setAllDiscountClear();
+                List<Integer> discountPriceList = new ArrayList<Integer>();
+                ObservableList<Integer> discountPriceObservableList;
+                rbFlexible.setSelected(true);
+                o.getDiscountBandList().forEach((oDB)->{
+                discountPriceList.add(oDB.getDiscountBandPK().getPrice());
+                });
+                discountPriceObservableList = FXCollections.observableArrayList(discountPriceList);
+                lsvFlexible.setItems(discountPriceObservableList);
+            }
+
+        }
+
     }
 
     private void getContact(Contact o) {
@@ -389,26 +728,46 @@ public class ManageCustomerAccountController implements Initializable {
     private boolean haveAddress(CustomerAccount o) {
         return !o.getAddressList().isEmpty();
     }
-    
-    private boolean finishAddress(){
-        if(isEmpty(txtAddressLine1)){
+
+    private boolean finishAddress() {
+        if (isEmpty(txtAddressLine1)) {
             return false;
         }
-        if(isEmpty(txtCity)){
+        if (isEmpty(txtCity)) {
             return false;
         }
-        if(isEmpty(txtPostCode)){
+        if (isEmpty(txtPostCode)) {
             return false;
         }
-        if(isEmpty(txtRegion)){
+        if (isEmpty(txtRegion)) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
-           
-            
-        
+
+    }
+
+    private void setAllDiscountClear() {
+        rbVariable.setSelected(false);
+        rbFixed.setSelected(false);
+        rbFlexible.setSelected(false);
+        lsvTasks.setItems(null);
+        lsvFlexible.setItems(null);
+        txtVariablePercentage.clear();
+        txtFixedPercentage.clear();
+        txtFlexiblePercentage.clear();
+        txtPrice.clear();
+        cbbVariable.getSelectionModel().clearSelection();
+    }
+    
+    private void setDiscountClear() {
+        lsvTasks.setItems(null);
+        lsvFlexible.setItems(null);
+        txtVariablePercentage.clear();
+        txtFixedPercentage.clear();
+        txtFlexiblePercentage.clear();
+        txtPrice.clear();
+        cbbVariable.getSelectionModel().clearSelection();
     }
 
 }

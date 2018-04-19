@@ -154,7 +154,7 @@ public class JobServiceImpl implements JobService {
         return jobComponentController.findJobComponentEntities().stream()
                 .filter(j -> j.getJob().getJobId() == jobId)
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
-   }
+    }
 
     /**
      *

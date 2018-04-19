@@ -75,6 +75,7 @@ public class CreateAccountController implements Initializable {
     private Label lblCreateAccount;
     private CustomerAccountService customerDao = new CustomerAccountServiceImpl();
     private AddressJpaController addressJpa = new AddressJpaController(EMF);
+    private boolean used = false;
 
     /**
      * Initializes the controller class.
@@ -95,6 +96,7 @@ public class CreateAccountController implements Initializable {
                 alert.showAndWait();
             } else {
                 CustomerAccount account = new CustomerAccount((short) 0, txtAccountHolder.getText(), (short) 0);
+                account.setDiscountType((short)0);
                 Address address = new Address();
                 AddressPK addressPK = new AddressPK();
                 if (!isEmpty(txtEmail))
@@ -109,7 +111,8 @@ public class CreateAccountController implements Initializable {
 
                     if (!isEmpty(txtAddress2) && !isEmpty(txtCountry)) {
                        address.setAddressLine2(txtAddress2.getText());
-                       address.setRegion(txtCountry.getText()); 
+                       address.setRegion(txtCountry.getText());
+                       used = true;
                     }
                     customerDao.addCustomer(account);
                     address.setCustomerAccount(account);
@@ -119,11 +122,6 @@ public class CreateAccountController implements Initializable {
                         Logger.getLogger(CreateAccountController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    try {
-                        addressJpa.create(address);
-                    } catch (Exception ex) {
-                        Logger.getLogger(CreateAccountController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                     customerDao.addCustomer(account);
                 }
                 alert.setAlertType(Alert.AlertType.INFORMATION);

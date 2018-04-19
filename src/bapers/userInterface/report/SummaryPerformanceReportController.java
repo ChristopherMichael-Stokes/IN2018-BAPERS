@@ -25,28 +25,34 @@
  */
 package bapers.userInterface.report;
 
+import bapers.utility.report.Shift;
+import bapers.utility.report.ShiftResultSet;
+import bapers.utility.report.SummaryShift;
+import bapers.utility.report.TotalShift;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * FXML Controller class
  *
  * @author EdgarLaw
  */
-public class SummaryPerformanceReportController implements Initializable {
+public class SummaryPerformanceReportController extends Report<ShiftResultSet>
+        implements Initializable {
 
     @FXML
-    private TableView<?> tblDayShift1;
+    private TableView<Shift> tblDayShift1;
     @FXML
-    private TableView<?> tblDayShift2;
-    @FXML
-    private TableView<?> tblPeriod;
+    private TableView<Shift> tblDayShift2;
     @FXML
     private Button btnPrint;
     @FXML
@@ -54,48 +60,125 @@ public class SummaryPerformanceReportController implements Initializable {
     @FXML
     private Label lblDayshift1;
     @FXML
-    private TableColumn<?, ?> tcDate;
-    @FXML
-    private TableColumn<?, ?> tcCopyRoom;
-    @FXML
-    private TableColumn<?, ?> tcDevelopment;
-    @FXML
-    private TableColumn<?, ?> tcFinishing;
-    @FXML
-    private TableColumn<?, ?> tcPacking;
-    @FXML
     private Label lblDayShift2;
     @FXML
     private Label lblNightShift;
     @FXML
-    private TableView<?> tblNightShift;
-    @FXML
-    private TableColumn<?, ?> tcTitle;
+    private TableView<Shift> tblNightShift;
     @FXML
     private Label lblDayShift1Total;
     @FXML
-    private TableView<?> tblDayShift1Total;
+    private TableView<TotalShift> tblDayShift1Total;
     @FXML
     private Label lblDayShift2Total;
     @FXML
-    private TableView<?> tblDayShift2Total;
+    private TableView<TotalShift> tblDayShift2Total;
     @FXML
     private Label lblNightShiftTotal;
     @FXML
-    private TableView<?> tblNightShiftTotal;
+    private TableView<TotalShift> tblNightShiftTotal;
     @FXML
     private Label lblSPRTotal;
     @FXML
-    private TableView<?> tblPeriodTotal;
+    private TableView<SummaryShift> tblSummary;
     @FXML
-    private TableColumn<?, ?> tcFinshing;
+    private TableView<TotalShift> tblSummaryTotal;
+    
+    private final ObservableList<Shift> 
+            dayShift1 = FXCollections.observableArrayList(),
+            dayShift2 = FXCollections.observableArrayList(),
+            nightShift = FXCollections.observableArrayList();    
+    private final ObservableList<SummaryShift> 
+            summaryShift = FXCollections.observableArrayList();
+    
+    private final ObservableList<TotalShift> 
+            dayShift1Total = FXCollections.observableArrayList(),
+            dayShift2Total = FXCollections.observableArrayList(),
+            nightShiftTotal = FXCollections.observableArrayList(),
+            summaryShiftTotal = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        setTable();
+        initTable(tblDayShift1, Shift.class);
+        initTable(tblDayShift2, Shift.class);
+        initTable(tblNightShift, Shift.class);
+        initTable(tblSummary, SummaryShift.class);
+        initTable(tblDayShift1Total, TotalShift.class);
+        initTable(tblDayShift2Total, TotalShift.class);
+        initTable(tblNightShiftTotal, TotalShift.class);
+        initTable(tblSummaryTotal, TotalShift.class);
+        
+        Class<SummaryShift> ss = SummaryShift.class;
+        System.err.println("shift: "+Shift.class.getClass().getName());
+        System.err.println("summary shift: "+ss.getClass().getName());
+        className(Shift.class);
     }
+    
+    private <S> String className(Class<S> objectClass) {
+        return objectClass.getTypeName();
+    }
+    
+    private <S extends TotalShift> void initTable(TableView<S> table, Class<S> objectClass) {
+        TableColumn<S, String> 
+                copyRoom = new TableColumn<>("Copy Room"),
+                development = new TableColumn<>("Development"),
+                finishing = new TableColumn<>("Finishing"),
+                packing = new TableColumn<>("Packing");
+        table.getColumns().clear();
+        
+        
+        String genericName = className(objectClass),
+                shiftName = className(Shift.class),
+                summaryShiftName = className(SummaryShift.class);
+
+        if (genericName.equals(shiftName)) {
+            TableColumn<S, String> date = new TableColumn<>("Date");
+            date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            table.getColumns().add(date);
+        } else if (genericName.equals(summaryShiftName)) {
+            TableColumn<S, String> title = new TableColumn<>("Title");
+            title.setCellValueFactory(new PropertyValueFactory<>("title"));
+            table.getColumns().add(title);
+        }
+        
+        copyRoom.setCellValueFactory(new PropertyValueFactory<>("copyRoom"));
+        development.setCellValueFactory(new PropertyValueFactory<>("development"));
+        finishing.setCellValueFactory(new PropertyValueFactory<>("finishing"));
+        packing.setCellValueFactory(new PropertyValueFactory<>("packing"));
+        
+        table.getColumns().addAll(copyRoom, development, finishing, packing);
+    }
+    
+    @Override
+    public void setItems(ShiftResultSet srs) {
+        dayShift1.setAll(srs.dayShift1);
+        dayShift2.setAll(srs.dayShift2);
+        nightShift.setAll(srs.nightShift);
+        summaryShift.setAll(srs.summaryShift);
+        
+        dayShift1Total.setAll(srs.dayShift1Total);
+        dayShift2Total.setAll(srs.dayShift2Total);
+        nightShiftTotal.setAll(srs.nightShiftTotal);
+        summaryShiftTotal.setAll(srs.summaryShiftTotal);
+    }
+
+    @Override
+    protected void setTable() {
+        tblDayShift1.setItems(dayShift1);
+        tblDayShift2.setItems(dayShift2);
+        tblNightShift.setItems(nightShift);
+        tblSummary.setItems(summaryShift);
+        
+        tblDayShift1Total.setItems(dayShift1Total);
+        tblDayShift2Total.setItems(dayShift2Total);
+        tblNightShiftTotal.setItems(nightShiftTotal);
+        tblSummaryTotal.setItems(summaryShiftTotal);
+    }
+
+    
 
 }

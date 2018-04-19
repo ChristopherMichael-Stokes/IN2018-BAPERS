@@ -99,4 +99,6 @@ public interface CustomerAccountService {
      */
     public void updateAccount(CustomerAccount account) 
             throws IllegalOrphanException, NonexistentEntityException, Exception;
+    
+    public CustomerAccount setAccountActive(CustomerAccount ca ,boolean active);
 }
