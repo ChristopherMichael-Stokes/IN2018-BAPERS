@@ -34,8 +34,8 @@ public class IprTotalIndividual {
 
     /**
      *
-     * @param name
-     * @param time
+     * @param name, a String, in here is the data for colum name retrieve from the database for Individual Performance Report.
+     * @param time, a String, in here is the data for colum time retrieve from the database for Individual Performance Report.
      */
     public IprTotalIndividual(String name, String time) {
         this.name = name;
@@ -44,7 +44,7 @@ public class IprTotalIndividual {
 
     /**
      *
-     * @return
+     * @return String name which representing colum name in the Individual Performance Report.
      */
     public String getName() {
         return name;
@@ -52,7 +52,7 @@ public class IprTotalIndividual {
 
     /**
      *
-     * @param name
+     * @param name,String, in here is the data for colum name retrieve from the database for Individual Performance Report.
      */
     public void setName(String name) {
         this.name = name;
@@ -60,7 +60,7 @@ public class IprTotalIndividual {
 
     /**
      *
-     * @return
+     * @return String time which representing colum time in the Individual Performance Report.
      */
     public String getTime() {
         return time;
@@ -68,7 +68,7 @@ public class IprTotalIndividual {
 
     /**
      *
-     * @param time
+     * @param time, a String, in here is the data for colum time retrieve from the database for Individual Performance Report.
      */
     public void setTime(String time) {
         this.time = time;

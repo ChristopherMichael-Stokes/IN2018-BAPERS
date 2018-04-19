@@ -38,7 +38,7 @@ public class LatePaymentReminderController implements Initializable {
 
     /**
      * Initializes the controller class.
-     * @param url
+     * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
     @Override

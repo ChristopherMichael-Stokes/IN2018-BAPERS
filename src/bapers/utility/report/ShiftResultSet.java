@@ -34,55 +34,55 @@ import java.util.stream.Collectors;
 public class ShiftResultSet {
     
     /**
-     *
+     *List which contains shift object where it stores the value retrieve from the database to generate report.
      */
     public final List<Shift> dayShift1,
 
     /**
-     *
+     *List which contains shift object where it stores the value retrieve from the database to generate report.
      */
     dayShift2,
 
     /**
-     *
+     *List which contains shift object where it stores the value retrieve from the database to generate report.
      */
     nightShift;
 
     /**
-     *
+     *TotalShift object which contain the total value from the data retrieve from the database to generate report.
      */
     public final TotalShift dayShift1Total, 
 
     /**
-     *
+     *TotalShift object which contain the total value from the data retrieve from the database to generate report.
      */
     dayShift2Total, 
 
     /**
-     *
+     *TotalShift object which contain the total value from the data retrieve from the database to generate report.
      */
     nightShiftTotal, 
 
     /**
-     *
+     *TotalShift object which contain the total value from the data retrieve from the database to generate report.
      */
     summaryShiftTotal;
 
     /**
-     *
+     *List which contains SummaryShift object where it stores the value retrieve from the database to generate report.
      */
     public final List<SummaryShift> summaryShift;
     
     /**
      *
-     * @param dayShift1
-     * @param dayShift2
-     * @param nightShift
-     * @param dayShift1Total
-     * @param dayShift2Total
-     * @param nightShiftTotal
-     * @param summaryShift
-     * @param summaryShiftTotal
+     * @param dayShift1,List,contains objects which holds data value for report generation.
+     * @param dayShift2,List,contains objects which holds data value for report generation.
+     * @param nightShift,List,contains objects which holds data value for report generation.
+     * @param dayShift1Total,objects,contains value which use to generate report.
+     * @param dayShift2Total,objects,contains value which use to generate report.
+     * @param nightShiftTotal,objects,contains value which use to generate report.
+     * @param summaryShift,List,contains objects which holds data value for report generation.
+     * @param summaryShiftTotal,objects,contains value which use to generate report.
      */
     public ShiftResultSet(List<Object[]> dayShift1, List<Object[]> dayShift2, 
             List<Object[]> nightShift, Object[] dayShift1Total, 
