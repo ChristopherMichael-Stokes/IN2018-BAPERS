@@ -30,3 +30,6 @@ hs_err_pid*
 /dist/
 /nbproject/private/
 /build/
+/backup/
+**/intervals.dat
+intervals.dat
