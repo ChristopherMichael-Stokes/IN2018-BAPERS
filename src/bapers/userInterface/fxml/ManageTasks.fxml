@@ -21,29 +21,32 @@
    <children>
       <BorderPane prefHeight="413.0" prefWidth="684.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
          <top>
-            <VBox prefHeight="120.0" prefWidth="779.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="120.0" prefWidth="972.0" BorderPane.alignment="CENTER">
                <children>
                   <Separator prefWidth="200.0">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Separator>
-                  <Label fx:id="lblManageTasks" style="-fx-text-fill: #c6c9d1;" text="Manage Tasks">
+                  <Label fx:id="lblManageTasks" prefHeight="10.0" prefWidth="102.0" style="-fx-text-fill: #c6c9d1;" text="Manage Tasks">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" top="20.0" />
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <Separator prefWidth="200.0" />
+                  <Separator prefHeight="4.0" prefWidth="936.0" />
                </children>
+               <BorderPane.margin>
+                  <Insets left="30.0" right="30.0" />
+               </BorderPane.margin>
             </VBox>
          </top>
          <bottom>
             <HBox nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btnHome" mnemonicParsing="false" text="Home">
+                  <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
@@ -70,12 +73,12 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="txtTaskID" promptText="Enter Task ID" />
-                        <TextField fx:id="txtTaskDescription" promptText="Enter Task Description" />
-                        <TextField fx:id="txtLocation" promptText="Enter Location" />
-                        <TextField fx:id="txtShelfSlot" promptText="Enter Shelf Slot" />
-                        <TextField fx:id="txtPrice" promptText="Enter Price" />
-                        <TextField fx:id="txtDuration" promptText="Enter Duration" />
+                        <TextField fx:id="txtTaskID" promptText="Enter Task ID" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtTaskDescription" promptText="Enter Task Description" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtLocation" promptText="Enter Location" style="-fx-background-color: #364059; -fx-border-radius: 10; -fx-border-color: #c6c9d1; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtShelfSlot" promptText="Enter Shelf Slot" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtPrice" promptText="Enter Price" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtDuration" promptText="Enter Duration" style="-fx-background-color: #364059; -fx-border-radius: 10; -fx-border-color: #c6c9d1; -fx-text-fill: #c6c9d1;" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -83,9 +86,9 @@
                   </HBox>
                   <HBox spacing="5.0">
                      <children>
-                        <Button fx:id="btnUpdateTask" mnemonicParsing="false" text="Update Task" />
-                        <Button fx:id="btnAddTask" mnemonicParsing="false" text="Add Task" />
-                        <Button fx:id="btnRemoveTask" mnemonicParsing="false" text="Remove Task" />
+                        <Button fx:id="btnUpdateTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Update Task" />
+                        <Button fx:id="btnAddTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Add Task" />
+                        <Button fx:id="btnRemoveTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Remove Task" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -97,6 +100,9 @@
                </BorderPane.margin>
             </VBox>
          </center>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </BorderPane>
    </children>
 </AnchorPane>
