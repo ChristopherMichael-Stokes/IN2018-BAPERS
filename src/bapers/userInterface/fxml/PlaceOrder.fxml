@@ -6,179 +6,139 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="844.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.PlaceOrderController">
+<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="419.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.PlaceOrderController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/placeorder.css" />
     </stylesheets>
    <children>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" />
-      <VBox layoutX="-3.0" layoutY="-3.0" prefHeight="91.0" prefWidth="853.0">
-         <children>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="10.0" />
-               </VBox.margin>
-            </Separator>
-            <Label prefHeight="44.0" prefWidth="146.0" style="-fx-text-fill: #c6c9d1;" text="Place Order">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="20.0" />
-               </VBox.margin>
-            </Label>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" />
-               </VBox.margin></Separator>
-         </children>
-      </VBox>
-      <HBox layoutY="101.0" prefHeight="305.0" prefWidth="853.0">
-         <children>
-            <VBox prefHeight="319.0" prefWidth="284.0">
+      <BorderPane prefHeight="537.0" prefWidth="853.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox prefHeight="77.0" prefWidth="853.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextField fx:id="txtSearchCustomer" prefHeight="30.0" prefWidth="247.0" promptText="Search Customer..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
+                  <Separator prefWidth="200.0">
                      <VBox.margin>
-                        <Insets left="20.0" right="10.0" />
+                        <Insets left="20.0" right="20.0" top="10.0" />
                      </VBox.margin>
-                  </TextField>
-                  <ScrollPane fx:id="scpSearchCustomer" prefHeight="195.0" prefWidth="261.0">
-                     <VBox.margin>
-                        <Insets left="20.0" right="10.0" top="20.0" />
-                     </VBox.margin>
-                     <content>
-                        <ListView prefHeight="193.0" prefWidth="225.0" />
-                     </content>
-                  </ScrollPane>
-                  <Button fx:id="btnCreateAccount" mnemonicParsing="false" prefHeight="36.0" prefWidth="227.0" style="-fx-background-color: #4185f2;" text="Create Customer Account">
-                     <VBox.margin>
-                        <Insets left="30.0" top="30.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-            <VBox prefHeight="305.0" prefWidth="196.0">
-               <children>
-                  <Label fx:id="lblJobinfo" prefHeight="17.0" prefWidth="125.0" style="-fx-text-fill: #c6c9d1;" text="Urgent Job">
-                     <padding>
-                        <Insets left="60.0" />
-                     </padding>
+                  </Separator>
+                  <Label prefHeight="44.0" prefWidth="146.0" style="-fx-text-fill: #c6c9d1;" text="Place Order">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font>
-                  </Label>
-                  <RadioButton fx:id="optNo" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="No">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="optYes" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Yes">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </RadioButton>
-                  <TextField fx:id="txtRecordDeadline" prefHeight="25.0" prefWidth="175.0" promptText="Record Deadline..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
-                     <VBox.margin>
-                        <Insets left="20.0" right="20.0" top="20.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <Label fx:id="lblSpecialRequests" prefHeight="17.0" prefWidth="105.0" style="-fx-text-fill: #c6c9d1;" text="Special Requests">
-                     <VBox.margin>
-                        <Insets left="40.0" top="10.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <ScrollPane fx:id="scpSpecialRequests" prefHeight="181.0" prefWidth="159.0">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="305.0" prefWidth="195.0">
-               <children>
-                  <Label fx:id="lblJobRequirements" prefHeight="17.0" prefWidth="131.0" style="-fx-text-fill: #c6c9d1;" text="Job Requirements">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets left="30.0" />
-                     </VBox.margin>
-                  </Label>
-                  <ScrollPane fx:id="scpJobRequirements" prefHeight="158.0" prefWidth="165.0">
-                     <VBox.margin>
-                        <Insets left="20.0" top="20.0" />
-                     </VBox.margin>
-                  </ScrollPane>
-                  <Button fx:id="btnConfirm" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Confirm">
-                     <VBox.margin>
-                        <Insets left="30.0" top="20.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-            <VBox prefHeight="305.0" prefWidth="181.0">
-               <children>
-                  <Label fx:id="lblJobNumber" style="-fx-text-fill: #c6c9d1;" text="Job Number:">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="lblPrice" style="-fx-text-fill: #c6c9d1;" text="Price:">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="lblDeadline" style="-fx-text-fill: #c6c9d1;" text="Deadline:">
                      <VBox.margin>
                         <Insets left="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="btnPrintLabel" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Print Label">
+                  <Separator prefWidth="200.0">
                      <VBox.margin>
-                        <Insets left="20.0" top="20.0" />
+                        <Insets left="20.0" right="20.0" />
                      </VBox.margin>
-                  </Button>
-                  <Button fx:id="btnPrintReceipt" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Print Receipt">
-                     <VBox.margin>
-                        <Insets left="20.0" top="20.0" />
-                     </VBox.margin>
-                  </Button>
+                  </Separator>
                </children>
             </VBox>
-         </children>
-      </HBox>
-      <HBox layoutY="446.0" prefHeight="91.0" prefWidth="853.0">
-         <children>
-            <Label prefHeight="45.0" prefWidth="304.0" style="-fx-text-fill: #c6c9d1;" text="Home &gt; Place Order">
-               <HBox.margin>
-                  <Insets left="10.0" top="40.0" />
-               </HBox.margin>
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <Pane prefHeight="91.0" prefWidth="866.0">
-               <HBox.margin>
-                  <Insets left="50.0" />
-               </HBox.margin>
+         </top>
+         <bottom>
+            <HBox prefHeight="0.0" prefWidth="853.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button layoutX="542.0" layoutY="60.0" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home" />
+                  <Label prefHeight="20.0" prefWidth="366.0" style="-fx-text-fill: #c6c9d1;" text="Home &gt; Place Order" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home" />
+                     </children>
+                  </HBox>
                </children>
-            </Pane>
-         </children>
-      </HBox>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" right="10.0" top="5.0" />
+               </BorderPane.margin>
+            </HBox>
+         </bottom>
+         <center>
+            <HBox prefHeight="411.0" prefWidth="418.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="411.0" prefWidth="128.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="txtSearchCustomer" maxWidth="-Infinity" prefHeight="30.0" prefWidth="175.0" promptText="Search Customer..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
+                           <VBox.margin>
+                              <Insets left="20.0" right="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <ListView prefHeight="193.0" prefWidth="225.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </ListView>
+                        <Button fx:id="btnCreateAccount" mnemonicParsing="false" prefHeight="36.0" prefWidth="227.0" style="-fx-background-color: #4185f2;" text="Create Customer Account">
+                           <VBox.margin>
+                              <Insets left="30.0" top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="411.0" prefWidth="85.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="lblJobinfo" prefHeight="17.0" prefWidth="125.0" style="-fx-text-fill: #c6c9d1;" text="Urgent Job">
+                           <padding>
+                              <Insets left="60.0" />
+                           </padding>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <RadioButton fx:id="optNo" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="No">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="optYes" mnemonicParsing="false" style="-fx-text-fill: #c6c9d1;" text="Yes">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <TextField fx:id="txtRecordDeadline" maxWidth="-Infinity" prefHeight="27.0" prefWidth="189.0" promptText="Record Deadline..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets left="20.0" right="20.0" top="20.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="lblPrice" style="-fx-text-fill: #c6c9d1;" text="Price:">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="20.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="lblDeadline" style="-fx-text-fill: #c6c9d1;" text="Deadline:">
+                           <VBox.margin>
+                              <Insets left="20.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Button fx:id="btnPrintLabel" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Print Label">
+                           <VBox.margin>
+                              <Insets left="20.0" top="20.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </center></BorderPane>
    </children>
 </AnchorPane>
