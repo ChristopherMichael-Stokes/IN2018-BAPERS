@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageStaffController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -120,21 +126,21 @@
       <Separator layoutX="23.0" layoutY="568.0" prefHeight="3.0" prefWidth="270.0" />
       <BorderPane layoutX="467.0" layoutY="94.0" prefHeight="462.0" prefWidth="404.0">
          <left>
-            <ListView prefHeight="127.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+            <ListView fx:id="lvUser" prefHeight="127.0" prefWidth="206.0" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets bottom="40.0" left="20.0" top="40.0" />
                </BorderPane.margin>
             </ListView>
          </left>
          <top>
-            <ComboBox prefWidth="150.0" promptText="Select User..." BorderPane.alignment="TOP_LEFT">
+            <ComboBox fx:id="cbcSelectUser" prefWidth="150.0" promptText="Select User..." BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
                   <Insets left="40.0" top="10.0" />
                </BorderPane.margin>
             </ComboBox>
          </top>
          <right>
-            <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="90.0" style="-fx-background-color: #4185f2;" text="Delete" BorderPane.alignment="BOTTOM_RIGHT">
+            <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="31.0" prefWidth="90.0" style="-fx-background-color: #4185f2;" text="Delete" BorderPane.alignment="BOTTOM_RIGHT">
                <BorderPane.margin>
                   <Insets bottom="40.0" right="30.0" />
                </BorderPane.margin>

@@ -36,6 +36,7 @@ import bapers.data.dataAccess.JobComponentJpaController;
 import bapers.data.dataAccess.JobJpaController;
 import bapers.data.dataAccess.PaymentInfoJpaController;
 import bapers.data.dataAccess.TaskDiscountJpaController;
+import bapers.data.dataAccess.TaskJpaController;
 import bapers.data.dataAccess.exceptions.IllegalOrphanException;
 import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.Address;
@@ -45,6 +46,9 @@ import bapers.data.domain.ContactPK;
 import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.DiscountBand;
 import bapers.data.domain.DiscountBandPK;
+import bapers.data.domain.Task;
+import bapers.data.domain.TaskDiscount;
+import bapers.data.domain.TaskDiscountPK;
 import bapers.service.CustomerAccountService;
 import bapers.service.CustomerAccountServiceImpl;
 import bapers.service.TaskService;
@@ -198,7 +202,9 @@ public class ManageCustomerAccountController implements Initializable {
     private CardDetailsJpaController cdJpa = new CardDetailsJpaController(EMF);
     private PaymentInfoJpaController piJpa = new PaymentInfoJpaController(EMF);
     private JobJpaController jJpa = new JobJpaController(EMF);
+    private TaskJpaController tJpa = new TaskJpaController(EMF);
     private short discountAccount = -1;
+    boolean isUpdate = false;
 
     /**
      * Initializes the controller class.
@@ -296,13 +302,13 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
-        ObservableList<Integer> taskIDOList;
-        List<Integer> taskIDList = new ArrayList<Integer>();
+        ObservableList<Integer> taskOList;
+        List<Integer> taskList = new ArrayList<Integer>();
         taskServiceDao.getTasks().forEach((o) -> {
-            taskIDList.add(o.getTaskId());
+            taskList.add(o.getTaskId());
         });
-        taskIDOList = FXCollections.observableArrayList(taskIDList);
-        cbbVariable.setItems(taskIDOList);
+        taskOList = FXCollections.observableArrayList(taskList);
+        cbbVariable.setItems(taskOList);
 
         btnUpdateDetails.setOnAction((event) -> {
             if (lsvAccounts.getItems() == null || editAccount == -1) {
@@ -563,15 +569,15 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-        
+
         lsvFlexible.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
             public void changed(ObservableValue<? extends Integer> ov, Integer oldvalue, Integer newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
                     if (o.getAccountNumber() == editAccount) {
                         o.getDiscountBandList().forEach((oDB) -> {
-                            if(oDB.getDiscountBandPK().getPrice() == (ov.getValue())){
-                            txtPrice.setText(String.valueOf(oDB.getDiscountBandPK().getPrice()));
-                            txtFlexiblePercentage.setText(String.valueOf(oDB.getPercentage()));
+                            if (oDB.getDiscountBandPK().getPrice() == (ov.getValue())) {
+                                txtPrice.setText(String.valueOf(oDB.getDiscountBandPK().getPrice()));
+                                txtFlexiblePercentage.setText(String.valueOf(oDB.getPercentage()));
                             }
                         });
                     }
@@ -580,68 +586,540 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-        
-        rbVariable.setOnAction((event)->{
-        setDiscountClear();
-        });
-        
-        rbFlexible.setOnAction((event)->{
-        setDiscountClear();
-        });
-        
-        rbFixed.setOnAction((event)->{
-        setDiscountClear();
-        });
-        
-        btnSetFixedDiscount.setOnAction((event)->{
-        if(!rbFixed.isSelected()){
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Fixed discount is not selected!");
-            alert.showAndWait();
-        }
-        else if(isEmpty(txtFixedPercentage)){
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Please fill in the percentage for fixed discount!");
-            alert.showAndWait();
-        }
-        else if (Float.parseFloat(txtFixedPercentage.getText()) <=100 && Float.parseFloat(txtFixedPercentage.getText()) >=0){
-            
-            customerAccountServiceDao.getCustomerAccounts().forEach((o)->{
-            if(o.getAccountNumber()==editAccount &&!o.getDiscountBandList().isEmpty()){
-                o.getDiscountBandList().get(0).setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
-                try {
-                    dbJpa.edit(o.getDiscountBandList().get(0));
-                    customerJpa.edit(o);
-                } catch (Exception ex) {
-                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            else if(o.getAccountNumber()==editAccount && o.getDiscountBandList().isEmpty()){
-                        DiscountBand discountBand = new DiscountBand();
-                        DiscountBandPK discountBandPK = new DiscountBandPK();
-                        
-                        discountBandPK.setPrice(0);
-                        discountBand.setCustomerAccount(o);
-                        discountBand.setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
-                        discountBand.setDiscountBandPK(discountBandPK);
-                try {
-                    dbJpa.create(discountBand);
-                    o.getDiscountBandList().add(discountBand);
-                    customerJpa.edit(o);
-                } catch (Exception ex) {
-                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                        }
-            });
-            
-        }
-        else{
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("Please fill in percentage between 0-100!");
-            alert.showAndWait();
-        }
+
+        rbVariable.setOnAction((event) -> {
+            setDiscountClear();
         });
 
+        rbFlexible.setOnAction((event) -> {
+            setDiscountClear();
+        });
+
+        rbFixed.setOnAction((event) -> {
+            setDiscountClear();
+        });
+
+        btnSetFixedDiscount.setOnAction((event) -> {
+            if (!rbFixed.isSelected()) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Fixed discount is not selected!");
+                alert.showAndWait();
+            } else if (isEmpty(txtFixedPercentage)) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please fill in the percentage for fixed discount!");
+                alert.showAndWait();
+            } else if (isFloat(txtFixedPercentage.getText()) && Float.parseFloat(txtFixedPercentage.getText()) <= 100 && Float.parseFloat(txtFixedPercentage.getText()) >= 0) {
+
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountType() == (short) 1) {
+                            o.getDiscountBandList().get(0).setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                            try {
+                                dbJpa.edit(o.getDiscountBandList().get(0));
+                                customerJpa.edit(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Fixed discount is Set!");
+                                alert.showAndWait();
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if (o.getDiscountType() == (short) 2) {
+                            o.getTaskDiscountList().forEach((oTD) -> {
+                                try {
+                                    tdJpa.destroy(oTD.getTaskDiscountPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+
+                            o.getTaskDiscountList().forEach((oa) -> {
+                                System.out.println(oa.getTaskDiscountPK().getFkAccountNumber());
+                            });
+                            o.getTaskDiscountList().clear();
+
+                            if (isFloat(txtFixedPercentage.getText())) {
+                                List<DiscountBand> dbList = new ArrayList<DiscountBand>();
+                                DiscountBand discountBand = new DiscountBand();
+                                DiscountBandPK discountBandPK = new DiscountBandPK();
+                                discountBandPK.setPrice(0);
+                                discountBand.setCustomerAccount(o);
+                                discountBand.setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                                discountBand.setDiscountBandPK(discountBandPK);
+                                dbList.add(discountBand);
+                                try {
+                                    dbJpa.create(discountBand);
+                                    o.setDiscountType((short) 1);
+                                    o.getDiscountBandList().add(discountBand);
+                                    customerAccountServiceDao.updateAccount(o);
+                                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                                    alert.setContentText("Fixed discount is Set!");
+                                    alert.showAndWait();
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                            }
+                        }
+
+                    } else if (o.getDiscountType() == (short) 3) {
+                        if (isFloat(txtFixedPercentage.getText())) {
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(0);
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            o.getDiscountBandList().forEach((oDB) -> {
+                                try {
+                                    dbJpa.destroy(oDB.getDiscountBandPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+
+                            o.getDiscountBandList().clear();
+                            try {
+                                dbJpa.create(discountBand);
+                                o.setDiscountType((short) 1);
+                                o.getDiscountBandList().add(discountBand);
+                                customerJpa.edit(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Fixed discount is Set!");
+                                alert.showAndWait();
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        }
+                    } else if (o.getAccountNumber() == editAccount && o.getDiscountType() == (short) 0) {
+                        if (isFloat(txtFixedPercentage.getText())) {
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(0);
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setPercentage(Float.parseFloat(txtFixedPercentage.getText()));
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            try {
+                                dbJpa.create(discountBand);
+                                o.setDiscountType((short) 1);
+                                o.getDiscountBandList().add(discountBand);
+                                customerJpa.edit(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Fixed discount is Set!");
+                                alert.showAndWait();
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                });
+            } else {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please fill in percentage between 0-100!");
+                alert.showAndWait();
+            }
+        }
+        );
+
+        btnUpdateVar.setOnAction((event) -> {
+            if (rbVariable.isSelected() && !cbbVariable.getSelectionModel().isEmpty() && isFloat(txtVariablePercentage.getText()) && Float.parseFloat(txtVariablePercentage.getText()) <= 100 && Float.parseFloat(txtVariablePercentage.getText()) >= 0) {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountType() == (short) 0) {
+                            TaskDiscount taskDiscount = new TaskDiscount();
+                            TaskDiscountPK taskDiscountPK = new TaskDiscountPK();
+                            taskDiscount.setCustomerAccount(o);
+                            taskDiscount.setPercentage(Float.parseFloat(txtVariablePercentage.getText()));
+                            taskDiscount.setTask(tJpa.findTask(Integer.parseInt(cbbVariable.getValue().toString())));
+                            taskDiscount.setTaskDiscountPK(taskDiscountPK);
+                            try {
+                                tdJpa.create(taskDiscount);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.setDiscountType((short) 2);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Variable discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if (o.getDiscountType() == (short) 1) {
+                            try {
+                                dbJpa.destroy(o.getDiscountBandList().get(0).getDiscountBandPK());
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().clear();
+
+                            TaskDiscount taskDiscount = new TaskDiscount();
+                            TaskDiscountPK taskDiscountPK = new TaskDiscountPK();
+                            taskDiscount.setCustomerAccount(o);
+                            taskDiscount.setPercentage(Float.parseFloat(txtVariablePercentage.getText()));
+                            taskDiscount.setTask(tJpa.findTask(Integer.parseInt(cbbVariable.getValue().toString())));
+                            taskDiscount.setTaskDiscountPK(taskDiscountPK);
+                            try {
+                                tdJpa.create(taskDiscount);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.setDiscountType((short) 2);
+                            o.getTaskDiscountList().add(taskDiscount);
+
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Variable discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } else if (o.getDiscountType() == (short) 2) {
+
+                            o.getTaskDiscountList().forEach((oTD) -> {
+                                if (oTD.getTaskDiscountPK().getFkTaskId() == Integer.parseInt(cbbVariable.getValue().toString())) {
+                                    isUpdate = true;
+                                    oTD.setPercentage(Float.parseFloat(txtVariablePercentage.getText()));
+                                    try {
+                                        tdJpa.edit(oTD);
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            });
+
+                            if (isUpdate) {
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Variable discount is set!");
+                                alert.showAndWait();
+                                isUpdate = false;
+                            } else {
+                                TaskDiscount taskDiscount = new TaskDiscount();
+                                TaskDiscountPK taskDiscountPK = new TaskDiscountPK();
+                                taskDiscount.setCustomerAccount(o);
+                                taskDiscount.setPercentage(Float.parseFloat(txtVariablePercentage.getText()));
+                                taskDiscount.setTask(tJpa.findTask(Integer.parseInt(cbbVariable.getValue().toString())));
+                                taskDiscount.setTaskDiscountPK(taskDiscountPK);
+                                try {
+                                    tdJpa.create(taskDiscount);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                o.getTaskDiscountList().add(taskDiscount);
+                                try {
+                                    customerAccountServiceDao.updateAccount(o);
+                                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                                    alert.setContentText("Variable discount is set!");
+                                    alert.showAndWait();
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                            }
+                        } else if (o.getDiscountType() == (short) 3) {
+
+                            o.getDiscountBandList().forEach((oDB -> {
+                                try {
+                                    dbJpa.destroy(oDB.getDiscountBandPK());
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }));
+                            o.getDiscountBandList().clear();
+
+                            TaskDiscount taskDiscount = new TaskDiscount();
+                            TaskDiscountPK taskDiscountPK = new TaskDiscountPK();
+                            taskDiscount.setCustomerAccount(o);
+                            taskDiscount.setPercentage(Float.parseFloat(txtVariablePercentage.getText()));
+                            taskDiscount.setTask(tJpa.findTask(Integer.parseInt(cbbVariable.getValue().toString())));
+                            taskDiscount.setTaskDiscountPK(taskDiscountPK);
+                            try {
+                                tdJpa.create(taskDiscount);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.setDiscountType((short) 2);
+                            o.getTaskDiscountList().add(taskDiscount);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Variable discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                    }
+                });
+
+            } else {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please select the TaskID and fill in percentage between 0-100!");
+                alert.showAndWait();
+            }
+
+        });
+
+        btnDeleteVar.setOnAction((event) -> {
+            if (!rbVariable.isSelected() || cbbVariable.getSelectionModel().isEmpty()) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("No Task is selected for delete!");
+                alert.showAndWait();
+            } else {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        o.getTaskDiscountList().forEach((oTD) -> {
+                            if (oTD.getTaskDiscountPK().getFkTaskId() == Integer.parseInt(cbbVariable.getValue().toString())) {
+                                try {
+                                    tdJpa.destroy(oTD.getTaskDiscountPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                    }
+
+                });
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getTaskDiscountList().isEmpty()) {
+                            o.setDiscountType((short) 0);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Value Customer " + o.getAccountHolderName() + " has been downgrade due to lack of discount plan!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } else {
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Task discount has been remove!");
+                            alert.showAndWait();
+                        }
+
+                    }
+
+                });
+            }
+        });
+
+        btnUpdateFlex.setOnAction((event) -> {
+            if (!rbFlexible.isSelected() || isEmpty(txtPrice) || isEmpty(txtFlexiblePercentage)) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Data entry is not complete!");
+                alert.showAndWait();
+            } else if (!isInt(txtPrice.getText()) || !isFloat(txtFlexiblePercentage.getText())) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please check data entry!");
+                alert.showAndWait();
+            } else if (Float.parseFloat(txtFlexiblePercentage.getText()) > 100 || Float.parseFloat(txtFlexiblePercentage.getText()) < 0) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Percentage value must be between 0-100!");
+                alert.showAndWait();
+            } else {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountType() == (short) 0) {
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if (o.getDiscountType() == (short) 1) {
+                            try {
+                                dbJpa.destroy(o.getDiscountBandList().get(0).getDiscountBandPK());
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().clear();
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Flexible discount is set!");
+                            alert.showAndWait();
+
+                        } else if (o.getDiscountType() == (short) 2) {
+                            o.getTaskDiscountList().forEach((oTD) -> {
+                                try {
+                                    tdJpa.destroy(oTD.getTaskDiscountPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+                            o.getTaskDiscountList().clear();
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } else if (o.getDiscountType() == (short) 3) {
+                            o.getDiscountBandList().forEach((oDB) -> {
+                                if (oDB.getDiscountBandPK().getPrice() == Integer.parseInt(txtPrice.getText())) {
+                                    isUpdate = true;
+                                    oDB.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                                    try {
+                                        dbJpa.edit(oDB);
+
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                                        alert.setContentText("Flexible discount updated!");
+                                        alert.showAndWait();
+                                }
+                            });
+                            if (!isUpdate) {
+                                DiscountBand discountBand = new DiscountBand();
+                                DiscountBandPK discountBandPK = new DiscountBandPK();
+                                discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                                discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                                discountBand.setCustomerAccount(o);
+                                discountBand.setDiscountBandPK(discountBandPK);
+                                
+
+                                try {
+                                    dbJpa.create(discountBand);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                o.getDiscountBandList().add(discountBand);
+                                try {
+                                    customerAccountServiceDao.updateAccount(o);
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+
+                            } else {
+                                isUpdate = false;
+                            }
+                        }
+                    }
+                });
+            }
+
+        });
+
+        btnDeleteFlex.setOnAction((event) -> {
+            if (!rbFlexible.isSelected() || isEmpty(txtPrice) || !isInt(txtPrice.getText())) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("No flexible discount is selected for delete!");
+                alert.showAndWait();
+            } else {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        o.getDiscountBandList().forEach((oDB) -> {
+                            if (oDB.getDiscountBandPK().getPrice() == Integer.parseInt(txtPrice.getText())) {
+                                try {
+                                    dbJpa.destroy(oDB.getDiscountBandPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                    }
+                });
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountBandList().isEmpty()) {
+                            o.setDiscountType((short) 0);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Value Customer " + o.getAccountHolderName() + " has been downgrade due to lack of discount plan!");
+                            alert.showAndWait();
+
+                        } else {
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Task discount has been remove!");
+                            alert.showAndWait();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void turnAllTextBlank() {
@@ -703,8 +1181,8 @@ public class ManageCustomerAccountController implements Initializable {
                 List<Integer> discountPriceList = new ArrayList<Integer>();
                 ObservableList<Integer> discountPriceObservableList;
                 rbFlexible.setSelected(true);
-                o.getDiscountBandList().forEach((oDB)->{
-                discountPriceList.add(oDB.getDiscountBandPK().getPrice());
+                o.getDiscountBandList().forEach((oDB) -> {
+                    discountPriceList.add(oDB.getDiscountBandPK().getPrice());
                 });
                 discountPriceObservableList = FXCollections.observableArrayList(discountPriceList);
                 lsvFlexible.setItems(discountPriceObservableList);
@@ -759,7 +1237,7 @@ public class ManageCustomerAccountController implements Initializable {
         txtPrice.clear();
         cbbVariable.getSelectionModel().clearSelection();
     }
-    
+
     private void setDiscountClear() {
         lsvTasks.setItems(null);
         lsvFlexible.setItems(null);
@@ -768,6 +1246,26 @@ public class ManageCustomerAccountController implements Initializable {
         txtFlexiblePercentage.clear();
         txtPrice.clear();
         cbbVariable.getSelectionModel().clearSelection();
+    }
+
+    private static boolean isFloat(String str) {
+        try {
+            Float.parseFloat(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    private static boolean isInt(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
 }
