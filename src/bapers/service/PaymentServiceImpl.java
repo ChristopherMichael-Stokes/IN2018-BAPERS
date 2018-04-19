@@ -61,9 +61,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final JobJpaController jobController;
     private final ContactJpaController contactController;
 
-    /**
-     *
-     */
     public PaymentServiceImpl() {
         paymentController = new PaymentInfoJpaController(EMF);
         cardController = new CardDetailsJpaController(EMF);
@@ -71,36 +68,15 @@ public class PaymentServiceImpl implements PaymentService {
         contactController = new ContactJpaController(EMF);
     }
 
-    /**
-     *
-     * @param accountNumber
-     * @return
-     */
     @Override
     public ObservableList<Job> getUnpaidJobs(int accountNumber) {
         return jobController.findJobEntities().stream()
                 .filter(j -> j.getContact().getContactPK().getFkAccountNumber() == accountNumber
                     && j.getFkTransactionId() == null)
                 .collect(Collectors
-                        .toCollection(FXCollections::observableArrayList));
-                
-//        return contactController.findContactEntities().stream()
-//                .filter(c -> c.getContactPK().getFkAccountNumber() == accountNumber)
-//                .map(Contact::getJobList)
-//                .flatMap(j -> j.stream()
-//                        .filter(jb -> jb.getFkTransactionId() == null))
-//                .collect(Collectors
-//                        .toCollection(FXCollections::observableArrayList));
+                        .toCollection(FXCollections::observableArrayList)); 
     }
-        
-
-    /**
-     *
-     * @param datePaid
-     * @param jobs
-     * @throws PreexistingEntityException
-     * @throws Exception
-     */
+ 
     @Override
     public void addPayment(Date datePaid, int amount, List<Job> jobs) 
             throws PreexistingEntityException, Exception {
@@ -121,17 +97,6 @@ public class PaymentServiceImpl implements PaymentService {
         } 
     }
 
-    /**
-     *
-     * @param datePaid
-     * @param cardDigits
-     * @param expiryDate
-     * @param cardType
-     * @param jobs
-     * @throws PreexistingEntityException
-     * @throws IllegalOrphanException
-     * @throws Exception
-     */
     @Override
     public void addPayment(Date datePaid, int amount, String cardDigits, 
             String expiryDate, String cardType, List<Job> jobs)
@@ -168,20 +133,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .reduce(cost, (a, b) -> a + b);
         
         //account for urgency
-        /*  for some reason, retrieving the deadline from the db gives the 
-            actual time minus 1 hr, so add 1  */
-//        double time = (job.getDeadline().getTime() + 3.6e6) / 3.6e6d;
         if (job.getAddedPercentage() != null)
             cost += (cost*(job.getAddedPercentage()/100f));
         
         return Math.round(cost) / 100d;
     }
-    
-    /**
-     *
-     * @param jobId
-     * @return
-     */
+
     @Override
     public double getJobCost(int jobId) {
         Job job = jobController.findJob(jobId);

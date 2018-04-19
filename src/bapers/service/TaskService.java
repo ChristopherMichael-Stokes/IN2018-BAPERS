@@ -39,32 +39,32 @@ public interface TaskService {
 
     /**
      *
-     * @return
+     * @return all tasks from the system
      */
     public ObservableList<Task> getTasks();
 
     /**
      *
-     * @param task
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param task to add to the system
+     * @throws PreexistingEntityException if task already exists
+     * @throws Exception if database connection fails
      */
     public void addTask(Task task) throws PreexistingEntityException, Exception;
 
     /**
      *
-     * @param task
-     * @throws IllegalOrphanException
-     * @throws NonexistentEntityException
-     * @throws Exception
+     * @param task to update in the system
+     * @throws IllegalOrphanException if foreign keys are invalidated
+     * @throws NonexistentEntityException if task does not exist
+     * @throws Exception if database connection fails
      */
     public void updateTask(Task task) throws IllegalOrphanException, NonexistentEntityException, Exception;
     
     /**
      *
-     * @param taskId
-     * @throws IllegalOrphanException
-     * @throws NonexistentEntityException
+     * @param taskId of task to remove
+     * @throws IllegalOrphanException if foreign keys are invalidated
+     * @throws NonexistentEntityException if task does not already exist
      */
     public void removeTask(int taskId) throws IllegalOrphanException, NonexistentEntityException;
 }

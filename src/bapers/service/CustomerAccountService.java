@@ -39,45 +39,33 @@ import javafx.collections.ObservableList;
  * @author chris
  */
 public interface CustomerAccountService {
-    
+
     /**
      *
      */
     public enum DiscountPlan {
 
-        /**
-         *
-         */
-        none,
+        none, fixed, variable, flexible;
 
         /**
+         * takes an int and returns enum representation of discount
          *
-         */
-        fixed,
-
-        /**
-         *
-         */
-        variable,
-
-        /**
-         *
-         */
-        flexible;
-
-        /**
-         *
-         * @param plan
-         * @return
+         * @param plan value stored in the database
+         * @return discount type
          */
         public static DiscountPlan getPlan(int plan) {
-            switch(plan){
-                case 0: return none;
-                case 1: return fixed;
-                case 2: return variable;
-                case 3: return flexible;
-                default: return null;
-            }                
+            switch (plan) {
+                case 0:
+                    return none;
+                case 1:
+                    return fixed;
+                case 2:
+                    return variable;
+                case 3:
+                    return flexible;
+                default:
+                    return null;
+            }
         }
     };
 
@@ -90,48 +78,45 @@ public interface CustomerAccountService {
     /**
      *
      * @param account the new account to be added
-     * @param addressLine1
-     * @param address the address of the new customer
-     * @param city
-     * @param postcode
-     * @return 
-     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
-     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
+     * @param addressLine1 to be added to the account
+     * @param city to be added to the account
+     * @param postcode to be added to the account
+     * @return the customer object when it has been added to the database
      */
-    public CustomerAccount addCustomer(CustomerAccount account, String addressLine1, 
+    public CustomerAccount addCustomer(CustomerAccount account, String addressLine1,
             String postcode, String city);
-    
+
     /**
-     *
-     * @param account
-     * @return
+     * creates a customer with no address
+     * @param account the account to add
+     * @return the customer object when it has been added to the database
      */
     public CustomerAccount addCustomer(CustomerAccount account);
 
     /**
-     *
-     * @param account
-     * @param addressLine2
-     * @param region
+     * edit nullable fields in the address
+     * @param account the account that the address belongs to
+     * @param addressLine2 
+     * @param region of the address, e.g. united kingdom
      */
     public void modifyAddress(CustomerAccount account, String addressLine2, String region);
 
     /**
-     *
-     * @param accountMatches
-     * @return
+     * 
+     * @param accountMatches input string to look for
+     * @return all customer accounts that contain the input string
      */
     public List<CustomerAccount> findCustomers(String accountMatches);
 
     /**
      *
-     * @param c
-     * @param ca
-     * @return
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param c contact to add
+     * @param ca customer account that the contact belongs to
+     * @return the added contact
+     * @throws PreexistingEntityException if customer already exists
+     * @throws Exception if exception is raised when account is being added
      */
-    public Contact addContact(Contact c, CustomerAccount ca) throws PreexistingEntityException, Exception ;
+    public Contact addContact(Contact c, CustomerAccount ca) throws PreexistingEntityException, Exception;
 
     /**
      *
@@ -144,30 +129,30 @@ public interface CustomerAccountService {
      *
      * @param account the modified customer account that is to be edited
      * @param address the modified address
-     * @throws IllegalOrphanException if there are any other entities which rely 
+     * @throws IllegalOrphanException if there are any other entities which rely
      * upon data that has now been changed
      * @throws NonexistentEntityException if the account does not already exist
      * @throws Exception if db connection fails
      */
-    public void updateAccount(CustomerAccount account, Address address) 
+    public void updateAccount(CustomerAccount account, Address address)
             throws IllegalOrphanException, NonexistentEntityException, Exception;
-    
+
     /**
      *
      * @param account the modified customer account that is to be edited
-     * @throws IllegalOrphanException if there are any other entities which rely 
+     * @throws IllegalOrphanException if there are any other entities which rely
      * upon data that has now been changed
      * @throws NonexistentEntityException if the account does not already exist
      * @throws Exception if db connection fails
      */
-    public void updateAccount(CustomerAccount account) 
+    public void updateAccount(CustomerAccount account)
             throws IllegalOrphanException, NonexistentEntityException, Exception;
-    
+
     /**
      *
-     * @param ca
-     * @param active
-     * @return
+     * @param ca account to set active
+     * @param active true if the account should be active
+     * @return the updated customer account
      */
-    public CustomerAccount setAccountActive(CustomerAccount ca ,boolean active);
+    public CustomerAccount setAccountActive(CustomerAccount ca, boolean active);
 }

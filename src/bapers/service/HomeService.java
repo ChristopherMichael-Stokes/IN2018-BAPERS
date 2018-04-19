@@ -39,31 +39,12 @@ public interface HomeService {
     
     
     public enum UserTypes{
+        officeManager, shiftManager, receptionist, technician;
 
         /**
          *
-         */
-        officeManager,
-
-        /**
-         *
-         */
-        shiftManager,
-
-        /**
-         *
-         */
-        receptionist,
-
-        /**
-         *
-         */
-        technician;
-
-        /**
-         *
-         * @param type
-         * @return
+         * @param type integer value of the user type
+         * @return enum representation of the user type
          */
         public static UserTypes getType(int type) {
             switch(type){

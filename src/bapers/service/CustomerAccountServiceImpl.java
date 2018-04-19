@@ -51,19 +51,14 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     private final AddressJpaController addressController;
     private final ContactJpaController contactController;
 
-    /**
-     *
-     */
+    
     public CustomerAccountServiceImpl() {
         customerController = new CustomerAccountJpaController(EMF);
         addressController = new AddressJpaController(EMF);
         contactController = new ContactJpaController(EMF);
     }
 
-    /**
-     *
-     * @return a list of all the customer accounts stored in the system
-     */
+   
     @Override
     public ObservableList<CustomerAccount> getCustomerAccounts() {
         return FXCollections
@@ -85,15 +80,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
         return account;
     }
-
-    /**
-     *
-     * @param c
-     * @param ca
-     * @return
-     * @throws PreexistingEntityException
-     * @throws Exception
-     */
+    
     @Override
     public Contact addContact(Contact c, CustomerAccount ca)  throws PreexistingEntityException, Exception {
         Contact contact = contactController.findContact(c.getContactPK());
@@ -104,26 +91,13 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         return contact == null ? c : contact;
     }
 
-    /**
-     *
-     * @param accountMatches
-     * @return
-     */
     @Override
     public List<CustomerAccount> findCustomers(String accountMatches) {
         return customerController.findCustomerAccountEntities().stream()
                 .filter(ca -> ca.getAccountHolderName().contains(accountMatches))
                 .collect(Collectors.toList());
     }
-
-    /**
-     *
-     * @param account the new account to be added
-     * @param addressLine1
-     * @param postcode
-     * @param city
-     * @return 
-     */
+   
     @Override
     public CustomerAccount addCustomer(CustomerAccount account, String addressLine1,
             String postcode, String city) {
@@ -143,11 +117,6 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         return null;
     }
 
-    /**
-     *
-     * @param accountNumber of the customer to look up
-     * @return true if the customer record is in the database
-     */
     @Override
     public boolean customerExists(String accountNumber) {
 
@@ -155,51 +124,23 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                 .findCustomerAccount(Short.parseShort(accountNumber)) != null;
     }
 
-    /**
-     *
-     * @param account the modified customer account that is to be edited
-     * @param address the modified address
-     * @throws IllegalOrphanException if there are any other entities which rely
-     * upon data that has now been changed
-     * @throws NonexistentEntityException if the account does not already exist
-     * @throws Exception if db connection fails
-     */
     @Override
     public void updateAccount(CustomerAccount account, Address address)
             throws IllegalOrphanException, NonexistentEntityException, Exception {
         customerController.edit(setAddress(account, address));
     }
 
-    /**
-     *
-     * @param account the modified customer account that is to be edited
-     * @throws IllegalOrphanException if there are any other entities which rely
-     * upon data that has now been changed
-     * @throws NonexistentEntityException if the account does not already exist
-     * @throws Exception if db connection fails
-     */
     @Override
     public void updateAccount(CustomerAccount account)
             throws IllegalOrphanException, NonexistentEntityException, Exception {
         customerController.edit(account);
     }
 
-    /**
-     *
-     * @param account
-     * @return
-     */
     @Override
     public CustomerAccount addCustomer(CustomerAccount account) {
         return addCustomer_(account);
     }
 
-    /**
-     *
-     * @param account
-     * @param addressLine2
-     * @param region
-     */
     @Override
     public void modifyAddress(CustomerAccount account, String addressLine2, String region) {
         Address address = account.getAddressList().get(0);
@@ -208,12 +149,6 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         setAddress(account, address);
     }
 
-    /**
-     *
-     * @param ca
-     * @param active
-     * @return
-     */
     @Override
     public CustomerAccount setAccountActive(CustomerAccount ca, boolean active) {
         if (active) {

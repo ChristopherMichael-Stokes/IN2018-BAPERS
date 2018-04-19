@@ -23,45 +23,22 @@ import javafx.collections.ObservableList;
 public class UserServiceImpl implements UserService {
 
     private final UserJpaController controller;
-    
-    /**
-     *
-     * @param firstName
-     * @param surname
-     * @return
-     */
+   
     public boolean userExists(String firstName, String surname){
         return controller.findUserEntities().stream()
                 .filter(u -> (u.getFirstName()+" "+u.getSurname()).equals(firstName+" "+surname))
                 .findAny().isPresent();
     }
 
-    
-
-    /**
-     *
-     */
     public UserServiceImpl() {
         controller = new UserJpaController(EMF);
     }
 
-    /**
-     * determines whether staff member is in system
-     *
-     * @param username of user
-     * @return true if the staff member exists in the system
-     */
     @Override
     public boolean userExists(String username) {
         return controller.findUser(username) != null;
     }
 
-    /**
-     *
-     * @param username
-     * @param input
-     * @return
-     */
     @Override
     public boolean validHash(String username, String input) {
         User user = controller.findUser(username);
@@ -79,57 +56,29 @@ public class UserServiceImpl implements UserService {
         return hash.equals(user.getPassphrase());
     }
 
-    /**
-     *
-     * @param username
-     * @return
-     */
     @Override
     public User getUser(String username) {
         return controller.findUser(username);
     }
 
-    /**
-     *
-     * @param user
-     * @throws bapers.data.dataAccess.exceptions.PreexistingEntityException
-     * @throws java.lang.Exception
-     */
     @Override
     public void addUser(User user) 
             throws PreexistingEntityException, Exception {
         controller.create(user);
     }
 
-    /**
-     *
-     * @param username
-     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
-     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
-     */
     @Override
     public void removeUser(String username) 
             throws IllegalOrphanException, NonexistentEntityException {
         controller.destroy(username);
     }
 
-    /**
-     *
-     * @param user
-     * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
-     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
-     * @throws java.lang.Exception
-     */
     @Override
     public void updateUser(User user) 
             throws IllegalOrphanException, NonexistentEntityException, Exception {
         controller.edit(user);
     }
 
-   /**
-     *
-     * @return
-     */
     @Override
     public ObservableList<User> getUsers() {
         return FXCollections.observableArrayList(controller.findUserEntities());

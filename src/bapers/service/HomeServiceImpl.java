@@ -34,18 +34,11 @@ import static bapers.BAPERS.USER;
 public class HomeServiceImpl implements HomeService{
        
     private final UserTypes type;
-
-    /**
-     *
-     */
+    
     public HomeServiceImpl() {
         type = UserTypes.getType(USER.getType());
     }   
-    
-    /**
-     *
-     * @return briefing specific to the user that is currently logged in
-     */
+        
     @Override
     public String getBriefing() {        
         switch (type){
@@ -62,10 +55,6 @@ public class HomeServiceImpl implements HomeService{
         }        
     }
 
-    /**
-     * 
-     * @return the type of the user that is currently logged in
-     */
     @Override
     public UserTypes getUserType() {
         return type;

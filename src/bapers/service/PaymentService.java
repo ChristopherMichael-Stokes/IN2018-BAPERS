@@ -41,40 +41,40 @@ public interface PaymentService {
 
     /**
      *
-     * @param accountNumber
-     * @return
+     * @param accountNumber to find unpaid jobs for
+     * @return list of unpaid jobs
      */
     public ObservableList<Job> getUnpaidJobs(int accountNumber);
     
     /**
      *
-     * @param jobId
-     * @return
+     * @param jobId of job to get cost for
+     * @return cost for job
      */
     public double getJobCost(int jobId);
 
     /**
      *
-     * @param datePaid
-     * @param amount
-     * @param jobs
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param datePaid date of payment
+     * @param amount of money paid
+     * @param jobs to add payment for
+     * @throws PreexistingEntityException if payment item already exists
+     * @throws Exception if database connection fails
      */
     public void addPayment(Date datePaid, int amount, List<Job> jobs) 
             throws PreexistingEntityException, Exception;
 
     /**
-     *
-     * @param datePaid
-     * @param amount
-     * @param cardDigits
-     * @param expiryDate
-     * @param cardType
-     * @param jobs
-     * @throws PreexistingEntityException
-     * @throws IllegalOrphanException
-     * @throws Exception
+     * used for card payments
+     * @param datePaid date of payment
+     * @param amount of money paid
+     * @param cardDigits last four digits of card
+     * @param expiryDate expiry date of card
+     * @param cardType type of card
+     * @param jobs to add payment for
+     * @throws PreexistingEntityException if payment already exists
+     * @throws IllegalOrphanException if foreign keys are invalidated
+     * @throws Exception if database connection fails
      */
     public void addPayment(Date datePaid, int amount, String cardDigits, 
             String expiryDate, String cardType, List<Job> jobs)

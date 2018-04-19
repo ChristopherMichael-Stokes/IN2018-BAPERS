@@ -47,24 +47,10 @@ public interface JobService {
      */
     public static enum Jobs {
 
-        /**
-         *
-         */
-        all() {{j = "All jobs";}}, 
 
-        /**
-         *
-         */
-        complete() {{j = "Only complete jobs";}}, 
-
-        /**
-         *
-         */
+        all() {{j = "All jobs";}}, complete() {{j = "Only complete jobs";}}, 
         incomplete() {{j = "Only incomplete jobs";}};
 
-        /**
-         *
-         */
         protected String j;
         
         @Override
@@ -72,11 +58,6 @@ public interface JobService {
             return j;
         }
         
-        /**
-         *
-         * @param jobsType
-         * @return
-         */
         public Jobs getJobsType(String jobsType) {
             switch(jobsType) {
                 case "All jobs": return all;
@@ -89,118 +70,119 @@ public interface JobService {
 
     /**
      *
-     * @param job
-     * @return
+     * @param job to query whether it is complete
+     * @return true if job is complete
      */
     public boolean jobComplete(Job job);
 
     /**
      *
-     * @param account
-     * @param jobType
-     * @return
+     * @param account acount to find jobs for
+     * @param jobType - either complete, incomplete or all jobs
+     * @return list of all jobs belonging to the account
      */
     public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType);
 
     /**
      *
-     * @param taskId
-     * @return
+     * @param taskId of task to lookup
+     * @return true if the task is in the database
      */
     public boolean taskExists(int taskId);
 
     /**
      *
-     * @param taskId
-     * @return
+     * @param taskId of task to find from the database
+     * @return task from database
      */
     public Task getTask(int taskId);
 
     /**
      *
-     * @param ct
-     * @throws NonexistentEntityException
+     * @param ct component task to remove from the system
+     * @throws NonexistentEntityException if it is not in the database
      */
     public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException;
 
     /**
      *
-     * @param ct
-     * @throws NonexistentEntityException
-     * @throws Exception
+     * @param ct component task to update
+     * @throws NonexistentEntityException if the entity does not exist in the database
+     * @throws Exception if db connection fails
      */
     public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception;
 
     /**
      *
-     * @param componentId
-     * @param jobId
-     * @return
+     * @param componentId of job component
+     * @param jobId of job
+     * @return job component from the database with the same primary key
      */
     public JobComponent getComponent(String componentId, int jobId);
 
     /**
      *
-     * @param ct
-     * @param t
-     * @param jc
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param ct component task to add to job component
+     * @param t task to add to component task
+     * @param jc job component
+     * @throws PreexistingEntityException if component task exists
+     * @throws Exception if database connection fails
      */
     public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) throws PreexistingEntityException, Exception;
 
     /**
      *
-     * @param j
-     * @return
+     * @param j job to add to database
+     * @return job that was added
      */
     public Job addJob(Job j);
 
     /**
      *
-     * @param j
-     * @throws IllegalOrphanException
-     * @throws NonexistentEntityException
-     * @throws Exception
+     * @param j job to update
+     * @throws IllegalOrphanException if changes invalidate foreign keys
+     * @throws NonexistentEntityException if job does not exist 
+     * @throws Exception if database connection fails
      */
     public void updateJob(Job j) throws IllegalOrphanException, NonexistentEntityException, Exception;
 
     /**
      *
-     * @param ct
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param ct component task to add to the database
+     * @throws PreexistingEntityException if it already exists
+     * @throws Exception if database connection fails
      */
     public void addComponentTask(ComponentTask ct) throws PreexistingEntityException, Exception;
 
     /**
      *
-     * @param jc
-     * @throws PreexistingEntityException
-     * @throws Exception
+     * @param jc job component to add to the database
+     * @throws PreexistingEntityException if it already exists
+     * @throws Exception if database connection fails
      */
     public void addJobComponent(JobComponent jc) throws PreexistingEntityException, Exception;
     /**
-     * @param taskId
-     * @param jobId
-     * @param compId
-     * @param time
-     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
-     * @throws java.lang.Exception
+     * @param taskId id of task that is complete
+     * @param jobId id of job
+     * @param compId id of the job component
+     * @param time time that the task was finished
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException 
+     * if the component task does not already exist in the database
+     * @throws java.lang.Exception if db connection fails
      */
     public void setTaskComplete(int jobId, String compId, int taskId, Date time) 
             throws NonexistentEntityException, Exception;
 
     /**
      *
-     * @param jobId
-     * @return
+     * @param jobId id of job to return components for
+     * @return list of all components for given job
      */
     public ObservableList<JobComponent> getComponents(int jobId);
 
     /**
      *
-     * @param jobId
+     * @param jobId id of job to print label for
      */
     public void printLabel(int jobId);
 
