@@ -25,9 +25,32 @@
  */
 package bapers.userInterface;
 
+import static bapers.BAPERS.EMF;
+import bapers.data.dataAccess.LocationJpaController;
+import bapers.data.dataAccess.UserJpaController;
+import bapers.data.domain.Location;
+import bapers.data.domain.User;
+import bapers.service.UserService;
+import bapers.service.UserServiceImpl;
+import static bapers.userInterface.SceneController.switchScene;
+import bapers.utility.SimpleHash;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import static javafx.collections.FXCollections.observableList;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -36,15 +59,84 @@ import javafx.fxml.Initializable;
  */
 public class ManageStaffController implements Initializable {
 
+    @FXML
+    private Button btnHome;
+    @FXML
+    private TextField txtFirstName;
+    @FXML
+    private TextField txtSurname;
+    @FXML
+    private TextField txtUsername;
+    @FXML
+    private TextField txtPassword;
+    @FXML
+    private ComboBox<String> cmbUserType;
+    @FXML
+    private ComboBox<String> cmbUsersLocation;
+    @FXML
+    private Button btnCreateUser;
+    @FXML
+    private ComboBox<String> cbcSelectUser;
+    @FXML
+    private ListView<String> lvUser;
+    @FXML
+    private Button btnDelete;
+    private UserJpaController uJpa = new UserJpaController(EMF);
+    private LocationJpaController lJpa = new LocationJpaController(EMF);
+    private UserService us = new UserServiceImpl();
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
+        btnCreateUser.setOnAction((event) -> {
+            if (isEmpty(txtUsername)||isEmpty(txtPassword)||cmbUserType.getSelectionModel().isEmpty()) {
+                alert("Please fill in all the require fields!");
+            }
+            else{
+                
+                User newUser = new User();
+                newUser.setUsername(txtUsername.getText());
+                //newUser.setType(cmbUserType.getValue());
+                try {
+                    newUser.setPassphrase(SimpleHash.getStringHash(txtPassword.getText()));
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(ManageStaffController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //newUser.setFkLocation(fkLocation);
+            }
+        });
+        List<String> userList = new ArrayList<String>();
+        ObservableList<String> oUserList;
+        userList.add("office manager");
+        userList.add("shift manager");
+        userList.add("receptionist");
+        userList.add("technician");
+        oUserList = FXCollections.observableArrayList(userList);
+        List<String> locationList = new ArrayList<String>();
+        ObservableList<String> oLocationList;
+        locationList.add("copy room");
+        locationList.add("development area");
+        locationList.add("packing department");
+        locationList.add("finishing room");
+        cmbUserType.setItems(oUserList);
+        cmbUsersLocation.setItems(oUserList);
+    }
+
+    private boolean isEmpty(TextField tf) {
+        return tf.getText().trim().equals("");
+    }
+    private void alert(String message){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }
