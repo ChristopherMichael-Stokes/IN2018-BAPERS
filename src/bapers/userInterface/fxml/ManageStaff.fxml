@@ -5,15 +5,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
+<AnchorPane id="AnchorPane" prefHeight="564.0" prefWidth="1020.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageBackupController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managebackup.css" />
     </stylesheets>
@@ -25,7 +27,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </Separator>
-            <Label prefHeight="37.0" prefWidth="87.0" text="Staff">
+            <Label prefHeight="37.0" prefWidth="87.0" style="-fx-text-fill: #c6c9d1;" text="Staff">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
@@ -45,7 +47,7 @@
          <children>
             <HBox prefHeight="27.0" prefWidth="1014.0">
                <children>
-                  <Label prefHeight="31.0" prefWidth="122.0" text="Home&gt;Staff">
+                  <Label prefHeight="31.0" prefWidth="122.0" style="-fx-text-fill: #c6c9d1;" text="Home&gt;Staff">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
@@ -58,7 +60,7 @@
                         <HBox layoutX="-62.0" layoutY="-2.0" prefHeight="3.0" prefWidth="559.0" />
                      </children>
                   </Pane>
-                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Home">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #4185f2;" text="Home">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
@@ -78,22 +80,22 @@
       </VBox>
       <VBox layoutX="14.0" layoutY="109.0" prefHeight="376.0" prefWidth="404.0">
          <children>
-            <TextField fx:id="txtFirstName" prefHeight="25.0" prefWidth="235.0" promptText="Enter First Name (optional)">
+            <TextField fx:id="txtFirstName" prefHeight="25.0" prefWidth="235.0" promptText="Enter First Name (optional)" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                <VBox.margin>
                   <Insets left="30.0" right="100.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="txtSurname" promptText="Enter Surname (optional)">
+            <TextField fx:id="txtSurname" promptText="Enter Surname (optional)" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                <VBox.margin>
                   <Insets bottom="10.0" left="30.0" right="100.0" top="10.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="txtUsername" promptText="Enter Username">
+            <TextField fx:id="txtUsername" promptText="Enter Username" style="-fx-background-color: #364059; -fx-border-radius: 10; -fx-border-color: #c6c9d1; -fx-text-fill: #c6c9d1;">
                <VBox.margin>
                   <Insets left="30.0" right="100.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="txtPassword" promptText="Enter password">
+            <TextField fx:id="txtPassword" promptText="Enter password" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                <VBox.margin>
                   <Insets left="30.0" right="100.0" top="10.0" />
                </VBox.margin>
@@ -108,7 +110,7 @@
                   <Insets left="30.0" top="10.0" />
                </VBox.margin>
             </ComboBox>
-            <Button fx:id="btnCreateUser" mnemonicParsing="false" prefHeight="37.0" prefWidth="169.0" text="Create User">
+            <Button fx:id="btnCreateUser" mnemonicParsing="false" prefHeight="37.0" prefWidth="169.0" style="-fx-background-color: #4185f2;" text="Create User">
                <VBox.margin>
                   <Insets left="30.0" top="50.0" />
                </VBox.margin>
@@ -116,5 +118,28 @@
          </children>
       </VBox>
       <Separator layoutX="23.0" layoutY="568.0" prefHeight="3.0" prefWidth="270.0" />
+      <BorderPane layoutX="467.0" layoutY="94.0" prefHeight="462.0" prefWidth="404.0">
+         <left>
+            <ListView prefHeight="127.0" prefWidth="206.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="40.0" left="20.0" top="40.0" />
+               </BorderPane.margin>
+            </ListView>
+         </left>
+         <top>
+            <ComboBox prefWidth="150.0" promptText="Select User..." BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets left="40.0" top="10.0" />
+               </BorderPane.margin>
+            </ComboBox>
+         </top>
+         <right>
+            <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="90.0" style="-fx-background-color: #4185f2;" text="Delete" BorderPane.alignment="BOTTOM_RIGHT">
+               <BorderPane.margin>
+                  <Insets bottom="40.0" right="30.0" />
+               </BorderPane.margin>
+            </Button>
+         </right>
+      </BorderPane>
    </children>
 </AnchorPane>

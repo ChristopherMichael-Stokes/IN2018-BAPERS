@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="443.0" prefWidth="406.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.CreateAccountController">
+<AnchorPane id="AnchorPane" prefHeight="443.0" prefWidth="406.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.CreateAccountController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/createaccount.css" />
     </stylesheets>
@@ -23,16 +23,16 @@
             <VBox prefHeight="62.0" prefWidth="535.0" BorderPane.alignment="CENTER">
                <children>
                   <Separator prefHeight="11.0" prefWidth="769.0" />
-                  <Label fx:id="lblCreateAccount" prefHeight="17.0" prefWidth="600.0" text="Create Account">
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding>
+                  <Label fx:id="lblCreateAccount" prefHeight="29.0" prefWidth="124.0" style="-fx-text-fill: #c6c9d1;" text="Create Account">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                      <VBox.margin>
-                        <Insets left="20.0" />
+                        <Insets left="13.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
                   </Label>
                   <Separator prefHeight="11.0" prefWidth="600.0">
                      <padding>
@@ -40,6 +40,9 @@
                      </padding>
                   </Separator>
                </children>
+               <BorderPane.margin>
+                  <Insets left="10.0" right="15.0" />
+               </BorderPane.margin>
             </VBox>
          </top>
          <center>
@@ -47,17 +50,17 @@
                <children>
                   <VBox prefHeight="273.0" prefWidth="198.0">
                      <children>
-                        <TextField fx:id="txtAccountHolder" prefHeight="26.0" prefWidth="164.0" promptText="Account holder name">
+                        <TextField fx:id="txtAccountHolder" prefHeight="26.0" prefWidth="164.0" promptText="Account holder name" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtEmail" promptText="Email...">
+                        <TextField fx:id="txtEmail" promptText="Email..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtPhone" promptText="Landline">
+                        <TextField fx:id="txtPhone" promptText="Landline" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
@@ -66,32 +69,32 @@
                   </VBox>
                   <VBox prefHeight="339.0" prefWidth="195.0">
                      <children>
-                        <TextField fx:id="txtAddress1" promptText="Address Line 1...">
+                        <TextField fx:id="txtAddress1" promptText="Address Line 1..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtAddress2" promptText="Address Line 2...">
+                        <TextField fx:id="txtAddress2" promptText="Address Line 2..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtPostcode" promptText="Post Code...">
+                        <TextField fx:id="txtPostcode" promptText="Post Code..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtCity" promptText="City...">
+                        <TextField fx:id="txtCity" promptText="City..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="txtCountry" promptText="Country...">
+                        <TextField fx:id="txtCountry" promptText="Country..." style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                            <VBox.margin>
                               <Insets left="10.0" top="30.0" />
                            </VBox.margin>
                         </TextField>
-                        <Button fx:id="btnCreate" mnemonicParsing="false" prefHeight="32.0" prefWidth="183.0" text="Create Customer Account">
+                        <Button fx:id="btnCreate" mnemonicParsing="false" prefHeight="32.0" prefWidth="183.0" style="-fx-background-color: #4185f2;" text="Create Customer Account">
                            <VBox.margin>
                               <Insets left="10.0" top="20.0" />
                            </VBox.margin>
@@ -104,7 +107,16 @@
          <bottom>
             <HBox nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btnHome" layoutX="335.0" layoutY="15.0" mnemonicParsing="false" text="Home" />
+                  <Button fx:id="btnHome" layoutX="335.0" layoutY="15.0" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home" />
+                  <Pane prefHeight="27.0" prefWidth="115.0" />
+                  <Label prefHeight="26.0" prefWidth="205.0" style="-fx-text-fill: #c6c9d1;" text="Home&gt;Place Order&gt;Create Account">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
                </children>
                <BorderPane.margin>
                   <Insets bottom="10.0" right="20.0" />

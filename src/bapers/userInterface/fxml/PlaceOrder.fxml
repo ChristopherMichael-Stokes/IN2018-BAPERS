@@ -162,7 +162,7 @@
       </HBox>
       <HBox layoutY="446.0" prefHeight="91.0" prefWidth="853.0">
          <children>
-            <Label prefHeight="45.0" prefWidth="304.0" style="-fx-text-fill: #c6c9d1;" text="Home &gt; Place Order">
+            <Label prefHeight="45.0" prefWidth="356.0" style="-fx-text-fill: #c6c9d1;" text="Home &gt; Place Order">
                <HBox.margin>
                   <Insets left="10.0" top="40.0" />
                </HBox.margin>
@@ -175,7 +175,7 @@
                   <Insets left="50.0" />
                </HBox.margin>
                <children>
-                  <Button layoutX="542.0" layoutY="60.0" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home" />
+                  <Button layoutX="559.0" layoutY="32.0" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home" />
                </children>
             </Pane>
          </children>

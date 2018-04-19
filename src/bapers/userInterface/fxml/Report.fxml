@@ -34,7 +34,7 @@
                   </Label>
                   <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btnHome" mnemonicParsing="false" text="Home">
+                        <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: #4185f2#4185f2;" text="Home">
                            <HBox.margin>
                               <Insets bottom="5.0" right="10.0" />
                            </HBox.margin>

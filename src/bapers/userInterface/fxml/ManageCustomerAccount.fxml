@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,8 +9,6 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -24,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="723.0" prefWidth="1091.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageCustomerAccountController">
+<AnchorPane id="AnchorPane" prefHeight="723.0" prefWidth="1091.0" style="-fx-background-color: #364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ManageCustomerAccountController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/managecustomeraccount.css" />
     </stylesheets>
@@ -131,13 +123,13 @@
                               <ListView fx:id="lsvTasks" prefHeight="200.0" prefWidth="261.0" />
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <TextField fx:id="txtVariablePercentage" prefHeight="27.0" prefWidth="60.0" promptText="\%" style="-fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1; -fx-background-color: #364059;" />
-                                    <Button fx:id="btnUpdateVar" mnemonicParsing="false" text="Update">
+                                    <TextField fx:id="txtVariablePercentage" prefHeight="27.0" prefWidth="60.0" promptText="\%" style="-fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1; -fx-background-color: #364059; -fx-text-fill: #c6c9d1;" />
+                                    <Button fx:id="btnUpdateVar" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Update">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
                                     </Button>
-                                    <Button fx:id="btnDeleteVar" mnemonicParsing="false" text="Delete">
+                                    <Button fx:id="btnDeleteVar" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Delete">
                                        <HBox.margin>
                                           <Insets left="10.0" />
                                        </HBox.margin>
@@ -188,12 +180,12 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="btnUpdateFlex" mnemonicParsing="false" text="Update">
+                              <Button fx:id="btnUpdateFlex" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Update">
                                  <HBox.margin>
                                     <Insets left="10.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btnDeleteFlex" mnemonicParsing="false" text="Delete">
+                              <Button fx:id="btnDeleteFlex" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Delete">
                                  <HBox.margin>
                                     <Insets left="10.0" top="10.0" />
                                  </HBox.margin>
@@ -244,116 +236,119 @@
                            <children>
                               <Label fx:id="lblAccountName" prefHeight="19.0" prefWidth="84.0" style="-fx-text-fill: #c6c9d1;" text="Account Name">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" top="5.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblEmail" style="-fx-text-fill: #c6c9d1;" text="Email">
+                              <Label fx:id="lblEmail" prefHeight="37.0" prefWidth="41.0" style="-fx-text-fill: #c6c9d1;" text="Email">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblLandline" style="-fx-text-fill: #c6c9d1;" text="Landline">
+                              <Label fx:id="lblLandline" prefHeight="24.0" prefWidth="72.0" style="-fx-text-fill: #c6c9d1;" text="Landline">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblAddress1" style="-fx-text-fill: #c6c9d1;" text="Address 1">
+                              <Label fx:id="lblAddress1" prefHeight="26.0" prefWidth="64.0" style="-fx-text-fill: #c6c9d1;" text="Address 1">
                                  <VBox.margin>
-                                    <Insets bottom="18.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblAddress2" style="-fx-text-fill: #c6c9d1;" text="Address 2">
+                              <Label fx:id="lblAddress2" prefHeight="24.0" prefWidth="72.0" style="-fx-text-fill: #c6c9d1;" text="Address 2">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblPostcode" style="-fx-text-fill: #c6c9d1;" text="Postcode">
+                              <Label fx:id="lblPostcode" prefHeight="25.0" prefWidth="71.0" style="-fx-text-fill: #c6c9d1;" text="Postcode">
                                  <VBox.margin>
-                                    <Insets bottom="18.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblRegion" style="-fx-text-fill: #c6c9d1;" text="Region">
+                              <Label fx:id="lblRegion" prefHeight="27.0" prefWidth="63.0" style="-fx-text-fill: #c6c9d1;" text="Region">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblCity" style="-fx-text-fill: #c6c9d1;" text="City">
+                              <Label fx:id="lblCity" prefHeight="24.0" prefWidth="51.0" style="-fx-text-fill: #c6c9d1;" text="City">
                                  <VBox.margin>
-                                    <Insets bottom="20.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblFirstName" prefHeight="17.0" prefWidth="78.0" text="First Name" textFill="WHITE">
+                              <Label fx:id="lblFirstName" prefHeight="27.0" prefWidth="74.0" style="-fx-text-fill: #c6c9d1;" text="First Name" textFill="WHITE">
                                  <VBox.margin>
-                                    <Insets bottom="7.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin></Label>
-                              <Label fx:id="lblSurname" prefHeight="25.0" prefWidth="81.0" text="Surname" textFill="#fff9f9">
+                              <Label fx:id="lblSurname" prefHeight="36.0" prefWidth="85.0" style="-fx-text-fill: #c6c9d1;" text="Surname" textFill="#fff9f9">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label fx:id="lblMobile" prefHeight="25.0" prefWidth="79.0" text="Mobile" textFill="WHITE">
+                              <Label fx:id="lblMobile" prefHeight="7.0" prefWidth="72.0" style="-fx-text-fill: #c6c9d1;" text="Mobile" textFill="WHITE">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets bottom="12.0" />
                                  </VBox.margin>
                               </Label>
                            </children>
                         </VBox>
                         <VBox prefHeight="543.0" prefWidth="173.0">
                            <children>
-                              <TextField fx:id="txtAccountName" prefHeight="25.0" prefWidth="149.0">
+                              <TextField fx:id="txtAccountName" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: #364059; -fx-border-radius: 10; -fx-border-color: #c6c9d1; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtEmail">
+                              <TextField fx:id="txtEmail" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtLandline" prefHeight="25.0" prefWidth="161.0">
+                              <TextField fx:id="txtLandline" prefHeight="25.0" prefWidth="161.0" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtAddressLine1">
+                              <TextField fx:id="txtAddressLine1" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtAddressLine2">
+                              <TextField fx:id="txtAddressLine2" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtPostCode">
+                              <TextField fx:id="txtPostCode" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtRegion">
+                              <TextField fx:id="txtRegion" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtCity">
+                              <TextField fx:id="txtCity" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets bottom="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtFirstName" />
-                              <TextField fx:id="txtSurname">
+                              <TextField fx:id="txtFirstName" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets bottom="9.0" />
+                                 </VBox.margin></TextField>
+                              <TextField fx:id="txtSurname" style="-fx-background-color: #364059; -fx-border-radius: 10; -fx-border-color: #c6c9d1; -fx-text-fill: #c6c9d1;">
+                                 <VBox.margin>
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="txtMobile">
+                              <TextField fx:id="txtMobile" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;">
                                  <VBox.margin>
-                                    <Insets top="10.0" />
+                                    <Insets bottom="9.0" />
                                  </VBox.margin>
                               </TextField>
-                              <Button fx:id="btnUpdateDetails" mnemonicParsing="false" text="Update">
+                              <Button fx:id="btnUpdateDetails" mnemonicParsing="false" prefHeight="23.0" prefWidth="63.0" style="-fx-background-color: #4185f2;" text="Update">
                                  <VBox.margin>
-                                    <Insets left="50.0" top="10.0" />
+                                    <Insets bottom="10.0" left="50.0" top="10.0" />
                                  </VBox.margin>
                               </Button>
                            </children>
@@ -363,7 +358,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <ListView fx:id="lvContact" prefHeight="134.0" prefWidth="253.0" />
+                  <ListView fx:id="lvContact" prefHeight="128.0" prefWidth="253.0" />
                </children>
             </VBox>
          </center>
@@ -377,6 +372,9 @@
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
                         </Label>
                      </children>
                      <BorderPane.margin>
@@ -385,7 +383,7 @@
                   </VBox>
                </left>
                <right>
-                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="28.0" prefWidth="53.0" style="-fx-background-color: #4185f2;" text="Home" BorderPane.alignment="CENTER">
+                  <Button fx:id="btnHome" mnemonicParsing="false" prefHeight="27.0" prefWidth="92.0" style="-fx-background-color: #4185f2;" text="Home" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets bottom="5.0" right="20.0" />
                      </BorderPane.margin>
