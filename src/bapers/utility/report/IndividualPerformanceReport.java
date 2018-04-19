@@ -41,6 +41,10 @@ public class IndividualPerformanceReport {
     private SimpleStringProperty startTime;
     private SimpleStringProperty timeTaken;
 
+    /**
+     *
+     * @param resultSet
+     */
     public IndividualPerformanceReport(Object[] resultSet) {
         if (!(resultSet.length < 7)) {
             this.name = new SimpleStringProperty(resultSet[0].toString());
@@ -53,60 +57,114 @@ public class IndividualPerformanceReport {
         }
     }
 
-    
-
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name.get();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setName(SimpleStringProperty name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCode() {
         return code.get();
     }
 
+    /**
+     *
+     * @param code
+     */
     public void setCode(SimpleStringProperty code) {
         this.code = code;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTaskID() {
         return taskID.get();
     }
 
+    /**
+     *
+     * @param taskID
+     */
     public void setTaskID(SimpleStringProperty taskID) {
         this.taskID = taskID;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDepartment() {
         return department.get();
     }
 
+    /**
+     *
+     * @param department
+     */
     public void setDepartment(SimpleStringProperty department) {
         this.department = department;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDate() {
         return date.get();
     }
 
+    /**
+     *
+     * @param date
+     */
     public void setDate(SimpleStringProperty date) {
         this.date = date;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getStartTime() {
         return startTime.get();
     }
 
+    /**
+     *
+     * @param startTime
+     */
     public void setStartTime(SimpleStringProperty startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTimeTaken() {
         return timeTaken.get();
     }
 
+    /**
+     *
+     * @param timeTaken
+     */
     public void setTimeTaken(SimpleStringProperty timeTaken) {
         this.timeTaken = timeTaken;
     }

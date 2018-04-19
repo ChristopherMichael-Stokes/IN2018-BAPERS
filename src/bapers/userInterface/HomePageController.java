@@ -109,7 +109,7 @@ public class HomePageController implements Initializable {
         btnReports.setOnAction((event) -> switchScene(Scenes.report));
         btnTasks.setOnAction((event) -> switchScene(Scenes.manageTasks));
         btnLogout.setOnAction((event) -> logout());
-        btnCustomerAccount.setOnAction((event) -> switchScene(Scenes.createAccount));
+        btnCustomerAccount.setOnAction((event) -> switchScene(Scenes.manageCustomerAccount));
         lblBriefing.setText(dao.getBriefing());
         
         ObservableList<Node> buttons = tbNavigation.getItems();

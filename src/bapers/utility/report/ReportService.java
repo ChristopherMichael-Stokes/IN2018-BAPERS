@@ -43,6 +43,13 @@ public class ReportService {
 
     private static final EntityManager EM = EMF.createEntityManager();
 
+    /**
+     *
+     * @param account_no
+     * @param date_start
+     * @param date_end
+     * @return
+     */
     public static List<IndividualReport> getIndividualReport(String account_no, String date_start, String date_end) {
         StoredProcedureQuery query = EM.createStoredProcedureQuery("ir")
                 .registerStoredProcedureParameter("account_no", char[].class, ParameterMode.IN)
@@ -58,6 +65,13 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @param name
+     * @param date_start
+     * @param date_end
+     * @return
+     */
     public static IprResultSet getIndividualPerformanceReport(String name, String date_start, String date_end) {
         StoredProcedureQuery query = EM.createStoredProcedureQuery("ipr")
                 .registerStoredProcedureParameter("ID", char[].class, ParameterMode.IN)
@@ -74,6 +88,12 @@ public class ReportService {
         return new IprResultSet(results1, results2, results3);
     }
     
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public static ShiftResultSet getSummaryPerformanceReport(String startDate, String endDate) {
         StoredProcedureQuery dayShift1_ = getShiftQuery("day_shift1", startDate, endDate);
         StoredProcedureQuery dayShift2_ = getShiftQuery("day_shift2", startDate, endDate);

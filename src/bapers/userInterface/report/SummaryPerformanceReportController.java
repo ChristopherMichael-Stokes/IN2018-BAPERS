@@ -91,6 +91,8 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -147,6 +149,10 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
         table.getColumns().addAll(copyRoom, development, finishing, packing);
     }
     
+    /**
+     *
+     * @param srs
+     */
     @Override
     public void setItems(ShiftResultSet srs) {
         dayShift1.setAll(srs.dayShift1);
@@ -160,6 +166,9 @@ public class SummaryPerformanceReportController extends Report<ShiftResultSet>
         summaryShiftTotal.setAll(srs.summaryShiftTotal);
     }
 
+    /**
+     *
+     */
     @Override
     protected void setTable() {
         tblDayShift1.setItems(dayShift1);

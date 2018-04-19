@@ -5,10 +5,6 @@
  */
 package bapers;
 
-import bapers.data.dataAccess.ContactJpaController;
-import bapers.data.dataAccess.CustomerAccountJpaController;
-import bapers.data.domain.Contact;
-import bapers.data.domain.CustomerAccount;
 import bapers.data.domain.User;
 import bapers.service.UserServiceImpl;
 import bapers.utility.BackupService;
@@ -20,8 +16,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -63,6 +57,9 @@ public class BAPERS extends Application {
      */
     public static Stage primaryStage;
     
+    /**
+     *
+     */
     public static Intervals intervals;
 
     private static URL url
@@ -104,18 +101,7 @@ public class BAPERS extends Application {
         
         if (!TESTING) {           
             launch(args);
-        } else {   
-//            Contact c = new Contact("a", "b", (short) 1);
-//            CustomerAccountJpaController cajpa = new CustomerAccountJpaController(EMF);
-//            CustomerAccount ca = cajpa.findCustomerAccount((short) 1);
-//            c.setCustomerAccount(ca);
-//            ContactJpaController cjpa = new ContactJpaController(EMF);
-//            try {
-//                cjpa.create(c);
-//            } catch (Exception ex) {
-//                System.err.println("could not add contact\n"+ex);
-//            }
-            
+        } else {             
             //finds all .fxml files and prompts the user to select one from a list.
             PathMatchingResourcePatternResolver scanner = new PathMatchingResourcePatternResolver();
             Resource[] resources = scanner.getResources("/bapers/userInterface/fxml/*.fxml");
@@ -159,10 +145,18 @@ public class BAPERS extends Application {
 
     }
     
+    /**
+     *
+     * @return
+     */
     public static Intervals getIntervals() {
         return intervals;
     }
 
+    /**
+     *
+     * @param intervals
+     */
     public static void setIntervals(Intervals intervals) {
         BAPERS.intervals = intervals;
     }

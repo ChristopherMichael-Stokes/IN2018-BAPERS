@@ -44,12 +44,65 @@ public class SceneController {
      *
      */
     public static enum Scenes {
-        payment("AddPayment"), createAccount("CreateAccount"), 
-        home("HomePage"), jobProcessing("JobProcessing"), 
-        login("Login"), manageBackup("ManageBackup"),
+
+        /**
+         *
+         */
+        payment("AddPayment"), 
+
+        /**
+         *
+         */
+        createAccount("CreateAccount"), 
+
+        /**
+         *
+         */
+        home("HomePage"), 
+
+        /**
+         *
+         */
+        jobProcessing("JobProcessing"), 
+
+        /**
+         *
+         */
+        login("Login"),
+
+        /**
+         *
+         */
+        manageBackup("ManageBackup"),
+
+        /**
+         *
+         */
         manageCustomerAccount("ManageCustomerAccount"), 
-        manageIntervals("ManageIntervals"), manageStaff("ManageStaff"), 
-        manageTasks("ManageTasks"),placeOrder("PlaceOrder"), 
+
+        /**
+         *
+         */
+        manageIntervals("ManageIntervals"), 
+
+        /**
+         *
+         */
+        manageStaff("ManageStaff"), 
+
+        /**
+         *
+         */
+        manageTasks("ManageTasks"), 
+
+        /**
+         *
+         */
+        placeOrder("PlaceOrder"), 
+
+        /**
+         *
+         */
         report("Report");
         
         private final String fxml;

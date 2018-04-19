@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserJpaController controller;
     
+    /**
+     *
+     * @param firstName
+     * @param surname
+     * @return
+     */
     public boolean userExists(String firstName, String surname){
         return controller.findUserEntities().stream()
                 .filter(u -> (u.getFirstName()+" "+u.getSurname()).equals(firstName+" "+surname))

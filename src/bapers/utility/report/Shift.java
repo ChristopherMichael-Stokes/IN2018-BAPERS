@@ -36,6 +36,10 @@ public class Shift extends TotalShift{
     
     private SimpleStringProperty date;
     
+    /**
+     *
+     * @param resultSet
+     */
     public Shift(Object[] resultSet) {
         super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
         this.date = new SimpleStringProperty(stringResult(resultSet[0]));        
@@ -45,10 +49,18 @@ public class Shift extends TotalShift{
         return o == null ? "No data" : o.toString();
     }
     
+    /**
+     *
+     * @return
+     */
     public String getDate() {
         return date.get();
     }
 
+    /**
+     *
+     * @param date
+     */
     public void setDate(SimpleStringProperty date) {
         this.date = date;
     }

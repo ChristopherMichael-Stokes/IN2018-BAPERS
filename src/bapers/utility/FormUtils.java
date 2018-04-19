@@ -34,6 +34,11 @@ import javafx.scene.control.ButtonType;
  * @author chris
  */
 public class FormUtils {
+
+    /**
+     *
+     * @param message
+     */
     public static void haltAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.getButtonTypes().add(ButtonType.OK);
@@ -41,6 +46,11 @@ public class FormUtils {
         alert.showAndWait();
     }
     
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static SimpleStringProperty getProperty(String s) {
         return new SimpleStringProperty(s);
     }

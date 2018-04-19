@@ -69,12 +69,23 @@ public class JobServiceImpl implements JobService {
         componentController = new ComponentTaskJpaController(EMF);
     }
     
+    /**
+     *
+     * @param job
+     * @return
+     */
     @Override
     public boolean jobComplete(Job job) {
         return !job.getJobComponentList().stream().flatMap(jc -> jc.getComponentTaskList().stream())
             .anyMatch(ct -> ct.getEndTime() == null);        
     }
     
+    /**
+     *
+     * @param account
+     * @param jobType
+     * @return
+     */
     @Override
     public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType) {
         List<Job> jobs = account.getContactList().stream().flatMap(x -> x.getJobList().stream())
@@ -99,33 +110,77 @@ public class JobServiceImpl implements JobService {
                         ).collect(Collectors.toList()));
     }
     
+    /**
+     *
+     * @param ct
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     @Override
     public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception {
         componentController.edit(ct);
     }
+
+    /**
+     *
+     * @param taskId
+     * @return
+     */
     @Override
     public boolean taskExists(int taskId) {
         return taskController.findTask(taskId) != null;
     }
+
+    /**
+     *
+     * @param taskId
+     * @return
+     */
     @Override
     public Task getTask(int taskId) {
         return taskController.findTask(taskId);
     }
+
+    /**
+     *
+     * @param ct
+     * @throws NonexistentEntityException
+     */
     @Override
     public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException {
         componentController.destroy(ct.getComponentTaskPK());
     }
+
+    /**
+     *
+     * @param j
+     * @return
+     */
     @Override
     public Job addJob(Job j) {
         int pos = jobController.getJobCount();
         jobController.create(j);
         return jobController.findJobEntities(1, pos).get(0);
     }
+
+    /**
+     *
+     * @param jc
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
     public void addJobComponent(JobComponent jc) throws PreexistingEntityException, Exception{
         jobComponentController.create(jc);
     }
 
+    /**
+     *
+     * @param j
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     @Override
     public void updateJob(Job j) 
             throws IllegalOrphanException, NonexistentEntityException, Exception {
@@ -137,6 +192,8 @@ public class JobServiceImpl implements JobService {
      * @param jobId
      * @param compId
      * @param time
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
+     * @throws java.lang.Exception
      */
     @Override
     public void setTaskComplete(int jobId, String compId, int taskId, Date time) 
@@ -145,15 +202,37 @@ public class JobServiceImpl implements JobService {
         task.setEndTime(time);
         componentController.edit(task);
     }
+
+    /**
+     *
+     * @param componentId
+     * @param jobId
+     * @return
+     */
     @Override
     public JobComponent getComponent(String componentId, int jobId) {
         return jobComponentController.findJobComponent(new JobComponentPK(jobId, componentId));
     }
     
+    /**
+     *
+     * @param ct
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
     public void addComponentTask(ComponentTask ct) throws PreexistingEntityException, Exception{
         componentController.create(ct);
     }
+
+    /**
+     *
+     * @param ct
+     * @param t
+     * @param jc
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
     public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) 
             throws PreexistingEntityException, Exception {

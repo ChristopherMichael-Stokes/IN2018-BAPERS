@@ -42,9 +42,29 @@ import javafx.collections.ObservableList;
  */
 public interface JobService {
     
+    /**
+     *
+     */
     public static enum Jobs {
-        all() {{j = "All jobs";}}, complete() {{j = "Only complete jobs";}}, 
+
+        /**
+         *
+         */
+        all() {{j = "All jobs";}}, 
+
+        /**
+         *
+         */
+        complete() {{j = "Only complete jobs";}}, 
+
+        /**
+         *
+         */
         incomplete() {{j = "Only incomplete jobs";}};
+
+        /**
+         *
+         */
         protected String j;
         
         @Override
@@ -52,6 +72,11 @@ public interface JobService {
             return j;
         }
         
+        /**
+         *
+         * @param jobsType
+         * @return
+         */
         public Jobs getJobsType(String jobsType) {
             switch(jobsType) {
                 case "All jobs": return all;
@@ -61,23 +86,107 @@ public interface JobService {
             }
         }
     }
+
+    /**
+     *
+     * @param job
+     * @return
+     */
     public boolean jobComplete(Job job);
+
+    /**
+     *
+     * @param account
+     * @param jobType
+     * @return
+     */
     public ObservableList<Job> getJobs(CustomerAccount account, Jobs jobType);
+
+    /**
+     *
+     * @param taskId
+     * @return
+     */
     public boolean taskExists(int taskId);
+
+    /**
+     *
+     * @param taskId
+     * @return
+     */
     public Task getTask(int taskId);
+
+    /**
+     *
+     * @param ct
+     * @throws NonexistentEntityException
+     */
     public void removeComponentTask(ComponentTask ct) throws NonexistentEntityException;
+
+    /**
+     *
+     * @param ct
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     public void updateTask(ComponentTask ct) throws NonexistentEntityException, Exception;
+
+    /**
+     *
+     * @param componentId
+     * @param jobId
+     * @return
+     */
     public JobComponent getComponent(String componentId, int jobId);
+
+    /**
+     *
+     * @param ct
+     * @param t
+     * @param jc
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     public void addComponentTask(ComponentTask ct, Task t, JobComponent jc) throws PreexistingEntityException, Exception;
+
+    /**
+     *
+     * @param j
+     * @return
+     */
     public Job addJob(Job j);
+
+    /**
+     *
+     * @param j
+     * @throws IllegalOrphanException
+     * @throws NonexistentEntityException
+     * @throws Exception
+     */
     public void updateJob(Job j) throws IllegalOrphanException, NonexistentEntityException, Exception;
+
+    /**
+     *
+     * @param ct
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     public void addComponentTask(ComponentTask ct) throws PreexistingEntityException, Exception;
+
+    /**
+     *
+     * @param jc
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     public void addJobComponent(JobComponent jc) throws PreexistingEntityException, Exception;
     /**
      * @param taskId
      * @param jobId
      * @param compId
      * @param time
+     * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
+     * @throws java.lang.Exception
      */
     public void setTaskComplete(int jobId, String compId, int taskId, Date time) 
             throws NonexistentEntityException, Exception;

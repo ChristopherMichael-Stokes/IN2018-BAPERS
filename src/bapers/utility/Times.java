@@ -38,6 +38,12 @@ public class Times implements Serializable {
     private long days, hours, minutes;
     private Date lastSet;
     
+    /**
+     *
+     * @param days
+     * @param hours
+     * @param minutes
+     */
     public Times(int days, int hours, int minutes) {
         this.days = days * DAY;
         this.hours = hours * HOUR;
@@ -45,20 +51,37 @@ public class Times implements Serializable {
         lastSet = new Date();
     }
     
+    /**
+     *
+     * @param hours
+     * @param minutes
+     */
     public Times(int hours, int minutes) {
         this(0, hours, minutes);
     }
     
+    /**
+     *
+     * @param minutes
+     */
     public Times(int minutes) {
         this(0, 0, minutes);
     }
 
+    /**
+     *
+     * @param days
+     */
     public void setDays(int days) {
         this.days = days * DAY;        
         setLastSet();
 
     }
 
+    /**
+     *
+     * @param hours
+     */
     public void setHours(int hours) {
         this.hours = hours * HOUR;
         lastSet = new Date();
@@ -66,19 +89,34 @@ public class Times implements Serializable {
 
     }
 
+    /**
+     *
+     * @param minutes
+     */
     public void setMinutes(int minutes) {
         this.minutes = minutes * MINUTE;
         setLastSet();
     }
     
+    /**
+     *
+     * @return
+     */
     public long getMilliseconds() {
         return days + hours + minutes;
     }
 
+    /**
+     *
+     */
     public void setLastSet() {
         lastSet = new Date();
     }
     
+    /**
+     *
+     * @return
+     */
     public Date getLastSet() {
         return lastSet;
     }

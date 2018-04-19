@@ -88,6 +88,8 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -105,6 +107,10 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
         });
     }
 
+    /**
+     *
+     * @param ir
+     */
     @Override
     public void setItems(IprResultSet ir) {
         tb1.clear();
@@ -115,6 +121,9 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
         txtTotal.setText(ir.totalOverallEffort);
     }
 
+    /**
+     *
+     */
     @Override
     protected void setTable() {
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));

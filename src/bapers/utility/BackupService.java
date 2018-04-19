@@ -41,10 +41,27 @@ import java.util.List;
  * @author chris
  */
 public class BackupService {
+
+    /**
+     *
+     */
     protected static final String CONNSTR = "--server=root:haddockexecellipsis@localhost";
+
+    /**
+     *
+     */
     public static final DateFormat BACKUPDATE = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    /**
+     *
+     */
     protected static final File BACKUP = new File("backups");    
     
+    /**
+     *
+     * @param file
+     * @throws IOException
+     */
     public static void restoreFromBackup(File file) throws IOException {
         ProcessBuilder pb = new ProcessBuilder("mysqldbimport", "-i", "both",
                 CONNSTR, file.getAbsolutePath());
@@ -53,6 +70,10 @@ public class BackupService {
         pb.start();
     }
     
+    /**
+     *
+     * @throws IOException
+     */
     public static void backup() throws IOException { 
         ProcessBuilder pb = new ProcessBuilder("mysqldbexport", CONNSTR, "-e", 
                 "both", "bapers");
@@ -63,7 +84,7 @@ public class BackupService {
             BACKUP.mkdir();
         }
         File file = new File(BACKUP.getAbsoluteFile()+"/"
-                +BACKUPDATE.format(new Date())+".sql");
+                + BACKUPDATE.format(new Date())+".sql");
 //        Date date = DATE.parse(filename here);        
         file.createNewFile();
         try (FileOutputStream fos = new FileOutputStream(file)) {
@@ -73,6 +94,10 @@ public class BackupService {
         }        
     }
     
+    /**
+     *
+     * @return
+     */
     public static List<File> getBackupList() {
         File[] files = BACKUP.listFiles(File::isFile);
         return files == null ? new ArrayList() : Arrays.asList(files);

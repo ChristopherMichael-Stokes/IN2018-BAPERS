@@ -41,17 +41,39 @@ import javafx.stage.Stage;
  */
 public abstract class Report<T> {
 
+    /**
+     *
+     */
     protected final ObservableList<T> reportList = FXCollections.observableArrayList();
+
+    /**
+     *
+     */
     protected T item;
+
+    /**
+     *
+     */
     public Stage stage = null;
 
+    /**
+     *
+     * @param items
+     */
     public void setItems(List<T> items) {
         reportList.clear();
         reportList.addAll(items);
     }
 
+    /**
+     *
+     */
     protected abstract void setTable();
 
+    /**
+     *
+     * @param n
+     */
     protected void print(Node n) {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job != null) {
@@ -61,6 +83,10 @@ public abstract class Report<T> {
         }
     }
 
+    /**
+     *
+     * @param item
+     */
     public void setItems(T item) {
     }
 

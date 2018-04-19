@@ -40,8 +40,36 @@ import javafx.collections.ObservableList;
  */
 public interface CustomerAccountService {
     
+    /**
+     *
+     */
     public enum DiscountPlan {
-        none, fixed, variable, flexible;
+
+        /**
+         *
+         */
+        none,
+
+        /**
+         *
+         */
+        fixed,
+
+        /**
+         *
+         */
+        variable,
+
+        /**
+         *
+         */
+        flexible;
+
+        /**
+         *
+         * @param plan
+         * @return
+         */
         public static DiscountPlan getPlan(int plan) {
             switch(plan){
                 case 0: return none;
@@ -62,16 +90,47 @@ public interface CustomerAccountService {
     /**
      *
      * @param account the new account to be added
+     * @param addressLine1
      * @param address the address of the new customer
+     * @param city
+     * @param postcode
+     * @return 
      * @throws bapers.data.dataAccess.exceptions.IllegalOrphanException
      * @throws bapers.data.dataAccess.exceptions.NonexistentEntityException
      */
     public CustomerAccount addCustomer(CustomerAccount account, String addressLine1, 
             String postcode, String city);
     
+    /**
+     *
+     * @param account
+     * @return
+     */
     public CustomerAccount addCustomer(CustomerAccount account);
+
+    /**
+     *
+     * @param account
+     * @param addressLine2
+     * @param region
+     */
     public void modifyAddress(CustomerAccount account, String addressLine2, String region);
+
+    /**
+     *
+     * @param accountMatches
+     * @return
+     */
     public List<CustomerAccount> findCustomers(String accountMatches);
+
+    /**
+     *
+     * @param c
+     * @param ca
+     * @return
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     public Contact addContact(Contact c, CustomerAccount ca) throws PreexistingEntityException, Exception ;
 
     /**
@@ -104,5 +163,11 @@ public interface CustomerAccountService {
     public void updateAccount(CustomerAccount account) 
             throws IllegalOrphanException, NonexistentEntityException, Exception;
     
+    /**
+     *
+     * @param ca
+     * @param active
+     * @return
+     */
     public CustomerAccount setAccountActive(CustomerAccount ca ,boolean active);
 }

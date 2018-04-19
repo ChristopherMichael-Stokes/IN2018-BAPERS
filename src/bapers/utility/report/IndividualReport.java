@@ -45,6 +45,10 @@ public class IndividualReport {
     private SimpleStringProperty completedBy;
     private SimpleStringProperty shelfOnCompletion;
 
+    /**
+     *
+     * @param resultSet
+     */
     public IndividualReport(Object[] resultSet) {
         this.code = new SimpleStringProperty(resultSet[0].toString());
         int price_ = Integer.parseInt(resultSet[1].toString()) / 100;
@@ -57,66 +61,130 @@ public class IndividualReport {
         this.shelfOnCompletion = new SimpleStringProperty(resultSet[7].toString());
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCode() {
         return code.get();
     }
 
+    /**
+     *
+     * @param code
+     */
     public void setCode(String code) {
         this.code = new SimpleStringProperty(code);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPrice() {
         return price.get();
     }
 
+    /**
+     *
+     * @param price
+     */
     public void setPrice(double price) {
         this.price = new SimpleStringProperty(tf.getValueConverter().toString(price / 100));
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTask() {
         return task.get();
     }
 
+    /**
+     *
+     * @param task
+     */
     public void setTask(String task) {
         this.task = new SimpleStringProperty(task);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDepartment() {
         return department.get();
     }
 
+    /**
+     *
+     * @param department
+     */
     public void setDepartment(String department) {
         this.department = new SimpleStringProperty(department);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getStartTime() {
         return startTime.get();
     }
 
+    /**
+     *
+     * @param startTime
+     */
     public void setStartTime(SimpleStringProperty startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTimeTaken() {
         return timeTaken.get();
     }
 
+    /**
+     *
+     * @param timeTaken
+     */
     public void setTimeTaken(SimpleStringProperty timeTaken) {
         this.timeTaken = timeTaken;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCompletedBy() {
         return completedBy.get();
     }
 
+    /**
+     *
+     * @param completedBy
+     */
     public void setCompletedBy(SimpleStringProperty completedBy) {
         this.completedBy = completedBy;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getShelfOnCompletion() {
         return shelfOnCompletion.get();
     }
 
+    /**
+     *
+     * @param shelfOnCompletion
+     */
     public void setShelfOnCompletion(SimpleStringProperty shelfOnCompletion) {
         this.shelfOnCompletion = shelfOnCompletion;
     }

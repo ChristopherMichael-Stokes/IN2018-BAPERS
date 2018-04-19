@@ -32,8 +32,16 @@ import java.util.List;
  * @author chris
  */
 public class IrResultSet {
+
+    /**
+     *
+     */
     public final List<IndividualReport> irList;
     
+    /**
+     *
+     * @param irList
+     */
     public IrResultSet(List<IndividualReport> irList) {
         this.irList = irList;
     }

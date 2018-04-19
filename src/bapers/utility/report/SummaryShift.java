@@ -35,6 +35,10 @@ import javafx.beans.property.SimpleStringProperty;
 public class SummaryShift extends TotalShift{
     private SimpleStringProperty title;
             
+    /**
+     *
+     * @param resultSet
+     */
     public SummaryShift(Object[] resultSet) {
         super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
         title = new SimpleStringProperty(stringResult(resultSet[0]));
@@ -44,10 +48,18 @@ public class SummaryShift extends TotalShift{
         return o == null ? "No data" : o.toString();
     }
     
+    /**
+     *
+     * @return
+     */
     public String getTitle() {
         return title.get();
     }
 
+    /**
+     *
+     * @param title
+     */
     public void setTitle(SimpleStringProperty title) {
         this.title = title;
     }

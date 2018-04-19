@@ -35,10 +35,27 @@ import java.util.stream.Collectors;
  */
 public class IprResultSet {
     
+    /**
+     *
+     */
     public final List<IndividualPerformanceReport> individualEffort;
+
+    /**
+     *
+     */
     public final List<IprTotalIndividual> totalIndividualEffort;
+
+    /**
+     *
+     */
     public final String totalOverallEffort; 
     
+    /**
+     *
+     * @param individual
+     * @param totalIndividual
+     * @param total
+     */
     public IprResultSet(List<Object[]> individual, List<Object[]> totalIndividual,
             Object total) {
         

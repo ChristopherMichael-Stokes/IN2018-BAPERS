@@ -97,7 +97,6 @@ public class PaymentServiceImpl implements PaymentService {
     /**
      *
      * @param datePaid
-     * @param card
      * @param jobs
      * @throws PreexistingEntityException
      * @throws Exception
@@ -178,6 +177,11 @@ public class PaymentServiceImpl implements PaymentService {
         return Math.round(cost) / 100d;
     }
     
+    /**
+     *
+     * @param jobId
+     * @return
+     */
     @Override
     public double getJobCost(int jobId) {
         Job job = jobController.findJob(jobId);

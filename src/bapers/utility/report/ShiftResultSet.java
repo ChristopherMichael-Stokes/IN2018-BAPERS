@@ -33,11 +33,57 @@ import java.util.stream.Collectors;
  */
 public class ShiftResultSet {
     
-    public final List<Shift> dayShift1, dayShift2, nightShift;
-    public final TotalShift dayShift1Total, dayShift2Total, nightShiftTotal, 
-            summaryShiftTotal;
+    /**
+     *
+     */
+    public final List<Shift> dayShift1,
+
+    /**
+     *
+     */
+    dayShift2,
+
+    /**
+     *
+     */
+    nightShift;
+
+    /**
+     *
+     */
+    public final TotalShift dayShift1Total, 
+
+    /**
+     *
+     */
+    dayShift2Total, 
+
+    /**
+     *
+     */
+    nightShiftTotal, 
+
+    /**
+     *
+     */
+    summaryShiftTotal;
+
+    /**
+     *
+     */
     public final List<SummaryShift> summaryShift;
     
+    /**
+     *
+     * @param dayShift1
+     * @param dayShift2
+     * @param nightShift
+     * @param dayShift1Total
+     * @param dayShift2Total
+     * @param nightShiftTotal
+     * @param summaryShift
+     * @param summaryShiftTotal
+     */
     public ShiftResultSet(List<Object[]> dayShift1, List<Object[]> dayShift2, 
             List<Object[]> nightShift, Object[] dayShift1Total, 
             Object[] dayShift2Total, Object[] nightShiftTotal,

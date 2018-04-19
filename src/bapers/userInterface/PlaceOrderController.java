@@ -28,7 +28,6 @@ package bapers.userInterface;
 import static bapers.BAPERS.EMF;
 import bapers.data.dataAccess.ContactJpaController;
 import bapers.data.dataAccess.CustomerAccountJpaController;
-import bapers.data.dataAccess.exceptions.NonexistentEntityException;
 import bapers.data.domain.ComponentTask;
 import bapers.data.domain.ComponentTaskPK;
 import bapers.data.domain.Contact;
@@ -64,6 +63,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -163,6 +163,22 @@ public class PlaceOrderController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+//        btnPrintLabel.setOnAction((event) -> {
+//            Stage stage = new Stage();
+//            try {
+//                Scene label = new Scene(FXMLLoader.load(this.getClass().getResource("/bapers/userInterface/fxml/Label.fxml")));
+//                stage.setScene(label);
+//                PrinterJob job = PrinterJob.createPrinterJob();
+//                LabelController = 
+//                if (job != null) {
+//                    job.showPrintDialog(bapers.BAPERS.primaryStage); // Window must be your main Stage
+//                    job.printPage();
+//                    job.endJob();
+//                }
+//            } catch (IOException ex) {
+//                System.err.println("Cannot load label form");
+//            }
+//        });
         btnHome.setOnAction(event -> SceneController.switchScene(SceneController.Scenes.home));
         //radioButtons
         optNo.setToggleGroup(urgent);

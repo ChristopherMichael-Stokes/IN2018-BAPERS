@@ -72,6 +72,8 @@ public class IndividualReportController extends Report<IndividualReport> impleme
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -86,6 +88,9 @@ public class IndividualReportController extends Report<IndividualReport> impleme
         });
     }
 
+    /**
+     *
+     */
     @Override
     protected void setTable() {
         tcCode.setCellValueFactory(new PropertyValueFactory<>("code"));

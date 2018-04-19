@@ -38,6 +38,10 @@ public class TotalShift {
     private SimpleStringProperty finishing;
     private SimpleStringProperty packing;
 
+    /**
+     *
+     * @param resultSet
+     */
     public TotalShift(Object[] resultSet) {
         this.copyRoom = new SimpleStringProperty(stringResult(resultSet[0]));
         this.development = new SimpleStringProperty(stringResult(resultSet[1]));
@@ -49,34 +53,66 @@ public class TotalShift {
         return o == null ? "No data" : o.toString();
     }
     
+    /**
+     *
+     * @return
+     */
     public String getCopyRoom() {
         return copyRoom.get();
     }
 
+    /**
+     *
+     * @param copyRoom
+     */
     public void setCopyRoom(SimpleStringProperty copyRoom) {
         this.copyRoom = copyRoom;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDevelopment() {
         return development.get();
     }
 
+    /**
+     *
+     * @param development
+     */
     public void setDevelopment(SimpleStringProperty development) {
         this.development = development;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFinishing() {
         return finishing.get();
     }
 
+    /**
+     *
+     * @param finishing
+     */
     public void setFinishing(SimpleStringProperty finishing) {
         this.finishing = finishing;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPacking() {
         return packing.get();
     }
 
+    /**
+     *
+     * @param packing
+     */
     public void setPacking(SimpleStringProperty packing) {
         this.packing = packing;
     }

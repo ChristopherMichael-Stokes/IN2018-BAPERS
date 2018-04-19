@@ -43,11 +43,18 @@ public class Intervals implements Serializable{
     private static final int DAYS = 0, HOURS = 1, MINUTES = 0;
     private Times reportIntervals, backupIntervals;
 
+    /**
+     *
+     */
     public Intervals() {
         reportIntervals = new Times(DAYS, HOURS, MINUTES);
         backupIntervals = new Times(DAYS, HOURS, MINUTES);
     }
 
+    /**
+     *
+     * @return
+     */
     public static Intervals readIntervals() {
         Intervals intervals = null;
         
@@ -64,6 +71,12 @@ public class Intervals implements Serializable{
         }
     }
 
+    /**
+     *
+     * @param intervals
+     * @return
+     * @throws IOException
+     */
     public static boolean writeIntervals(Intervals intervals) throws IOException {
         File file = new File(URI_);
         
@@ -80,34 +93,65 @@ public class Intervals implements Serializable{
             return false;
         }
     }
+
+    /**
+     *
+     * @param times
+     */
     public static void setMainBackupIntervals(Times times){
         bapers.BAPERS.intervals.setBackupIntervals(times);
     }
     
+    /**
+     *
+     * @param times
+     */
     public static void setMainReportIntervals(Times times) {
         bapers.BAPERS.intervals.setReportIntervals(times);
     }
     
+    /**
+     *
+     */
     public void setBackupGenerated() {
         backupIntervals.setLastSet();
     }
     
+    /**
+     *
+     */
     public void setReportGenerated() {
         reportIntervals.setLastSet();
     }
     
+    /**
+     *
+     * @return
+     */
     public Times getReportIntervals() {
         return reportIntervals;
     }
 
+    /**
+     *
+     * @param reportIntervals
+     */
     public void setReportIntervals(Times reportIntervals) {
         this.reportIntervals = reportIntervals;
     }
 
+    /**
+     *
+     * @return
+     */
     public Times getBackupIntervals() {
         return backupIntervals;
     }
 
+    /**
+     *
+     * @param backupIntervals
+     */
     public void setBackupIntervals(Times backupIntervals) {
         this.backupIntervals = backupIntervals;
     }

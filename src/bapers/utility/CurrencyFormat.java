@@ -38,6 +38,9 @@ public class CurrencyFormat extends TextFormatter<Double> {
     private static final DecimalFormat strictZeroDecimalFormat  
                 = new DecimalFormat("\u00A3###,###.##");
 
+    /**
+     *
+     */
     public CurrencyFormat() {
         super(
             new StringConverter<Double>() {

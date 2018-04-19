@@ -51,6 +51,9 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     private final AddressJpaController addressController;
     private final ContactJpaController contactController;
 
+    /**
+     *
+     */
     public CustomerAccountServiceImpl() {
         customerController = new CustomerAccountJpaController(EMF);
         addressController = new AddressJpaController(EMF);
@@ -83,6 +86,14 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         return account;
     }
 
+    /**
+     *
+     * @param c
+     * @param ca
+     * @return
+     * @throws PreexistingEntityException
+     * @throws Exception
+     */
     @Override
     public Contact addContact(Contact c, CustomerAccount ca)  throws PreexistingEntityException, Exception {
         Contact contact = contactController.findContact(c.getContactPK());
@@ -93,6 +104,11 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         return contact == null ? c : contact;
     }
 
+    /**
+     *
+     * @param accountMatches
+     * @return
+     */
     @Override
     public List<CustomerAccount> findCustomers(String accountMatches) {
         return customerController.findCustomerAccountEntities().stream()
@@ -103,7 +119,10 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     /**
      *
      * @param account the new account to be added
-     * @param address the address of the new customer
+     * @param addressLine1
+     * @param postcode
+     * @param city
+     * @return 
      */
     @Override
     public CustomerAccount addCustomer(CustomerAccount account, String addressLine1,
@@ -165,11 +184,22 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         customerController.edit(account);
     }
 
+    /**
+     *
+     * @param account
+     * @return
+     */
     @Override
     public CustomerAccount addCustomer(CustomerAccount account) {
         return addCustomer_(account);
     }
 
+    /**
+     *
+     * @param account
+     * @param addressLine2
+     * @param region
+     */
     @Override
     public void modifyAddress(CustomerAccount account, String addressLine2, String region) {
         Address address = account.getAddressList().get(0);
@@ -178,6 +208,12 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         setAddress(account, address);
     }
 
+    /**
+     *
+     * @param ca
+     * @param active
+     * @return
+     */
     @Override
     public CustomerAccount setAccountActive(CustomerAccount ca, boolean active) {
         if (active) {

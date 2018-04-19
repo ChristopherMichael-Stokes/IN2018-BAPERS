@@ -46,6 +46,11 @@ public interface PaymentService {
      */
     public ObservableList<Job> getUnpaidJobs(int accountNumber);
     
+    /**
+     *
+     * @param jobId
+     * @return
+     */
     public double getJobCost(int jobId);
 
     /**

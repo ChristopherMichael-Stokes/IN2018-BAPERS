@@ -17,6 +17,12 @@ import javafx.collections.ObservableList;
  */
 public interface UserService {
     
+    /**
+     *
+     * @param firstName
+     * @param surname
+     * @return
+     */
     public boolean userExists(String firstName, String surname);
 
     /**
