@@ -91,6 +91,8 @@ public class ManageStaffController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //Creating a new user type, inserting their details including name, surname, usertype and the users location
+    // a username and password must also be created for the staff
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
@@ -183,6 +185,7 @@ public class ManageStaffController implements Initializable {
     private boolean isEmpty(TextField tf) {
         return tf.getText().trim().equals("");
     }
+    //Alert messsage if information is not inputted in the textfields
     private void alert(String message){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
@@ -190,7 +193,7 @@ public class ManageStaffController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    
+    //alert message sent if all information completed
     private void information(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);

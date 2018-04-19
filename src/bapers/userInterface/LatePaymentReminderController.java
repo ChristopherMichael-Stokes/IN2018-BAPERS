@@ -41,6 +41,7 @@ public class LatePaymentReminderController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //did not complete iplementation for this part
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

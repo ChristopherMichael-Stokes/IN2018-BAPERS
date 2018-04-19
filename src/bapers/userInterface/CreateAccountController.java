@@ -77,12 +77,9 @@ public class CreateAccountController implements Initializable {
     private AddressJpaController addressJpa = new AddressJpaController(EMF);
     private boolean used = false;
 
-    /**
-     * Initializes the controller class.
-     *
-     * @param url
-     * @param rb
-     */
+ 
+     //Creates a customer Account
+     //inserting inputs inside textfields such as Account holder name, email and details of customer
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblCreateAccount.setText("Create Account");
@@ -132,7 +129,7 @@ public class CreateAccountController implements Initializable {
         });
 
     }
-
+//
     private boolean isEmpty(TextField tf) {
         return tf.getText().trim().equals("");
     }

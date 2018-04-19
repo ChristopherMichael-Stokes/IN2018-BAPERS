@@ -40,69 +40,41 @@ import static bapers.BAPERS.USER;
  */
 public class SceneController {
 
-    /**
-     *
-     */
     public static enum Scenes {
 
-        /**
-         *
-         */
+     //accessing different scenes for the different gui forms
         payment("AddPayment"), 
 
-        /**
-         *
-         */
+      
         createAccount("CreateAccount"), 
 
-        /**
-         *
-         */
+
         home("HomePage"), 
 
-        /**
-         *
-         */
         jobProcessing("JobProcessing"), 
 
-        /**
-         *
-         */
+       
         login("Login"),
 
-        /**
-         *
-         */
+        
         manageBackup("ManageBackup"),
 
-        /**
-         *
-         */
+        
         manageCustomerAccount("ManageCustomerAccount"), 
 
-        /**
-         *
-         */
+        
         manageIntervals("ManageIntervals"), 
 
-        /**
-         *
-         */
+        
         manageStaff("ManageStaff"), 
 
-        /**
-         *
-         */
+        
         manageTasks("ManageTasks"), 
 
-        /**
-         *
-         */
+        
         placeOrder("PlaceOrder"), 
 
-        /**
-         *
-         */
+     
         report("Report");
         
         private final String fxml;
@@ -129,6 +101,8 @@ public class SceneController {
      *
      * @param scene
      */
+    
+    //switching scenes between the forms
     public static void switchScene(Scenes scene) {
         Stage stage = primaryStage;
         double height = 0.0, width = 0.0;

@@ -236,7 +236,7 @@ public class AddPaymentController implements Initializable {
         });        
     }   
     
-    
+    //Lists the customers name
     private void loadCustomers() {
         ObservableList<CustomerAccount> customers = customerDao.getCustomerAccounts();
         if (customers == null)
@@ -250,7 +250,7 @@ public class AddPaymentController implements Initializable {
             cmbCustomer.getItems().add(accountName);
         }       
     }
-    
+    //When you select a customer and it loads jobs that are unpaid 
     private void loadJobs() {
         if (cmbCustomer.getSelectionModel().isEmpty())
             return;
@@ -266,7 +266,7 @@ public class AddPaymentController implements Initializable {
             jobs.add(cbox);
         }
     }
-    
+    //when you select a customer and their job comes up, it states the payment due 
     private void updatePayment() {
         double cost = jobs.stream().filter(cb -> cb.isSelected())
                     .map(cb -> jobMap.get(cb))
@@ -274,7 +274,7 @@ public class AddPaymentController implements Initializable {
                     .reduce(0, (a, b) -> a + b);
         lblPaymentDue.setText("Payment Due: "+tf.getValueConverter().toString(cost));
     }
-    
+    //Sets a limit to the characters that you can insert
     private void setTextLimit(TextField textField, int length) {
         int ln = length - 1;
         textField.setOnKeyTyped(event -> {
@@ -287,4 +287,3 @@ public class AddPaymentController implements Initializable {
         });
     }
 }
-

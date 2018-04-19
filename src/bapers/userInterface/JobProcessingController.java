@@ -406,7 +406,7 @@ public class JobProcessingController implements Initializable {
         });
                         
     }
-    
+    //Lists the customers name
     private void loadCustomers() {
         ObservableList<CustomerAccount> customers = customerDao.getCustomerAccounts();
         if (customers == null)
@@ -420,7 +420,7 @@ public class JobProcessingController implements Initializable {
             cmbCustomer.getItems().add(accountName);
         }
     }
-    
+    //loads all jobs taken by that customer
     private void loadJobs(Jobs jobType) {
         if (cmbCustomer.getValue() == null)
             return;       
@@ -428,7 +428,7 @@ public class JobProcessingController implements Initializable {
         jobs.addAll(jobDao.getJobs(custMap.get(cmbCustomer.getValue()), jobType));
         clearText();
     }
-    
+    //loads all tasks taken
     private void loadTasks(Job job) {
         tasks.clear();
         if (job == null)
@@ -438,7 +438,7 @@ public class JobProcessingController implements Initializable {
                 .flatMap(jc -> jc.getComponentTaskList().stream())
                 .collect(Collectors.toList()));
     }
-    
+    //clears texts when trying to input values
     private void clearText() {
         txtJobTask.setEditable(true);
         txtTask.setEditable(true);
@@ -448,7 +448,7 @@ public class JobProcessingController implements Initializable {
         txtTaskStart.clear();
         txtUser.clear();
     }
-    
+    //gets text from textfield when entering task inputs
     private String getText(TextField tf) {
         return tf.getText().trim();
     }

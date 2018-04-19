@@ -93,6 +93,7 @@ public class HomePageController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //setting all forms buttons on homepage and switiching scenes
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblName.setText("Welcome back "+USER.getFirstName()+" "+USER.getSurname());

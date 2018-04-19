@@ -68,6 +68,7 @@ public class ManageIntervalsController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //Selecting intervals and setting hours and minutes for reports and database backup
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Combo box

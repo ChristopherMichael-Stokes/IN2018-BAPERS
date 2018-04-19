@@ -110,6 +110,7 @@ public class ReportController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnHome.setOnAction((event) -> switchScene(Scenes.home));
@@ -131,7 +132,7 @@ public class ReportController implements Initializable {
         });
         
         rbAllUsers.setSelected(true);
-
+//radio button for selecting individual performance report and entering the start dates, end dates and also account number
         txtSurname.setVisible(false);
         txtFirstName.setVisible(false);
         dpStartDateIPR.setVisible(false);
@@ -156,6 +157,7 @@ public class ReportController implements Initializable {
             dpEndDateIR.setVisible(false);
             txtAccountNumber.setVisible(false);
         });
+        //radio button for summary performance report entering start dates, end dates, names and account number
         rbSPR.setOnAction((event) -> {
             txtSurname.setVisible(false);
             txtFirstName.setVisible(false);
@@ -169,6 +171,7 @@ public class ReportController implements Initializable {
             rbAllUsers.setVisible(false);
             rbUser.setVisible(false);
         });
+        //radio button for individual performance report entering start dates, end dates, name and account number
         rbIR.setOnAction((event) -> {
             txtSurname.setVisible(false);
             txtFirstName.setVisible(false);
@@ -182,6 +185,7 @@ public class ReportController implements Initializable {
             rbAllUsers.setVisible(false);
             rbUser.setVisible(false);
         });
+        //when individual report is selected with input data, the report will be displayed and if incorrect details are entered alert message will pop up
         btnConfirm.setOnAction((event) -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
@@ -193,12 +197,13 @@ public class ReportController implements Initializable {
                     alert.setContentText("Please fill in all the details!");
                     alert.showAndWait();
                 } else {
+                    //report is generated
                     System.err.println(dpStartDateIR.getValue().toString());
                     List<IndividualReport> irList
                             = getIndividualReport(txtAccountNumber.getText().trim(),
                                     dpStartDateIR.getValue().toString(),
                                     dpEndDateIR.getValue().toString());
-
+// if report cannot display
                     Pair<Report, Stage> report = loadReport("IndividualReport.fxml");
                     if (report == null) {
                         FormUtils.haltAlert("Cannot display report");
@@ -208,6 +213,7 @@ public class ReportController implements Initializable {
                     report.getKey().stage = report.getValue();
                     report.getValue().showAndWait();
                 }
+                //if individual performance report selected, inputs are entered
             } else if (rbIPR.isSelected()) {
                 if (dpStartDateIPR.getValue() == null
                         || dpEndDateIPR.getValue() == null) {
@@ -227,6 +233,7 @@ public class ReportController implements Initializable {
                             return;
                         }
                     }
+                    //generating the reports
                     IprResultSet iprResult
                             = ReportService.getIndividualPerformanceReport(
                                     name, dpStartDateIPR.getValue().toString(),
@@ -247,6 +254,7 @@ public class ReportController implements Initializable {
                     alert.setContentText("Please fill in all the details!");
                     alert.showAndWait();
                 } else {
+                    // report generated
                     String startDate = dpStartDateSPR.getValue().toString(),
                             endDate = dpEndDateSPR.getValue().toString();
                     ShiftResultSet srs = ReportService.getSummaryPerformanceReport(startDate, endDate);
@@ -259,6 +267,7 @@ public class ReportController implements Initializable {
                     report.getKey().stage = report.getValue();
                     report.getValue().showAndWait();
                 }
+                //alert sent to select type of report
             } else {
                 alert.setContentText("Please Select type for the report!");
                 alert.showAndWait();

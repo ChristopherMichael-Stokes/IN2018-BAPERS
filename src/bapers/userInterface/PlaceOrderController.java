@@ -161,6 +161,7 @@ public class PlaceOrderController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        btnPrintLabel.setOnAction((event) -> {
@@ -220,6 +221,7 @@ public class PlaceOrderController implements Initializable {
         btnRemoveComponent.setOnAction((event) -> {
             lsvComponent.getSelectionModel().getSelectedItem();
         });
+        //Add a job component for a job required by the customer
         btnAddComponent.setOnAction((event) -> {
             String description = getText(txtComponentDesc);
             if (isEmpty(description)) {
@@ -241,7 +243,7 @@ public class PlaceOrderController implements Initializable {
                 System.err.println("hash broken");
             }
         });
-
+//remove job component from the list
         btnRemoveComponent.setOnAction((event) -> {
             JobComponent selection = lsvComponent.getSelectionModel().getSelectedItem();
             if (selection != null) {
@@ -275,6 +277,7 @@ public class PlaceOrderController implements Initializable {
                 }
             }
         });
+        //Select a task and choose to update a component from the list and then they are added
         cmbTask.setItems(tasks);
         updateTask();
         cmbTask.setOnMouseClicked((event) -> updateTask());
@@ -293,7 +296,7 @@ public class PlaceOrderController implements Initializable {
                 componentTasks.addAll(ctlist);
             }
         });
-
+//Removing a task from the list of tasks
         btnRemoveTask.setOnAction((event) -> {
             JobComponent jc = lsvComponent.getSelectionModel().getSelectedItem();
             ComponentTask selection = lsvTasks.getSelectionModel().getSelectedItem();
@@ -305,7 +308,7 @@ public class PlaceOrderController implements Initializable {
                 jc.setComponentTaskList(ctl);
             }
         });
-
+//adding a component to a task from the list
         btnAddTask.setOnAction((event) -> {
             JobComponent selection = lsvComponent.getSelectionModel().getSelectedItem();
             if (selection == null) {
@@ -349,7 +352,7 @@ public class PlaceOrderController implements Initializable {
                 System.err.println("Cannot load add customer account form");
             }
         });
-
+//when button clicked the user can place an order
         btnPlaceOrder.setOnAction((event) -> {
             String firstName = getText(txtFirstName), surname = getText(txtSurname),
                     mobile = getText(txtMobile);
@@ -358,13 +361,13 @@ public class PlaceOrderController implements Initializable {
                 FormUtils.haltAlert("Please enter contact details");
                 return;
             }
-
+// selecting a customer from a list
             CustomerAccount account = lsvCustomer.getSelectionModel().getSelectedItem();
             if (account == null) {
                 FormUtils.haltAlert("Please select a customer account");
                 return;
             }
-
+//Recording a deadline and a set percentage for a job
             job.setDateIssued(new Date());
 
             if (optYes.isSelected()) {
@@ -439,7 +442,7 @@ public class PlaceOrderController implements Initializable {
 //                System.err.println("could not add contact\n"+ex);
 //                return;
 //            }
-
+//not being able to add a job component
             job.setContact(contact);
 
             job = jobDao.addJob(job);

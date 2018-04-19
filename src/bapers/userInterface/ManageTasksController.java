@@ -34,6 +34,7 @@ import javafx.fxml.Initializable;
  *
  * @author chris
  */
+//Was not implemented
 public class ManageTasksController implements Initializable {
 
     /**
