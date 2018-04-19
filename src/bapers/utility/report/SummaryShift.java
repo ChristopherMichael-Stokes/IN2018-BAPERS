@@ -37,7 +37,7 @@ public class SummaryShift extends TotalShift{
             
     /**
      *
-     * @param resultSet
+     * @param resultSet,generated from the database that contains data object of Individual PerformanceReport.
      */
     public SummaryShift(Object[] resultSet) {
         super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
@@ -50,7 +50,7 @@ public class SummaryShift extends TotalShift{
     
     /**
      *
-     * @return
+     * @return String title which representing colum title in the Individual Performance Report.
      */
     public String getTitle() {
         return title.get();
@@ -58,7 +58,7 @@ public class SummaryShift extends TotalShift{
 
     /**
      *
-     * @param title
+     * @param title, a SimpleStringProperty, in here is the data for colum title retrieve from the database for Individual Performance Report.
      */
     public void setTitle(SimpleStringProperty title) {
         this.title = title;

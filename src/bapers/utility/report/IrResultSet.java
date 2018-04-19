@@ -34,13 +34,13 @@ import java.util.List;
 public class IrResultSet {
 
     /**
-     *
+     * A list use to store the items IndividualReport in order to generate report from it.
      */
     public final List<IndividualReport> irList;
     
     /**
      *
-     * @param irList
+     * @param irList, List contains IndividualRpeort's object,which mean data retrieve from the database.
      */
     public IrResultSet(List<IndividualReport> irList) {
         this.irList = irList;

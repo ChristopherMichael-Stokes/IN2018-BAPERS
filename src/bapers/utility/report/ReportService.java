@@ -45,10 +45,10 @@ public class ReportService {
 
     /**
      *
-     * @param account_no
-     * @param date_start
-     * @param date_end
-     * @return
+     * @param account_no,String,account number representing the customer account in the database.
+     * @param date_start,String,boundary for the data retrieve, it will retrieve data start form this date till date_end.
+     * @param date_end,String,boundary for the data retrieve, it will retrieve data start from date_start till this date.
+     * @return a List,which contain IndividualReport items which have values to create table for reports.
      */
     public static List<IndividualReport> getIndividualReport(String account_no, String date_start, String date_end) {
         StoredProcedureQuery query = EM.createStoredProcedureQuery("ir")
@@ -67,10 +67,10 @@ public class ReportService {
 
     /**
      *
-     * @param name
-     * @param date_start
-     * @param date_end
-     * @return
+     * @param name,string,can be all to retrieve all user result or type in name for specific user.
+     * @param date_start,String,boundary for the data retrieve, it will retrieve data start form this till date_end.
+     * @param date_end,String,boundary for the data retrieve, it will retrieve data start form date_start till this date.
+     * @return IprResultSet Object ,which contain Three resultSets which have values to create table for reports.
      */
     public static IprResultSet getIndividualPerformanceReport(String name, String date_start, String date_end) {
         StoredProcedureQuery query = EM.createStoredProcedureQuery("ipr")
@@ -90,9 +90,9 @@ public class ReportService {
     
     /**
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate,String,boundary for the data retrieve, it will retrieve data start form this date till endDate.
+     * @param endDate,String,boundary for the data retrieve, it will retrieve data start form startDate till this date.
+     * @return ShiftResultSer,which contain Two resultSets which have values to create table for reports.
      */
     public static ShiftResultSet getSummaryPerformanceReport(String startDate, String endDate) {
         StoredProcedureQuery dayShift1_ = getShiftQuery("day_shift1", startDate, endDate);

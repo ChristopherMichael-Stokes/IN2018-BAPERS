@@ -38,7 +38,7 @@ public class Shift extends TotalShift{
     
     /**
      *
-     * @param resultSet
+     * @param resultSet,generated from the database that contains data object of Individual PerformanceReport.
      */
     public Shift(Object[] resultSet) {
         super(Arrays.copyOfRange(resultSet, 1, resultSet.length));
@@ -51,7 +51,7 @@ public class Shift extends TotalShift{
     
     /**
      *
-     * @return
+     * @return String code which representing colum date in the Individual Performance Report.
      */
     public String getDate() {
         return date.get();
@@ -59,7 +59,7 @@ public class Shift extends TotalShift{
 
     /**
      *
-     * @param date
+     * @param date, a SimpleStringProperty, in here is the data for colum date retrieve from the database for Individual Performance Report.
      */
     public void setDate(SimpleStringProperty date) {
         this.date = date;

@@ -40,7 +40,7 @@ public class TotalShift {
 
     /**
      *
-     * @param resultSet
+     * @param resultSet,generated from the database that contains data object of Individual PerformanceReport.
      */
     public TotalShift(Object[] resultSet) {
         this.copyRoom = new SimpleStringProperty(stringResult(resultSet[0]));
@@ -55,7 +55,7 @@ public class TotalShift {
     
     /**
      *
-     * @return
+     * @return String copyRoom which representing colum copyRoom in the Individual Performance Report.
      */
     public String getCopyRoom() {
         return copyRoom.get();
@@ -63,7 +63,7 @@ public class TotalShift {
 
     /**
      *
-     * @param copyRoom
+     * @param copyRoom, a SimpleStringProperty, in here is the data for colum copyRoom retrieve from the database for Individual Performance Report.
      */
     public void setCopyRoom(SimpleStringProperty copyRoom) {
         this.copyRoom = copyRoom;
@@ -71,7 +71,7 @@ public class TotalShift {
 
     /**
      *
-     * @return
+     * @return String development which representing colum development in the Individual Performance Report.
      */
     public String getDevelopment() {
         return development.get();
@@ -79,7 +79,7 @@ public class TotalShift {
 
     /**
      *
-     * @param development
+     * @param development, a SimpleStringProperty, in here is the data for colum development retrieve from the database for Individual Performance Report.
      */
     public void setDevelopment(SimpleStringProperty development) {
         this.development = development;
@@ -87,7 +87,7 @@ public class TotalShift {
 
     /**
      *
-     * @return
+     * @return String finishing which representing colum finishing in the Individual Performance Report.
      */
     public String getFinishing() {
         return finishing.get();
@@ -95,7 +95,7 @@ public class TotalShift {
 
     /**
      *
-     * @param finishing
+     * @param finishing, a SimpleStringProperty, in here is the data for colum finishing retrieve from the database for Individual Performance Report.
      */
     public void setFinishing(SimpleStringProperty finishing) {
         this.finishing = finishing;
@@ -103,7 +103,7 @@ public class TotalShift {
 
     /**
      *
-     * @return
+     * @return String packing which representing colum packing in the Individual Performance Report.
      */
     public String getPacking() {
         return packing.get();
@@ -111,7 +111,7 @@ public class TotalShift {
 
     /**
      *
-     * @param packing
+     * @param packing, a SimpleStringProperty, in here is the data for colum packing retrieve from the database for Individual Performance Report.
      */
     public void setPacking(SimpleStringProperty packing) {
         this.packing = packing;

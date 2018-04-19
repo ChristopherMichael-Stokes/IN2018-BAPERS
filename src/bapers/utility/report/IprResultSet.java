@@ -36,25 +36,25 @@ import java.util.stream.Collectors;
 public class IprResultSet {
     
     /**
-     *
+     * A list use to store the items IndividualReport in order to generate report from it.
      */
     public final List<IndividualPerformanceReport> individualEffort;
 
     /**
-     *
+     * A list use to store the items IprTotalIndividual in order to generate report from it.
      */
     public final List<IprTotalIndividual> totalIndividualEffort;
 
     /**
-     *
+     *String to store the value for totalOverallEffort according to the data retrieved.
      */
     public final String totalOverallEffort; 
     
     /**
      *
-     * @param individual
-     * @param totalIndividual
-     * @param total
+     * @param individual list of object contain IndividualReport object,retrieve values from the item to completed the table for report.
+     * @param totalIndividual list of object contain totalIndividualEffort object,retrieve values from the item to completed the table for report.
+     * @param total an object representing the totalOverallEffort generate using above List.
      */
     public IprResultSet(List<Object[]> individual, List<Object[]> totalIndividual,
             Object total) {

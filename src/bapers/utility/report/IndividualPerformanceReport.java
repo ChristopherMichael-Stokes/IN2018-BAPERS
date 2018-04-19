@@ -43,7 +43,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param resultSet
+     * @param resultSet,generated from the database that contains data object of Individual PerformanceReport.
      */
     public IndividualPerformanceReport(Object[] resultSet) {
         if (!(resultSet.length < 7)) {
@@ -67,7 +67,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String name which representing colum name in the Individual Performance Report.
      */
     public String getName() {
         return name.get();
@@ -75,7 +75,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param name
+     * @param name, a SimpleStringProperty, in here is the data for colum name retrieve from the database for Individual Performance Report.
      */
     public void setName(SimpleStringProperty name) {
         this.name = name;
@@ -83,7 +83,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String code which representing colum code in the Individual Performance Report.
      */
     public String getCode() {
         return code.get();
@@ -91,7 +91,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param code
+     * @param code, a SimpleStringProperty, in here is the data for colum code retrieve from the database for Individual Performance Report.
      */
     public void setCode(SimpleStringProperty code) {
         this.code = code;
@@ -99,7 +99,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String taskID which representing colum taskID in the Individual Performance Report.
      */
     public String getTaskID() {
         return taskID.get();
@@ -107,7 +107,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param taskID
+     * @param taskID, a SimpleStringProperty, in here is the data for colum taskID retrieve from the database for Individual Performance Report.
      */
     public void setTaskID(SimpleStringProperty taskID) {
         this.taskID = taskID;
@@ -115,7 +115,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String department which representing colum department in the Individual Performance Report.
      */
     public String getDepartment() {
         return department.get();
@@ -123,7 +123,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param department
+     * @param department, a SimpleStringProperty, in here is the data for colum department retrieve from the database for Individual Performance Report.
      */
     public void setDepartment(SimpleStringProperty department) {
         this.department = department;
@@ -131,7 +131,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String date which representing colum date in the Individual Performance Report.
      */
     public String getDate() {
         return date.get();
@@ -139,7 +139,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param date
+     * @param date, a SimpleStringProperty, in here is the data for colum date retrieve from the database for Individual Performance Report.
      */
     public void setDate(SimpleStringProperty date) {
         this.date = date;
@@ -147,7 +147,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String startTime which representing colum startTime in the Individual Performance Report.
      */
     public String getStartTime() {
         return startTime.get();
@@ -155,7 +155,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param startTime
+     * @param startTime, a SimpleStringProperty, in here is the data for colum startTime retrieve from the database for Individual Performance Report.
      */
     public void setStartTime(SimpleStringProperty startTime) {
         this.startTime = startTime;
@@ -163,7 +163,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @return
+     * @return String timeTaken which representing colum timeTaken in the Individual Performance Report.
      */
     public String getTimeTaken() {
         return timeTaken.get();
@@ -171,7 +171,7 @@ public class IndividualPerformanceReport {
 
     /**
      *
-     * @param timeTaken
+     * @param timeTaken, a SimpleStringProperty, in here is the data for colum timeTaken retrieve from the database for Individual Performance Report.
      */
     public void setTimeTaken(SimpleStringProperty timeTaken) {
         this.timeTaken = timeTaken;
