@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,12 +9,12 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ReportController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.ReportController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/report.css" />
     </stylesheets>
@@ -40,7 +34,7 @@
                   </Label>
                   <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btnHome" mnemonicParsing="false" text="Home">
+                        <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: #4185f2#4185f2;" text="Home">
                            <HBox.margin>
                               <Insets bottom="5.0" right="10.0" />
                            </HBox.margin>

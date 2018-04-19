@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="565.0" prefWidth="779.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
+<AnchorPane id="AnchorPane" prefHeight="565.0" prefWidth="779.0" style="-fx-background-color: #364059#364059;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bapers.userInterface.JobProcessingController">
     <stylesheets>
         <URL value="@/bapers/userInterface/styles/jobprocessing.css" />
     </stylesheets>
@@ -34,7 +34,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" top="20.0" />
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </Label>
                   <Separator prefWidth="200.0" />
@@ -42,7 +42,7 @@
                      <children>
                         <ComboBox fx:id="cmbCustomer" prefWidth="150.0" promptText="Select Customer">
                            <HBox.margin>
-                              <Insets left="10.0" top="20.0" />
+                              <Insets top="20.0" />
                            </HBox.margin>
                         </ComboBox>
                         <ComboBox fx:id="cmbJobType" prefWidth="150.0" promptText="Show which jobs">
@@ -53,12 +53,15 @@
                      </children>
                   </HBox>
                </children>
+               <BorderPane.margin>
+                  <Insets left="30.0" right="30.0" />
+               </BorderPane.margin>
             </VBox>
          </top>
          <bottom>
             <HBox nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="btnHome" mnemonicParsing="false" text="Home">
+                  <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Home">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
@@ -99,11 +102,11 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="txtJobTask" promptText="Enter Job Task ID" />
-                        <TextField fx:id="txtTask" promptText="Enter Task ID" />
-                        <TextField fx:id="txtTaskStart" promptText="Enter start time" />
-                        <TextField fx:id="txtTaskEnd" promptText="Enter end time" />
-                        <TextField fx:id="txtUser" promptText="Enter username" />
+                        <TextField fx:id="txtJobTask" promptText="Enter Job Task ID" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtTask" promptText="Enter Task ID" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtTaskStart" promptText="Enter start time" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtTaskEnd" promptText="Enter end time" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
+                        <TextField fx:id="txtUser" promptText="Enter username" style="-fx-background-color: #364059; -fx-border-color: #c6c9d1; -fx-border-radius: 10; -fx-text-fill: #c6c9d1;" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -111,9 +114,9 @@
                   </HBox>
                   <HBox spacing="5.0">
                      <children>
-                        <Button fx:id="btnUpdateTask" mnemonicParsing="false" text="Update Task" />
-                        <Button fx:id="btnAddTask" mnemonicParsing="false" text="Add Task" />
-                        <Button fx:id="btnRemoveTask" mnemonicParsing="false" text="Remove Task" />
+                        <Button fx:id="btnUpdateTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Update Task" />
+                        <Button fx:id="btnAddTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Add Task" />
+                        <Button fx:id="btnRemoveTask" mnemonicParsing="false" style="-fx-background-color: #4185f2;" text="Remove Task" />
                      </children>
                      <VBox.margin>
                         <Insets top="10.0" />
