@@ -722,7 +722,7 @@ public class ManageCustomerAccountController implements Initializable {
         );
 
         btnUpdateVar.setOnAction((event) -> {
-            if (rbVariable.isSelected() && !cbbVariable.getSelectionModel().isEmpty() && isFloat(txtVariablePercentage.getText())) {
+            if (rbVariable.isSelected() && !cbbVariable.getSelectionModel().isEmpty() && isFloat(txtVariablePercentage.getText()) && Float.parseFloat(txtVariablePercentage.getText()) <= 100 && Float.parseFloat(txtVariablePercentage.getText()) >= 0) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
                     if (o.getAccountNumber() == editAccount) {
                         if (o.getDiscountType() == (short) 0) {
@@ -899,7 +899,7 @@ public class ManageCustomerAccountController implements Initializable {
                             try {
                                 customerAccountServiceDao.updateAccount(o);
                                 alert.setAlertType(Alert.AlertType.INFORMATION);
-                                alert.setContentText("Value Customer "+o.getAccountHolderName()+" has been downgrade due to lack of discount plan!");
+                                alert.setContentText("Value Customer " + o.getAccountHolderName() + " has been downgrade due to lack of discount plan!");
                                 alert.showAndWait();
                             } catch (NonexistentEntityException ex) {
                                 Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
@@ -907,11 +907,10 @@ public class ManageCustomerAccountController implements Initializable {
                                 Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
                             }
 
-                        }
-                        else{
+                        } else {
                             alert.setAlertType(Alert.AlertType.INFORMATION);
-                                alert.setContentText("Task discount has been remove!");
-                                alert.showAndWait();
+                            alert.setContentText("Task discount has been remove!");
+                            alert.showAndWait();
                         }
 
                     }
@@ -920,6 +919,207 @@ public class ManageCustomerAccountController implements Initializable {
             }
         });
 
+        btnUpdateFlex.setOnAction((event) -> {
+            if (!rbFlexible.isSelected() || isEmpty(txtPrice) || isEmpty(txtFlexiblePercentage)) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Data entry is not complete!");
+                alert.showAndWait();
+            } else if (!isInt(txtPrice.getText()) || !isFloat(txtFlexiblePercentage.getText())) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Please check data entry!");
+                alert.showAndWait();
+            } else if (Float.parseFloat(txtFlexiblePercentage.getText()) > 100 || Float.parseFloat(txtFlexiblePercentage.getText()) < 0) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("Percentage value must be between 0-100!");
+                alert.showAndWait();
+            } else {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountType() == (short) 0) {
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else if (o.getDiscountType() == (short) 1) {
+                            try {
+                                dbJpa.destroy(o.getDiscountBandList().get(0).getDiscountBandPK());
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().clear();
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Flexible discount is set!");
+                            alert.showAndWait();
+
+                        } else if (o.getDiscountType() == (short) 2) {
+                            o.getTaskDiscountList().forEach((oTD) -> {
+                                try {
+                                    tdJpa.destroy(oTD.getTaskDiscountPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            });
+                            o.getTaskDiscountList().clear();
+                            DiscountBand discountBand = new DiscountBand();
+                            DiscountBandPK discountBandPK = new DiscountBandPK();
+                            discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                            discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                            discountBand.setCustomerAccount(o);
+                            discountBand.setDiscountBandPK(discountBandPK);
+                            try {
+                                dbJpa.create(discountBand);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            o.getDiscountBandList().add(discountBand);
+                            o.setDiscountType((short) 3);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        } else if (o.getDiscountType() == (short) 3) {
+                            o.getDiscountBandList().forEach((oDB) -> {
+                                if (oDB.getDiscountBandPK().getPrice() == Integer.parseInt(txtPrice.getText())) {
+                                    isUpdate = true;
+                                    oDB.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                                    try {
+                                        dbJpa.edit(oDB);
+
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                                        alert.setContentText("Flexible discount updated!");
+                                        alert.showAndWait();
+                                }
+                            });
+                            if (!isUpdate) {
+                                DiscountBand discountBand = new DiscountBand();
+                                DiscountBandPK discountBandPK = new DiscountBandPK();
+                                discountBandPK.setPrice(Integer.parseInt(txtPrice.getText()));
+                                discountBand.setPercentage(Float.parseFloat(txtFlexiblePercentage.getText()));
+                                discountBand.setCustomerAccount(o);
+                                discountBand.setDiscountBandPK(discountBandPK);
+                                
+
+                                try {
+                                    dbJpa.create(discountBand);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                o.getDiscountBandList().add(discountBand);
+                                try {
+                                    customerAccountServiceDao.updateAccount(o);
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                alert.setAlertType(Alert.AlertType.INFORMATION);
+                                alert.setContentText("Flexible discount is set!");
+                                alert.showAndWait();
+
+                            } else {
+                                isUpdate = false;
+                            }
+                        }
+                    }
+                });
+            }
+
+        });
+
+        btnDeleteFlex.setOnAction((event) -> {
+            if (!rbFlexible.isSelected() || isEmpty(txtPrice) || !isInt(txtPrice.getText())) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setContentText("No flexible discount is selected for delete!");
+                alert.showAndWait();
+            } else {
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        o.getDiscountBandList().forEach((oDB) -> {
+                            if (oDB.getDiscountBandPK().getPrice() == Integer.parseInt(txtPrice.getText())) {
+                                try {
+                                    dbJpa.destroy(oDB.getDiscountBandPK());
+                                } catch (NonexistentEntityException ex) {
+                                    Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        });
+                    }
+                });
+                customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
+                    if (o.getAccountNumber() == editAccount) {
+                        if (o.getDiscountBandList().isEmpty()) {
+                            o.setDiscountType((short) 0);
+                            try {
+                                customerAccountServiceDao.updateAccount(o);
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Value Customer " + o.getAccountHolderName() + " has been downgrade due to lack of discount plan!");
+                            alert.showAndWait();
+
+                        } else {
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Task discount has been remove!");
+                            alert.showAndWait();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void turnAllTextBlank() {
@@ -1051,6 +1251,16 @@ public class ManageCustomerAccountController implements Initializable {
     private static boolean isFloat(String str) {
         try {
             Float.parseFloat(str);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    private static boolean isInt(String str) {
+        try {
+            Integer.parseInt(str);
             return true;
         } catch (Exception e) {
             return false;
