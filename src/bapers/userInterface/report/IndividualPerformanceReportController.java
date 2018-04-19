@@ -29,7 +29,6 @@ import bapers.utility.report.IndividualPerformanceReport;
 import bapers.utility.report.IprResultSet;
 import bapers.utility.report.IprTotalIndividual;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -38,11 +37,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 
 /**
  * FXML Controller class
@@ -77,10 +78,13 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
     private TextField txtTotal;
     @FXML
     private TableView<IprTotalIndividual> tblTotal;
+    @FXML
+    private HBox hbRoot;
 
     private ObservableList<IndividualPerformanceReport> tb1 = FXCollections.observableArrayList();
     private ObservableList<IprTotalIndividual> tb2 = FXCollections.observableArrayList();
     private ObservableIntegerValue total = new SimpleIntegerProperty(0);
+    
 
     /**
      * Initializes the controller class.
@@ -92,6 +96,13 @@ public class IndividualPerformanceReportController extends Report<IprResultSet> 
         tblTotal.setItems(tb2);
         txtTotal.setText(total.toString());
         txtTotal.setEditable(false);
+        btnPrint.setOnAction((event) -> {
+            stage.setMaximized(true);
+            stage.setFullScreen(true);
+            print(hbRoot);
+            stage.setMaximized(false);
+            stage.setFullScreen(false);
+        });
     }
 
     @Override

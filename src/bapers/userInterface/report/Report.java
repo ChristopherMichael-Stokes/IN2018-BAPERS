@@ -28,6 +28,11 @@ package bapers.userInterface.report;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.print.PrinterJob;
+import javafx.scene.Node;
+import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  *
@@ -38,13 +43,25 @@ public abstract class Report<T> {
 
     protected final ObservableList<T> reportList = FXCollections.observableArrayList();
     protected T item;
-    
+    public Stage stage = null;
+
     public void setItems(List<T> items) {
         reportList.clear();
         reportList.addAll(items);
     }
-    
+
     protected abstract void setTable();
-    
-    public void setItems(T item) {}
+
+    protected void print(Node n) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null) {
+            job.showPrintDialog(bapers.BAPERS.primaryStage); // Window must be your main Stage
+            job.printPage(n);
+            job.endJob();
+        }
+    }
+
+    public void setItems(T item) {
+    }
+
 }

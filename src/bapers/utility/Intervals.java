@@ -55,7 +55,7 @@ public class Intervals implements Serializable{
                 ObjectInputStream ois = new ObjectInputStream(fis);) {
             intervals = (Intervals) ois.readObject();
         } catch (IOException | ClassNotFoundException ex) {
-            System.err.println("Could not read intervals, using defaults instead\n"+ex);
+            System.err.println("Could not read intervals, using defaults instead\n");
             intervals = new Intervals();
             
             writeIntervals(intervals);
@@ -76,7 +76,7 @@ public class Intervals implements Serializable{
             oos.writeObject(intervals);
             return true;
         } catch (IOException ex) {
-            System.err.println("Could not write intervals to file\n"+ex);
+            System.err.println("Could not write intervals to file\n");
             return false;
         }
     }
