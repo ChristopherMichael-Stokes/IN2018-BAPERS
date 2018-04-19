@@ -62,6 +62,8 @@ public class LoginController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    
+    //when click on textfields username and password, will be able to enter inputs
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         txtId.setOnKeyPressed((event) -> { 
@@ -78,7 +80,7 @@ public class LoginController implements Initializable {
         });
         
     }
-
+//enter in the username and password and will return whether it is correct or not
     private void login() {        
         lblOut.setText("begin request " + (++attempts));
 

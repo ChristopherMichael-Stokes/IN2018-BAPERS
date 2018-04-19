@@ -82,6 +82,9 @@ public class ManageBackupController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //Set the time and date for the backups
+    //will display the size of the backup
+    //button is clicked to confirm backup was successful
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Table
@@ -119,7 +122,7 @@ public class ManageBackupController implements Initializable {
                 haltAlert("Cannot backup at this moment");
             }
         });
-        
+        //button
         btnRestoreFromBackup.setOnAction((event) -> {
             File f = tblBackup.getSelectionModel().getSelectedItem();
             if (f == null) {
@@ -134,7 +137,7 @@ public class ManageBackupController implements Initializable {
                 haltAlert("Cannot restore from selected backup");
             }
         });
-        
+        //button
         btnRemoveBackup.setOnAction((event) -> {
             ObservableList<File> f = tblBackup.getSelectionModel().getSelectedItems();
             if (f == null) {
@@ -148,7 +151,7 @@ public class ManageBackupController implements Initializable {
         
         btnHome.setOnAction((event) -> SceneController.switchScene(Scenes.home));        
     }    
-    
+    //gets the files that were backedup
     private void loadBackups() {
         files.clear();
         files.addAll(getBackupList());

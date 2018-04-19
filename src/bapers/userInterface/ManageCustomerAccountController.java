@@ -212,6 +212,9 @@ public class ManageCustomerAccountController implements Initializable {
      * @param url is the directory used to retrieve the .fxml files which contain the gui
      * @param rb
      */
+    //searches a customer account
+    //able to update customer details for example: name, address etc
+    //set discount plans fo flexible, variable and fixed
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -235,6 +238,7 @@ public class ManageCustomerAccountController implements Initializable {
         lblAccountName.setText("Account Number");
         btnHome.setOnAction((event) -> switchScene(SceneController.Scenes.home));
         btnSearch.setOnAction((event) -> {
+            //insert customer detail to update and cannot be left empty
             if (txtSearch.getText().trim().equals("")) {
                 alert.setContentText("Search bar cannot be empty!");
                 alert.showAndWait();
@@ -245,6 +249,7 @@ public class ManageCustomerAccountController implements Initializable {
                 editContact = null;
                 discountAccount = -1;
             } else {
+                //gets customer accounts from a list
                 ObservableList<String> searchObservableList;
                 List<String> searchList = new ArrayList<String>();
                 customerAccountServiceDao.getCustomerAccounts().forEach((o)
@@ -253,6 +258,7 @@ public class ManageCustomerAccountController implements Initializable {
                         searchList.add(o.getAccountHolderName());
                     }
                 });
+                //if customer name cannot be located, warning is sent 
                 if (searchList.isEmpty()) {
                     lsvAccounts.setItems(null);
                     alert.setAlertType(Alert.AlertType.WARNING);
@@ -272,6 +278,7 @@ public class ManageCustomerAccountController implements Initializable {
                 }
             }
         });
+        //once you select customer account, the texts then turns blank
         lsvAccounts.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov, String oldvalue, String newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o)
@@ -287,6 +294,7 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
+        //
         lvContact.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov, String oldvalue, String newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o)
@@ -302,6 +310,7 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
+        //to be able to update details, a warning is a displayed that a customer needs to be selected
         ObservableList<Integer> taskOList;
         List<Integer> taskList = new ArrayList<Integer>();
         taskServiceDao.getTasks().forEach((o) -> {
@@ -317,7 +326,7 @@ public class ManageCustomerAccountController implements Initializable {
                 alert.setContentText("You need to select a customer account!");
                 alert.showAndWait();
             } else {
-
+////updating customer details 
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
                     if (o.getAccountNumber() == editAccount && !isEmpty(txtAccountName)) {
                         CustomerAccount ca = o;
@@ -332,6 +341,7 @@ public class ManageCustomerAccountController implements Initializable {
                             Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    //setting details for a contact of the selected customer account
                     if (o.getAccountNumber() == editAccount && !isEmpty(txtFirstName) && !isEmpty(txtMobile) && !isEmpty(txtSurname)) {
                         try {
                             if (editContact != null) {
@@ -362,6 +372,7 @@ public class ManageCustomerAccountController implements Initializable {
                             Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    //setting an address for selected customer account
                     if (o.getAccountNumber() == editAccount && !haveAddress(o)) {
                         if (finishAddress()) {
                             AddressPK addressPK = new AddressPK();
@@ -388,6 +399,7 @@ public class ManageCustomerAccountController implements Initializable {
                             }
 
                         }
+                        //alerts sent if details for address are not set
                     } else if (haveAddress(o) && o.getAccountNumber() == editAccount) {
                         if (!finishAddress()) {
                             alert.setAlertType(Alert.AlertType.WARNING);
@@ -416,7 +428,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-
+//button for removing an account, customer account must be selected
         btnRemoveAccount.setOnAction((event) -> {
             if (editAccount == -1) {
                 alert.setAlertType(Alert.AlertType.WARNING);
@@ -503,7 +515,7 @@ public class ManageCustomerAccountController implements Initializable {
 
             }
         });
-
+//button for downgrading a customer valued status, including getting a task discount and setting a discount type
         btnDowngrade.setOnAction((event) -> {
             if (editAccount != -1) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
@@ -530,7 +542,8 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
-
+//button for acivating a customer account 
+//setting an account that its not longer disabled
         btnActivateAccount.setOnAction(((event) -> {
             customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
                 if (o.getAccountNumber() == editAccount && o.getLocked() != (short) 0) {
@@ -553,7 +566,7 @@ public class ManageCustomerAccountController implements Initializable {
             });
 
         }));
-
+//Setting a variable discount to a task
         lsvTasks.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
             public void changed(ObservableValue<? extends Integer> ov, Integer oldvalue, Integer newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
@@ -569,7 +582,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-
+//setting a flexible discount
         lsvFlexible.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
             public void changed(ObservableValue<? extends Integer> ov, Integer oldvalue, Integer newvalue) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
@@ -586,6 +599,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
+        //radio button for clearing discounts
 
         rbVariable.setOnAction((event) -> {
             setDiscountClear();
@@ -598,7 +612,7 @@ public class ManageCustomerAccountController implements Initializable {
         rbFixed.setOnAction((event) -> {
             setDiscountClear();
         });
-
+//setting fixed discount 
         btnSetFixedDiscount.setOnAction((event) -> {
             if (!rbFixed.isSelected()) {
                 alert.setAlertType(Alert.AlertType.WARNING);
@@ -676,7 +690,7 @@ public class ManageCustomerAccountController implements Initializable {
                                     Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             });
-
+//clearing the discount band
                             o.getDiscountBandList().clear();
                             try {
                                 dbJpa.create(discountBand);
@@ -720,7 +734,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
         }
         );
-
+//setting the variable discount
         btnUpdateVar.setOnAction((event) -> {
             if (rbVariable.isSelected() && !cbbVariable.getSelectionModel().isEmpty() && isFloat(txtVariablePercentage.getText()) && Float.parseFloat(txtVariablePercentage.getText()) <= 100 && Float.parseFloat(txtVariablePercentage.getText()) >= 0) {
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
@@ -871,7 +885,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-
+//deleting variable discount for a task
         btnDeleteVar.setOnAction((event) -> {
             if (!rbVariable.isSelected() || cbbVariable.getSelectionModel().isEmpty()) {
                 alert.setAlertType(Alert.AlertType.WARNING);
@@ -892,6 +906,7 @@ public class ManageCustomerAccountController implements Initializable {
                     }
 
                 });
+                //customer gets downgraded 
                 customerAccountServiceDao.getCustomerAccounts().forEach((o) -> {
                     if (o.getAccountNumber() == editAccount) {
                         if (o.getTaskDiscountList().isEmpty()) {
@@ -906,7 +921,7 @@ public class ManageCustomerAccountController implements Initializable {
                             } catch (Exception ex) {
                                 Logger.getLogger(ManageCustomerAccountController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
+//alerts for removed discount
                         } else {
                             alert.setAlertType(Alert.AlertType.INFORMATION);
                             alert.setContentText("Task discount has been remove!");
@@ -918,7 +933,7 @@ public class ManageCustomerAccountController implements Initializable {
                 });
             }
         });
-
+//updating flexible discount
         btnUpdateFlex.setOnAction((event) -> {
             if (!rbFlexible.isSelected() || isEmpty(txtPrice) || isEmpty(txtFlexiblePercentage)) {
                 alert.setAlertType(Alert.AlertType.WARNING);
@@ -1076,7 +1091,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
 
         });
-
+//deleting a flexible discount 
         btnDeleteFlex.setOnAction((event) -> {
             if (!rbFlexible.isSelected() || isEmpty(txtPrice) || !isInt(txtPrice.getText())) {
                 alert.setAlertType(Alert.AlertType.WARNING);
@@ -1121,7 +1136,7 @@ public class ManageCustomerAccountController implements Initializable {
             }
         });
     }
-
+//clearing text
     private void turnAllTextBlank() {
         txtRegion.clear();
         txtPostCode.clear();
@@ -1137,7 +1152,7 @@ public class ManageCustomerAccountController implements Initializable {
         txtMobile.clear();
 
     }
-
+//getting customers details
     private void getAllText(CustomerAccount o) {
         List<Address> al = o.getAddressList();
         if (!al.isEmpty()) {
@@ -1191,7 +1206,7 @@ public class ManageCustomerAccountController implements Initializable {
         }
 
     }
-
+//get contacts details
     private void getContact(Contact o) {
         txtFirstName.setText(o.getContactPK().getForename());
         txtSurname.setText(o.getContactPK().getSurname());
@@ -1224,7 +1239,7 @@ public class ManageCustomerAccountController implements Initializable {
         }
 
     }
-
+//clear discounts
     private void setAllDiscountClear() {
         rbVariable.setSelected(false);
         rbFixed.setSelected(false);
