@@ -39,7 +39,7 @@ public class CurrencyFormat extends TextFormatter<Double> {
                 = new DecimalFormat("\u00A3###,###.##");
 
     /**
-     *
+     * modified from https://stackoverflow.com/questions/35093145/string-with-numbers-and-letters-to-double-javafx/35096648#35096648
      */
     public CurrencyFormat() {
         super(

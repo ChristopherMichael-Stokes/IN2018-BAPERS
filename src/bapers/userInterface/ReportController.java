@@ -271,6 +271,12 @@ public class ReportController implements Initializable {
         return tf.getText().trim();
     }
 
+    /**
+     * 
+     * @param <T> type of report
+     * @param name uri to location of report gui
+     * @return the controller for the report, and the stage that it is shown on
+     */
     private <T extends Report> Pair<T, Stage> loadReport(String name) {
         try {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource(uri + name));

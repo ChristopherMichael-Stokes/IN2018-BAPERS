@@ -29,7 +29,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * holds information for a time period, in days, hours and minutes.
+ * times are represented in milliseconds.
  * @author chris
  */
 public class Times implements Serializable {
@@ -40,9 +41,9 @@ public class Times implements Serializable {
     
     /**
      *
-     * @param days
-     * @param hours
-     * @param minutes
+     * @param days for the period
+     * @param hours for the period
+     * @param minutes for the period
      */
     public Times(int days, int hours, int minutes) {
         this.days = days * DAY;
@@ -53,8 +54,8 @@ public class Times implements Serializable {
     
     /**
      *
-     * @param hours
-     * @param minutes
+     * @param hours for the period
+     * @param minutes for the periods
      */
     public Times(int hours, int minutes) {
         this(0, hours, minutes);
@@ -62,7 +63,7 @@ public class Times implements Serializable {
     
     /**
      *
-     * @param minutes
+     * @param minutes for the period
      */
     public Times(int minutes) {
         this(0, 0, minutes);
@@ -70,7 +71,8 @@ public class Times implements Serializable {
 
     /**
      *
-     * @param days
+     * @param days value to assign to current days field (in number of actual 
+     * days, not milliseconds)
      */
     public void setDays(int days) {
         this.days = days * DAY;        
@@ -80,7 +82,8 @@ public class Times implements Serializable {
 
     /**
      *
-     * @param hours
+     * @param hours value to assign to current hours field (in number of actual 
+     * hours, not milliseconds)
      */
     public void setHours(int hours) {
         this.hours = hours * HOUR;
@@ -91,7 +94,8 @@ public class Times implements Serializable {
 
     /**
      *
-     * @param minutes
+     * @param minutes value to assign to current minutes field (in number of actual 
+     * minutes, not milliseconds)
      */
     public void setMinutes(int minutes) {
         this.minutes = minutes * MINUTE;
@@ -100,14 +104,14 @@ public class Times implements Serializable {
     
     /**
      *
-     * @return
+     * @return the value of the times object in milliseconds
      */
     public long getMilliseconds() {
         return days + hours + minutes;
     }
 
     /**
-     *
+     * set the last time the times object was accessed
      */
     public void setLastSet() {
         lastSet = new Date();
@@ -115,7 +119,7 @@ public class Times implements Serializable {
     
     /**
      *
-     * @return
+     * @return when the times object was last accessed
      */
     public Date getLastSet() {
         return lastSet;

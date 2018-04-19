@@ -43,24 +43,24 @@ import java.util.List;
 public class BackupService {
 
     /**
-     *
+     *  connection string for database
      */
     protected static final String CONNSTR = "--server=root:haddockexecellipsis@localhost";
 
     /**
-     *
+     * date format for naming backup files
      */
     public static final DateFormat BACKUPDATE = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
-     *
+     * folder location where backups will be stored
      */
     protected static final File BACKUP = new File("backups");    
     
     /**
      *
-     * @param file
-     * @throws IOException
+     * @param file - sql file to restore database backup to
+     * @throws IOException if the process cannot be run
      */
     public static void restoreFromBackup(File file) throws IOException {
         ProcessBuilder pb = new ProcessBuilder("mysqldbimport", "-i", "both",
@@ -71,8 +71,8 @@ public class BackupService {
     }
     
     /**
-     *
-     * @throws IOException
+     * creates a backup from the server, and gives it unix timestamp as the name
+     * @throws IOException if the process cannot be run
      */
     public static void backup() throws IOException { 
         ProcessBuilder pb = new ProcessBuilder("mysqldbexport", CONNSTR, "-e", 
@@ -96,7 +96,7 @@ public class BackupService {
     
     /**
      *
-     * @return
+     * @return list of all taken backups
      */
     public static List<File> getBackupList() {
         File[] files = BACKUP.listFiles(File::isFile);

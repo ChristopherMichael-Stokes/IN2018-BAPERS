@@ -30,14 +30,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 /**
- *
+ * convenience class for actions that are common across most guis
  * @author chris
  */
 public class FormUtils {
 
     /**
      *
-     * @param message
+     * @param message to display in alert
      */
     public static void haltAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
@@ -48,8 +48,8 @@ public class FormUtils {
     
     /**
      *
-     * @param s
-     * @return
+     * @param s string to make a property from
+     * @return string property object from s
      */
     public static SimpleStringProperty getProperty(String s) {
         return new SimpleStringProperty(s);

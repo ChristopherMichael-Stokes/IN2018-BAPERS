@@ -47,13 +47,21 @@ public class IndividualPerformanceReport {
      */
     public IndividualPerformanceReport(Object[] resultSet) {
         if (!(resultSet.length < 7)) {
-            this.name = new SimpleStringProperty(resultSet[0].toString());
-            this.code = new SimpleStringProperty(resultSet[1].toString());
-            this.taskID = new SimpleStringProperty(resultSet[2].toString());
-            this.department = new SimpleStringProperty(resultSet[3].toString());
-            this.date = new SimpleStringProperty(resultSet[4].toString());
-            this.startTime = new SimpleStringProperty(resultSet[5].toString());
-            this.timeTaken = new SimpleStringProperty(resultSet[6].toString());
+            this.name = new SimpleStringProperty(getValue(resultSet[0]));
+            this.code = new SimpleStringProperty(getValue(resultSet[1]));
+            this.taskID = new SimpleStringProperty(getValue(resultSet[2]));
+            this.department = new SimpleStringProperty(getValue(resultSet[3]));
+            this.date = new SimpleStringProperty(getValue(resultSet[4]));
+            this.startTime = new SimpleStringProperty(getValue(resultSet[5]));
+            this.timeTaken = new SimpleStringProperty(getValue(resultSet[6]));
+        }
+    }
+    
+    private String getValue(Object o) {
+        if (o == null) {
+            return "No data";
+        } else {
+            return o.toString();
         }
     }
 

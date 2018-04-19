@@ -147,7 +147,7 @@ public class BAPERS extends Application {
     
     /**
      *
-     * @return
+     * @return intervals object to assign for automatic system events
      */
     public static Intervals getIntervals() {
         return intervals;
@@ -155,7 +155,7 @@ public class BAPERS extends Application {
 
     /**
      *
-     * @param intervals
+     * @param intervals object to assign for automatic system events
      */
     public static void setIntervals(Intervals intervals) {
         BAPERS.intervals = intervals;

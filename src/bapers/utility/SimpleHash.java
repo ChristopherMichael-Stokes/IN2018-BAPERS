@@ -22,9 +22,10 @@ public class SimpleHash {
 
     /**
      *
-     * @param strings
-     * @return
-     * @throws java.security.NoSuchAlgorithmException
+     * @param strings strings to hash
+     * @return sha-512 hash of all inputs concatenated
+     * @throws NoSuchAlgorithmException if the input hashing algorithm does
+     * not exist
      */
     public static String getStringHash(String... strings)
             throws NoSuchAlgorithmException {
@@ -37,10 +38,10 @@ public class SimpleHash {
 
     /**
      *
-     * @param stringBytes
-     * @param algorithm
-     * @return
-     * @throws java.security.NoSuchAlgorithmException
+     * @param stringBytes byte array representation of string to hash
+     * @param algorithm to use to hash string
+     * @return hash of stringBytes, using the supplied algorithm
+     * @throws NoSuchAlgorithmException if the input hashing algorithm does
      */
     public static String getStringHash(byte[] stringBytes, String algorithm)
             throws NoSuchAlgorithmException {
@@ -52,8 +53,6 @@ public class SimpleHash {
             s.append((String.format("%02x", b)));
         }
         return s.toString();
-//            hashValue = DatatypeConverter.printHexBinary(bytesArray).toLowerCase();
-
     }
 
 }

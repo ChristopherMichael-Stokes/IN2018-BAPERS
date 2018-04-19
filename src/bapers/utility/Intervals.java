@@ -44,6 +44,7 @@ public class Intervals implements Serializable{
     private Times reportIntervals, backupIntervals;
 
     /**
+     * set default backup and report intervals
      *
      */
     public Intervals() {
@@ -53,7 +54,8 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @return
+     * @return either the intervals object that has been serialized to disk, or 
+     * a new intervals object
      */
     public static Intervals readIntervals() {
         Intervals intervals = null;
@@ -73,9 +75,9 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @param intervals
-     * @return
-     * @throws IOException
+     * @param intervals the intervals object to serialize
+     * @return true if the write was successful
+     * @throws IOException if the file cannot be made
      */
     public static boolean writeIntervals(Intervals intervals) throws IOException {
         File file = new File(URI_);
@@ -96,7 +98,7 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @param times
+     * @param times - the intervals between database backups
      */
     public static void setMainBackupIntervals(Times times){
         bapers.BAPERS.intervals.setBackupIntervals(times);
@@ -104,21 +106,21 @@ public class Intervals implements Serializable{
     
     /**
      *
-     * @param times
+     * @param times - the intervals between report generations
      */
     public static void setMainReportIntervals(Times times) {
         bapers.BAPERS.intervals.setReportIntervals(times);
     }
     
     /**
-     *
+     *  sets the time when the backup was last generated
      */
     public void setBackupGenerated() {
         backupIntervals.setLastSet();
     }
     
     /**
-     *
+     *  sets the time when the reports were last generated
      */
     public void setReportGenerated() {
         reportIntervals.setLastSet();
@@ -126,7 +128,7 @@ public class Intervals implements Serializable{
     
     /**
      *
-     * @return
+     * @return intervals between reports
      */
     public Times getReportIntervals() {
         return reportIntervals;
@@ -134,7 +136,7 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @param reportIntervals
+     * @param reportIntervals set the intervals between reports
      */
     public void setReportIntervals(Times reportIntervals) {
         this.reportIntervals = reportIntervals;
@@ -142,7 +144,7 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @return
+     * @return the intervals between backups
      */
     public Times getBackupIntervals() {
         return backupIntervals;
@@ -150,7 +152,7 @@ public class Intervals implements Serializable{
 
     /**
      *
-     * @param backupIntervals
+     * @param backupIntervals set the intervals between backups
      */
     public void setBackupIntervals(Times backupIntervals) {
         this.backupIntervals = backupIntervals;
